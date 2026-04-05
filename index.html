@@ -3,1225 +3,2094 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CapWeb — Services sur mesure</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>CapWorks Studio — Services sur mesure</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('-Y8WjfvgdGTW69eYQ');</script>
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --surface2: #1a1a28;
-    --border: #2a2a40;
-    --accent: #7c5cfc;
-    --accent2: #00e5ff;
-    --accent3: #ff6b6b;
-    --text: #e8e8f0;
-    --muted: #6b6b8a;
-    --gold: #ffd700;
-    --green: #00ff88;
-    --tier1: #6b6b8a;
-    --tier2: #7c5cfc;
-    --tier3: #ffd700;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Syne', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* BACKGROUND GRID */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 60px 60px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* GLOW ORB */
-  body::after {
-    content: '';
-    position: fixed;
-    top: -200px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 800px;
-    height: 800px;
-    background: radial-gradient(circle, rgba(124,92,252,0.15) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ===== HEADER ===== */
-  header {
-    position: relative;
-    z-index: 10;
-    padding: 0 40px;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(20px);
-    background: rgba(10,10,15,0.8);
-    position: sticky;
-    top: 0;
-  }
-
-  .logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 1.3rem;
-    font-weight: 700;
-    letter-spacing: -1px;
-  }
-  .logo span { color: var(--accent); }
-
-  .nav-links { display: flex; gap: 32px; }
-  .nav-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--text); }
-
-  .admin-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .admin-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* ===== HERO ===== */
-  .hero {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 100px 40px 80px;
-  }
-
-  .hero-tag {
-    display: inline-block;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--accent2);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    border: 1px solid rgba(0,229,255,0.3);
-    padding: 6px 16px;
-    border-radius: 100px;
-    margin-bottom: 32px;
-    animation: pulse 3s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(0,229,255,0.2); }
-    50% { box-shadow: 0 0 0 8px rgba(0,229,255,0); }
-  }
-
-  .hero h1 {
-    font-size: clamp(3rem, 8vw, 6rem);
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -3px;
-    margin-bottom: 24px;
-  }
-
-  .hero h1 .line2 {
-    display: block;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero p {
-    color: var(--muted);
-    font-size: 1.1rem;
-    max-width: 500px;
-    margin: 0 auto 48px;
-    line-height: 1.7;
-    font-weight: 400;
-  }
-
-  /* ===== TIER LEGEND ===== */
-  .tier-legend {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 80px;
-    flex-wrap: wrap;
-  }
-
-  .tier-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-  }
-
-  .tier-badge .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-  }
-
-  .tier-badge.t1 { background: rgba(107,107,138,0.15); border: 1px solid rgba(107,107,138,0.3); color: var(--tier1); }
-  .tier-badge.t1 .dot { background: var(--tier1); }
-  .tier-badge.t2 { background: rgba(124,92,252,0.15); border: 1px solid rgba(124,92,252,0.3); color: var(--tier2); }
-  .tier-badge.t2 .dot { background: var(--tier2); }
-  .tier-badge.t3 { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3); color: var(--tier3); }
-  .tier-badge.t3 .dot { background: var(--tier3); box-shadow: 0 0 8px var(--tier3); }
-
-  /* ===== SECTION TITLE ===== */
-  .section-title {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    margin-bottom: 60px;
-  }
-
-  .section-title h2 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-  }
-
-  .section-title .label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--accent);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    display: block;
-  }
-
-  /* ===== SERVICES GRID ===== */
-  .services-section {
-    position: relative;
-    z-index: 1;
-    padding: 0 40px 100px;
-    max-width: 1300px;
-    margin: 0 auto;
-  }
-
-  #services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 24px;
-  }
-
-  /* SERVICE CARD */
-  .service-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-    animation: fadeUp 0.5s ease both;
-  }
-
-  .service-card:hover {
-    transform: translateY(-6px);
-    border-color: var(--accent);
-    box-shadow: 0 20px 60px rgba(124,92,252,0.15);
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .card-header {
-    padding: 28px 28px 20px;
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .card-icon {
-    width: 48px; height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    flex-shrink: 0;
-  }
-
-  .card-info h3 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    margin-bottom: 4px;
-  }
-
-  .card-info p {
-    color: var(--muted);
-    font-size: 0.85rem;
-    line-height: 1.5;
-    font-weight: 400;
-  }
-
-  /* TIERS */
-  .card-tiers {
-    padding: 20px 28px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .tier-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    border-radius: 10px;
-    transition: all 0.2s;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .tier-row::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .tier-row:hover::before { opacity: 1; }
-
-  .tier-row.t1 { background: rgba(107,107,138,0.08); border: 1px solid rgba(107,107,138,0.2); }
-  .tier-row.t1::before { background: rgba(107,107,138,0.08); }
-  .tier-row.t1 .tier-name { color: var(--tier1); }
-
-  .tier-row.t2 { background: rgba(124,92,252,0.08); border: 1px solid rgba(124,92,252,0.2); }
-  .tier-row.t2::before { background: rgba(124,92,252,0.08); }
-  .tier-row.t2 .tier-name { color: var(--tier2); }
-
-  .tier-row.t3 { background: rgba(255,215,0,0.06); border: 1px solid rgba(255,215,0,0.2); }
-  .tier-row.t3::before { background: rgba(255,215,0,0.06); }
-  .tier-row.t3 .tier-name { color: var(--tier3); }
-
-  .tier-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .tier-icon { font-size: 1rem; }
-
-  .tier-name {
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-
-  .tier-desc {
-    font-size: 0.75rem;
-    color: var(--muted);
-    font-weight: 400;
-    margin-top: 1px;
-    font-family: 'Space Mono', monospace;
-  }
-
-  .tier-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .tier-price {
-    font-family: 'Space Mono', monospace;
-    font-size: 1rem;
-    font-weight: 700;
-  }
-
-  .tier-row.t1 .tier-price { color: var(--tier1); }
-  .tier-row.t2 .tier-price { color: var(--tier2); }
-  .tier-row.t3 .tier-price { color: var(--tier3); }
-
-  .paypal-btn {
-    background: #0070ba;
-    color: white;
-    border: none;
-    padding: 7px 14px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    position: relative;
-    z-index: 1;
-  }
-
-  .paypal-btn:hover { background: #005ea6; transform: scale(1.05); }
-  .paypal-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
-
-  /* UNAVAILABLE CARD */
-  .service-card.unavailable {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-
-  .unavailable-badge {
-    display: inline-block;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    background: rgba(255,107,107,0.15);
-    color: var(--accent3);
-    border: 1px solid rgba(255,107,107,0.3);
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-left: 8px;
-    vertical-align: middle;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  /* ===== ADMIN PANEL ===== */
-  .admin-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(8px);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-
-  .admin-overlay.open { display: flex; }
-
-  .admin-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    width: 100%;
-    max-width: 860px;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: slideIn 0.3s ease;
-  }
-
-  @keyframes slideIn {
-    from { opacity: 0; transform: scale(0.95) translateY(20px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-  }
-
-  .admin-header {
-    padding: 28px 32px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    background: var(--surface);
-    z-index: 1;
-    border-radius: 20px 20px 0 0;
-  }
-
-  .admin-header h2 {
-    font-size: 1.3rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-  }
-
-  .admin-header h2 span {
-    font-family: 'Space Mono', monospace;
-    color: var(--accent);
-    font-size: 0.75rem;
-    font-weight: 400;
-    margin-left: 10px;
-    letter-spacing: 1px;
-  }
-
-  .close-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.2s;
-  }
-  .close-btn:hover { border-color: var(--accent3); color: var(--accent3); }
-
-  /* LOGIN */
-  .admin-login {
-    padding: 60px 32px;
-    text-align: center;
-  }
-
-  .admin-login h3 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .admin-login p {
-    color: var(--muted);
-    margin-bottom: 32px;
-    font-size: 0.9rem;
-  }
-
-  .login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-width: 320px;
-    margin: 0 auto;
-  }
-
-  .input-field {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 12px 16px;
-    border-radius: 10px;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.85rem;
-    outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
-  }
-
-  .input-field:focus { border-color: var(--accent); }
-
-  .btn-primary {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 10px;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-primary:hover { background: #6a4de8; transform: translateY(-1px); }
-
-  .btn-danger {
-    background: rgba(255,107,107,0.15);
-    color: var(--accent3);
-    border: 1px solid rgba(255,107,107,0.3);
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-danger:hover { background: rgba(255,107,107,0.25); }
-
-  .btn-success {
-    background: rgba(0,255,136,0.15);
-    color: var(--green);
-    border: 1px solid rgba(0,255,136,0.3);
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-success:hover { background: rgba(0,255,136,0.25); }
-
-  .btn-sm {
-    padding: 6px 12px;
-    font-size: 0.75rem;
-    border-radius: 6px;
-  }
-
-  .error-msg {
-    color: var(--accent3);
-    font-size: 0.8rem;
-    font-family: 'Space Mono', monospace;
-    margin-top: 8px;
-  }
-
-  /* ADMIN CONTENT */
-  .admin-content { padding: 32px; display: none; }
-  .admin-content.visible { display: block; }
-
-  .admin-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 32px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0;
-  }
-
-  .admin-tab {
-    padding: 10px 20px;
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    font-family: 'Syne', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: all 0.2s;
-  }
-
-  .admin-tab.active {
-    color: var(--text);
-    border-bottom-color: var(--accent);
-  }
-
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-
-  /* SERVICE EDITOR */
-  .service-list-admin { display: flex; flex-direction: column; gap: 16px; }
-
-  .service-item-admin {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-  }
-
-  .service-item-admin .item-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-
-  .item-title-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex: 1;
-  }
-
-  .item-actions { display: flex; gap: 8px; }
-
-  .tiers-editor {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-    margin-top: 12px;
-  }
-
-  .tier-editor-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
-  }
-
-  .tier-editor-box label {
-    display: block;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-
-  .tier-editor-box.t1 label { color: var(--tier1); }
-  .tier-editor-box.t2 label { color: var(--tier2); }
-  .tier-editor-box.t3 label { color: var(--tier3); }
-
-  .tier-inputs { display: flex; flex-direction: column; gap: 6px; }
-
-  .add-service-form {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-  }
-
-  .add-service-form h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    color: var(--accent2);
-  }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .form-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .form-field label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--muted);
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-
-  .form-field.full-width { grid-column: 1 / -1; }
-
-  /* PAYPAL SETTINGS */
-  .paypal-settings { display: flex; flex-direction: column; gap: 20px; }
-  .paypal-setting-item {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-  }
-
-  .paypal-setting-item h4 {
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-
-  .paypal-setting-item p {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-bottom: 12px;
-    line-height: 1.5;
-  }
-
-  .toggle-switch {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .toggle {
-    width: 44px; height: 24px;
-    background: var(--border);
-    border-radius: 100px;
-    position: relative;
-    transition: background 0.2s;
-    cursor: pointer;
-    border: none;
-  }
-
-  .toggle::after {
-    content: '';
-    position: absolute;
-    width: 18px; height: 18px;
-    background: white;
-    border-radius: 50%;
-    top: 3px; left: 3px;
-    transition: transform 0.2s;
-  }
-
-  .toggle.on { background: var(--green); }
-  .toggle.on::after { transform: translateX(20px); }
-
-  .save-bar {
-    position: sticky;
-    bottom: 0;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    padding: 16px 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    border-radius: 0 0 20px 20px;
-  }
-
-  .save-status {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--muted);
-  }
-
-  .save-status.saved { color: var(--green); }
-
-  /* FOOTER */
-  footer {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 40px;
-    border-top: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 0.8rem;
-    font-family: 'Space Mono', monospace;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    header { padding: 0 20px; }
-    .nav-links { display: none; }
-    .hero { padding: 60px 20px 40px; }
-    .services-section { padding: 0 20px 60px; }
-    #services-grid { grid-template-columns: 1fr; }
-    .tiers-editor { grid-template-columns: 1fr; }
-    .form-grid { grid-template-columns: 1fr; }
-    .admin-panel { max-height: 100vh; border-radius: 0; }
-    .tier-right { flex-direction: column; gap: 6px; align-items: flex-end; }
-  }
-
-  /* ICON BACKGROUNDS */
-  .icon-bg-1 { background: rgba(0,229,255,0.1); }
-  .icon-bg-2 { background: rgba(0,255,136,0.1); }
-  .icon-bg-3 { background: rgba(124,92,252,0.1); }
-  .icon-bg-4 { background: rgba(255,107,107,0.1); }
-  .icon-bg-5 { background: rgba(255,215,0,0.1); }
-
-  select.input-field option { background: var(--surface2); }
+:root {
+  --bg: #060609;
+  --bg2: #0c0c12;
+  --surface: #0f0f18;
+  --surface2: #16161f;
+  --surface3: #1c1c28;
+  --border: #22222f;
+  --border2: #2e2e3f;
+  --accent: #6c63ff;
+  --accent-glow: rgba(108,99,255,0.3);
+  --cyan: #00d4ff;
+  --cyan-glow: rgba(0,212,255,0.2);
+  --green: #00f593;
+  --green-glow: rgba(0,245,147,0.2);
+  --red: #ff4d6d;
+  --red-glow: rgba(255,77,109,0.2);
+  --gold: #ffc947;
+  --gold-glow: rgba(255,201,71,0.15);
+  --text: #e4e4f0;
+  --text2: #9898b0;
+  --text3: #5a5a70;
+  --tier1: #7a7a9a;
+  --tier2: #6c63ff;
+  --tier3: #ffc947;
+  --font-head: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-head);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* BG GRID */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* SCANLINE */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ====== SCROLLBAR ====== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ====== HEADER ====== */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 64px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(6,6,9,0.85);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent), var(--cyan));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.logo span { color: var(--cyan); }
+
+nav { display: flex; align-items: center; gap: 4px; }
+
+nav a {
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+nav a:hover { color: var(--text); background: var(--surface2); }
+
+.header-right { display: flex; align-items: center; gap: 8px; }
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.btn-accent {
+  background: var(--accent);
+  border: none;
+  color: white;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+.btn-accent:hover { background: #7b73ff; transform: translateY(-1px); box-shadow: 0 4px 24px var(--accent-glow); }
+
+/* User indicator */
+.user-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.user-indicator:hover { border-color: var(--accent); }
+.user-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+/* ====== HERO ====== */
+.hero {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 100px 40px 80px;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  top: -100px; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 500px;
+  background: radial-gradient(ellipse, rgba(108,99,255,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-glow2 {
+  position: absolute;
+  top: 0; left: 30%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--cyan);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid rgba(0,212,255,0.25);
+  background: rgba(0,212,255,0.05);
+  padding: 6px 16px;
+  border-radius: 100px;
+  margin-bottom: 36px;
+}
+
+.hero-tag .blink {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--cyan);
+  animation: blink 1.4s infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.hero h1 {
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -3px;
+  margin-bottom: 20px;
+}
+
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(120deg, var(--accent) 0%, var(--cyan) 50%, var(--accent) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer { to { background-position: 200% center; } }
+
+.hero p {
+  color: var(--text2);
+  font-size: 1rem;
+  font-weight: 400;
+  max-width: 480px;
+  margin: 0 auto 48px;
+  line-height: 1.8;
+}
+
+.tier-legend {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 0;
+  flex-wrap: wrap;
+}
+
+.tier-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.tier-pill .dot { width: 7px; height: 7px; border-radius: 50%; }
+.tier-pill.t1 { background: rgba(122,122,154,0.1); border: 1px solid rgba(122,122,154,0.25); color: var(--tier1); }
+.tier-pill.t1 .dot { background: var(--tier1); }
+.tier-pill.t2 { background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.3); color: var(--tier2); }
+.tier-pill.t2 .dot { background: var(--tier2); box-shadow: 0 0 6px var(--tier2); }
+.tier-pill.t3 { background: rgba(255,201,71,0.08); border: 1px solid rgba(255,201,71,0.3); color: var(--tier3); }
+.tier-pill.t3 .dot { background: var(--tier3); box-shadow: 0 0 8px var(--tier3); }
+
+/* ====== SECTION ====== */
+.section {
+  position: relative;
+  z-index: 1;
+  padding: 80px 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.section-head {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.section-label {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.section-head h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+/* ====== SERVICES GRID ====== */
+#services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.service-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(.2,.8,.3,1), border-color 0.3s, box-shadow 0.3s;
+  animation: fadeUp 0.5s ease both;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent);
+  box-shadow: 0 20px 60px rgba(108,99,255,0.12), 0 0 0 1px rgba(108,99,255,0.1);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.service-card.unavailable {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.card-top {
+  padding: 24px 24px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.icon-bg-1 { background: rgba(0,212,255,0.1); }
+.icon-bg-2 { background: rgba(0,245,147,0.1); }
+.icon-bg-3 { background: rgba(108,99,255,0.1); }
+.icon-bg-4 { background: rgba(255,77,109,0.1); }
+.icon-bg-5 { background: rgba(255,201,71,0.1); }
+
+.card-info h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 3px;
+  letter-spacing: -0.3px;
+}
+.card-info p {
+  color: var(--text2);
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.badge-na {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  background: rgba(255,77,109,0.12);
+  color: var(--red);
+  border: 1px solid rgba(255,77,109,0.25);
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.card-tiers { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 8px; }
+
+.tier-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  border-radius: 10px;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.tier-row.t1 { background: rgba(122,122,154,0.07); border: 1px solid rgba(122,122,154,0.15); }
+.tier-row.t1:hover { background: rgba(122,122,154,0.12); }
+.tier-row.t2 { background: rgba(108,99,255,0.07); border: 1px solid rgba(108,99,255,0.2); }
+.tier-row.t2:hover { background: rgba(108,99,255,0.12); }
+.tier-row.t3 { background: rgba(255,201,71,0.05); border: 1px solid rgba(255,201,71,0.2); }
+.tier-row.t3:hover { background: rgba(255,201,71,0.1); }
+
+.tier-left { display: flex; align-items: center; gap: 9px; }
+.tier-ico { font-size: 0.85rem; }
+
+.tier-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.tier-row.t1 .tier-name { color: var(--tier1); }
+.tier-row.t2 .tier-name { color: var(--tier2); }
+.tier-row.t3 .tier-name { color: var(--tier3); }
+
+.tier-subdesc {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text3);
+  margin-top: 1px;
+}
+
+.tier-right { display: flex; align-items: center; gap: 10px; }
+
+.tier-price {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.tier-row.t1 .tier-price { color: var(--tier1); }
+.tier-row.t2 .tier-price { color: var(--tier2); }
+.tier-row.t3 .tier-price { color: var(--tier3); }
+
+.paypal-btn {
+  background: #0070ba;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 7px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.paypal-btn:hover { background: #005ea6; transform: scale(1.05); }
+.paypal-btn:disabled { background: var(--border2); color: var(--text3); cursor: not-allowed; transform: none; }
+
+/* ====== TEAM SECTION ====== */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.team-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 20px;
+  text-align: center;
+  transition: all 0.3s;
+  animation: fadeUp 0.5s ease both;
+}
+
+.team-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(108,99,255,0.1);
+}
+
+.team-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  background: var(--surface3);
+  border: 2px solid var(--border2);
+  position: relative;
+}
+
+.team-avatar.online::after {
+  content: '';
+  position: absolute;
+  bottom: 3px; right: 3px;
+  width: 12px; height: 12px;
+  background: var(--green);
+  border-radius: 50%;
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.team-name { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+.team-role {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.role-owner { color: var(--gold); }
+.role-dev { color: var(--accent); }
+.role-mod { color: var(--cyan); }
+.role-support { color: var(--green); }
+
+.team-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+.team-tag {
+  font-size: 0.65rem;
+  padding: 3px 9px;
+  border-radius: 100px;
+  background: var(--surface3);
+  color: var(--text3);
+  border: 1px solid var(--border2);
+}
+
+/* ====== SUPPORT SECTION ====== */
+.support-wrapper {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+}
+
+.support-header {
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface2);
+}
+
+.support-header h3 { font-size: 1rem; font-weight: 700; }
+.support-header p { font-size: 0.78rem; color: var(--text2); margin-top: 2px; }
+
+.support-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--green);
+}
+
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 300px;
+}
+
+.chat-msg {
+  display: flex;
+  gap: 12px;
+  animation: fadeUp 0.3s ease;
+}
+
+.chat-msg.own { flex-direction: row-reverse; }
+
+.msg-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.msg-body { max-width: 70%; }
+
+.msg-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+  font-size: 0.72rem;
+}
+
+.chat-msg.own .msg-meta { flex-direction: row-reverse; }
+
+.msg-name { font-weight: 700; }
+.msg-name.is-mod { color: var(--cyan); }
+.msg-name.is-owner { color: var(--gold); }
+.msg-time { color: var(--text3); font-family: var(--font-mono); }
+.msg-badge {
+  font-size: 0.58rem;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.msg-badge.mod { background: rgba(0,212,255,0.15); color: var(--cyan); border: 1px solid rgba(0,212,255,0.3); }
+.msg-badge.owner { background: rgba(255,201,71,0.1); color: var(--gold); border: 1px solid rgba(255,201,71,0.3); }
+
+.msg-bubble {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+}
+
+.chat-msg.own .msg-bubble {
+  background: rgba(108,99,255,0.15);
+  border-color: rgba(108,99,255,0.3);
+}
+
+.support-login-wall {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.support-login-wall h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+.support-login-wall p { color: var(--text2); font-size: 0.85rem; margin-bottom: 24px; line-height: 1.6; }
+
+.chat-input-bar {
+  padding: 16px 28px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: var(--surface2);
+}
+
+.chat-input {
+  flex: 1;
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.chat-input:focus { border-color: var(--accent); }
+.chat-input::placeholder { color: var(--text3); }
+
+.chat-send-btn {
+  background: var(--accent);
+  border: none;
+  color: white;
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.chat-send-btn:hover { background: #7b73ff; transform: scale(1.05); }
+.chat-send-btn:disabled { background: var(--border2); cursor: not-allowed; transform: none; }
+
+/* ====== FOOTER ====== */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 40px;
+  text-align: center;
+}
+
+.footer-logo {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.footer-logo span { color: var(--cyan); }
+
+footer p {
+  font-size: 0.78rem;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  line-height: 1.8;
+}
+
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* ====== DIVIDER ====== */
+.section-divider {
+  position: relative;
+  z-index: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 0 40px;
+}
+
+/* ====== MODALS / OVERLAYS ====== */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(10px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 480px;
+  animation: modalIn 0.3s cubic-bezier(.2,.8,.3,1);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.94) translateY(16px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-head {
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-head h3 { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.4px; }
+.modal-body { padding: 24px 28px; }
+.modal-foot { padding: 16px 28px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+.btn-close {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.btn-close:hover { border-color: var(--red); color: var(--red); }
+
+/* ====== AUTH MODAL ====== */
+.auth-tabs { display: flex; gap: 4px; margin-bottom: 20px; background: var(--surface2); padding: 4px; border-radius: 10px; }
+.auth-tab {
+  flex: 1;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  color: var(--text2);
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.auth-tab.active { background: var(--surface3); color: var(--text); }
+
+/* OTP inputs */
+.otp-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 16px 0;
+}
+.otp-input {
+  width: 46px; height: 54px;
+  background: var(--surface2);
+  border: 2px solid var(--border2);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  caret-color: var(--accent);
+}
+.otp-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.otp-input.filled { border-color: var(--cyan); }
+.otp-input.error { border-color: var(--red); animation: shake 0.4s ease; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%,60% { transform: translateX(-5px); }
+  40%,80% { transform: translateX(5px); }
+}
+
+.email-masked {
+  font-family: var(--font-mono);
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+.resend-link {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-size: 0.75rem;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  text-decoration: underline;
+  padding: 0;
+  transition: color 0.2s;
+}
+.resend-link:hover { color: var(--accent); }
+.resend-link:disabled { cursor: not-allowed; text-decoration: none; }
+
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--text2); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; }
+
+.input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input:focus { border-color: var(--accent); }
+.input::placeholder { color: var(--text3); }
+
+.err { color: var(--red); font-size: 0.75rem; margin-top: 8px; font-family: var(--font-mono); }
+.ok { color: var(--green); font-size: 0.75rem; margin-top: 8px; font-family: var(--font-mono); }
+
+/* ====== ADMIN MODAL ====== */
+.admin-modal {
+  max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-modal .modal-body {
+  overflow-y: auto;
+  flex: 1;
+  padding: 0;
+}
+
+.admin-tabs-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  background: var(--surface2);
+}
+
+.a-tab {
+  padding: 12px 18px;
+  background: transparent;
+  border: none;
+  color: var(--text2);
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+}
+.a-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+
+.a-tab-content { display: none; padding: 24px; }
+.a-tab-content.active { display: block; }
+
+.admin-service-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.tiers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+.tier-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+}
+.tier-box label {
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+  display: block;
+}
+.tier-box.t1 label { color: var(--tier1); }
+.tier-box.t2 label { color: var(--tier2); }
+.tier-box.t3 label { color: var(--tier3); }
+
+.flex-row { display: flex; gap: 8px; align-items: center; }
+.flex-row-sb { display: flex; justify-content: space-between; align-items: center; }
+
+.save-bar {
+  padding: 14px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface2);
+}
+.save-status { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text3); }
+.save-status.saved { color: var(--green); }
+
+/* Toggle */
+.toggle {
+  width: 40px; height: 22px;
+  background: var(--border2);
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  background: white;
+  border-radius: 50%;
+  top: 3px; left: 3px;
+  transition: transform 0.2s;
+}
+.toggle.on { background: var(--green); }
+.toggle.on::after { transform: translateX(18px); }
+
+/* Buttons misc */
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  border-radius: 7px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 9px;
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+.btn-primary:hover { background: #7b73ff; }
+
+.btn-danger {
+  background: rgba(255,77,109,0.12);
+  color: var(--red);
+  border: 1px solid rgba(255,77,109,0.3);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-danger:hover { background: rgba(255,77,109,0.2); }
+
+.btn-success {
+  background: rgba(0,245,147,0.12);
+  color: var(--green);
+  border: 1px solid rgba(0,245,147,0.3);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-success:hover { background: rgba(0,245,147,0.2); }
+
+.btn-secondary {
+  background: var(--surface3);
+  color: var(--text2);
+  border: 1px solid var(--border2);
+  padding: 10px 20px;
+  border-radius: 9px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--text); }
+
+/* User list in admin */
+.user-admin-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.user-admin-info { display: flex; align-items: center; gap: 10px; }
+.user-admin-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--surface3); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+.user-admin-name { font-weight: 700; font-size: 0.88rem; }
+.user-admin-role { font-size: 0.68rem; font-family: var(--font-mono); color: var(--text3); margin-top: 1px; }
+
+select.input { cursor: pointer; }
+select.input option { background: var(--surface2); }
+
+/* Info box */
+.info-box {
+  background: rgba(0,212,255,0.05);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 0.8rem;
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.add-form {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.add-form h4 { font-size: 0.88rem; font-weight: 700; color: var(--cyan); margin-bottom: 16px; }
+
+.form-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+/* Notification toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 0.82rem;
+  z-index: 9999;
+  animation: toastIn 0.3s ease;
+  max-width: 300px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.toast.success { border-color: rgba(0,245,147,0.4); }
+.toast.error { border-color: rgba(255,77,109,0.4); }
+
+@keyframes toastIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Purchase success banner */
+.purchase-banner {
+  background: rgba(0,245,147,0.06);
+  border: 1px solid rgba(0,245,147,0.25);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  animation: fadeUp 0.4s ease;
+}
+.purchase-banner-icon { font-size: 1.5rem; }
+.purchase-banner h4 { font-size: 0.95rem; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+.purchase-banner p { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+.purchase-banner a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.purchase-banner a:hover { text-decoration: underline; }
+
+/* Mobile */
+@media (max-width: 768px) {
+  header { padding: 0 16px; }
+  nav { display: none; }
+  .hero { padding: 60px 20px 50px; }
+  .section { padding: 60px 20px; }
+  #services-grid { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr 1fr; }
+  .tiers-grid { grid-template-columns: 1fr; }
+  .form-grid2 { grid-template-columns: 1fr; }
+  .section-divider { margin: 0 16px; }
+  .tier-right { flex-direction: column; gap: 5px; align-items: flex-end; }
+}
+
+.text-accent { color: var(--accent); }
+.text-cyan { color: var(--cyan); }
+.text-green { color: var(--green); }
+.text-gold { color: var(--gold); }
+.text-muted { color: var(--text2); }
+
+.mt4 { margin-top: 4px; }
+.mt8 { margin-top: 8px; }
+.mt12 { margin-top: 12px; }
+.mt16 { margin-top: 16px; }
+.mb12 { margin-bottom: 12px; }
+.mb16 { margin-bottom: 16px; }
+.gap8 { gap: 8px; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ===== HEADER ===== -->
 <header>
-  <div class="logo">Cap<span>Web</span></div>
-  <nav class="nav-links">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    CapWorks<span> Studio</span>
+  </div>
+  <nav>
     <a href="#services">Services</a>
+    <a href="#team">Équipe</a>
+    <a href="#support">Support</a>
     <a href="#contact">Contact</a>
   </nav>
-  <button class="admin-btn" onclick="openAdmin()">⚙ Admin</button>
+  <div class="header-right" id="headerRight">
+    <button class="btn-ghost" onclick="openAdmin()">⚙ Admin</button>
+    <button class="btn-accent" onclick="openAuth('login')">Connexion</button>
+  </div>
 </header>
 
-<!-- HERO -->
+<!-- ===== HERO ===== -->
 <section class="hero">
-  <div class="hero-tag">✦ Développement sur commande</div>
-  <h1>
-    Votre projet,<br>
-    <span class="line2">livré avec soin</span>
-  </h1>
-  <p>Jeux, logiciels, bots, serveurs — je développe ce que vous imaginez. Choisissez votre niveau de qualité.</p>
-
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-tag"><div class="blink"></div> Développement sur commande</div>
+  <h1>Votre projet,<br><em>livré avec soin</em></h1>
+  <p>Jeux, logiciels, bots, serveurs — nous développons ce que vous imaginez. Choisissez votre niveau de qualité.</p>
   <div class="tier-legend">
-    <div class="tier-badge t1"><div class="dot"></div>Utilisable</div>
-    <div class="tier-badge t2"><div class="dot"></div>De bonne qualité</div>
-    <div class="tier-badge t3"><div class="dot"></div>Fabuleux</div>
+    <div class="tier-pill t1"><div class="dot"></div>Utilisable</div>
+    <div class="tier-pill t2"><div class="dot"></div>De bonne qualité</div>
+    <div class="tier-pill t3"><div class="dot"></div>Fabuleux</div>
   </div>
 </section>
 
-<!-- SERVICES -->
-<section class="services-section" id="services">
-  <div class="section-title">
-    <span class="label">// mes services</span>
-    <h2>Ce que je peux créer</h2>
+<!-- ===== SERVICES ===== -->
+<section class="section" id="services">
+  <div class="section-head">
+    <span class="section-label">// nos services</span>
+    <h2>Ce que nous créons</h2>
   </div>
   <div id="services-grid"></div>
 </section>
 
-<!-- FOOTER -->
+<div class="section-divider"></div>
+
+<!-- ===== TEAM ===== -->
+<section class="section" id="team">
+  <div class="section-head">
+    <span class="section-label">// notre équipe</span>
+    <h2>Des gens de confiance</h2>
+  </div>
+  <div class="team-grid" id="team-grid"></div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ===== SUPPORT ===== -->
+<section class="section" id="support">
+  <div class="section-head">
+    <span class="section-label">// assistance</span>
+    <h2>Support en direct</h2>
+  </div>
+  <div id="purchase-banner-zone"></div>
+  <div class="support-wrapper">
+    <div class="support-header">
+      <div>
+        <h3>💬 Salon de Support</h3>
+        <p>Posez vos questions, nos modérateurs vous répondent</p>
+      </div>
+      <div class="support-status">
+        <div class="blink" style="width:7px;height:7px;border-radius:50%;background:var(--green);"></div>
+        En ligne
+      </div>
+    </div>
+    <div id="chat-area" class="chat-area"></div>
+    <div class="chat-input-bar">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Connectez-vous pour écrire..." disabled onkeypress="if(event.key==='Enter')sendMsg()">
+      <button class="chat-send-btn" id="chat-send" onclick="sendMsg()" disabled>➤</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PAYMENT CONFIRM MODAL ===== -->
+<div class="overlay" id="payConfirmOverlay" onclick="handleOvClick(event,'payConfirmOverlay')">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🛒 Confirmer la commande</h3>
+      <button class="btn-close" onclick="closeOverlay('payConfirmOverlay')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="pay-confirm-summary" style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:0.85rem;line-height:1.8;"></div>
+      <div class="form-group">
+        <label>Votre adresse email <span style="color:var(--red);">*</span></label>
+        <input type="email" class="input" id="pay-email" placeholder="exemple@mail.com">
+        <p style="color:var(--text3);font-size:0.72rem;font-family:var(--font-mono);margin-top:6px;">Nous utiliserons cet email pour vous contacter après paiement.</p>
+      </div>
+      <div class="err" id="pay-email-err"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeOverlay('payConfirmOverlay')">Annuler</button>
+      <button class="btn-accent" id="pay-confirm-btn" onclick="confirmAndPay()">Payer via PayPal →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
 <footer id="contact">
-  <div>DevForge — Développement sur mesure &nbsp;·&nbsp; Tous droits réservés</div>
-  <div style="margin-top:8px;color:#3a3a5c">Paiement sécurisé via PayPal</div>
+  <div class="footer-logo">CapWorks <span>Studio</span></div>
+  <p>
+    Développement sur mesure &nbsp;·&nbsp; Tous droits réservés 2025<br>
+    Paiement sécurisé via PayPal &nbsp;·&nbsp; 
+    <a href="https://discord.gg/52AJ2jgHda" target="_blank">Discord CapWorks Studio</a>
+  </p>
 </footer>
 
-<!-- ADMIN OVERLAY -->
-<div class="admin-overlay" id="adminOverlay" onclick="handleOverlayClick(event)">
-  <div class="admin-panel">
-    <div class="admin-header">
-      <h2>Panneau Admin <span>// ACCÈS RESTREINT</span></h2>
-      <button class="close-btn" onclick="closeAdmin()">✕</button>
+<!-- ===== AUTH MODAL ===== -->
+<div class="overlay" id="authOverlay" onclick="handleOvClick(event,'authOverlay')">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="auth-title">Connexion</h3>
+      <button class="btn-close" onclick="closeOverlay('authOverlay')">✕</button>
     </div>
-
-    <!-- LOGIN -->
-    <div class="admin-login" id="adminLogin">
-      <h3>🔐 Connexion requise</h3>
-      <p>Entrez le mot de passe pour accéder au panneau d'administration</p>
-      <div class="login-form">
-        <input type="password" class="input-field" id="adminPassword" placeholder="Mot de passe..." onkeypress="if(event.key==='Enter') loginAdmin()">
-        <button class="btn-primary" onclick="loginAdmin()">Accéder →</button>
-        <div class="error-msg" id="loginError"></div>
+    <div class="modal-body">
+      <div class="auth-tabs" id="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuth('login')">Se connecter</button>
+        <button class="auth-tab" onclick="switchAuth('register')">Créer un compte</button>
       </div>
+      <div id="auth-form"></div>
     </div>
+  </div>
+</div>
 
-    <!-- ADMIN CONTENT -->
-    <div class="admin-content" id="adminContent">
-      <div class="admin-tabs">
-        <button class="admin-tab active" onclick="switchTab('services')">📦 Services</button>
-        <button class="admin-tab" onclick="switchTab('paypal')">💳 PayPal</button>
-        <button class="admin-tab" onclick="switchTab('settings')">⚙ Paramètres</button>
-      </div>
-
-      <!-- TAB: SERVICES -->
-      <div class="tab-content active" id="tab-services">
-        <div class="add-service-form">
-          <h3>+ Ajouter un nouveau service</h3>
-          <div class="form-grid">
-            <div class="form-field">
-              <label>Nom du service</label>
-              <input type="text" class="input-field" id="new-name" placeholder="Ex: Application Web">
-            </div>
-            <div class="form-field">
-              <label>Icône (emoji)</label>
-              <input type="text" class="input-field" id="new-icon" placeholder="🚀" maxlength="4">
-            </div>
-            <div class="form-field full-width">
-              <label>Description courte</label>
-              <input type="text" class="input-field" id="new-desc" placeholder="Décrivez brièvement le service...">
-            </div>
-          </div>
-          <div class="tiers-editor" style="margin-bottom:16px;">
-            <div class="tier-editor-box t1">
-              <label>Utilisable</label>
-              <div class="tier-inputs">
-                <input type="number" class="input-field" id="new-p1" placeholder="Prix (€)" min="0">
-                <input type="text" class="input-field" id="new-d1" placeholder="Description du tier">
-              </div>
-            </div>
-            <div class="tier-editor-box t2">
-              <label>Bonne qualité</label>
-              <div class="tier-inputs">
-                <input type="number" class="input-field" id="new-p2" placeholder="Prix (€)" min="0">
-                <input type="text" class="input-field" id="new-d2" placeholder="Description du tier">
-              </div>
-            </div>
-            <div class="tier-editor-box t3">
-              <label>Fabuleux</label>
-              <div class="tier-inputs">
-                <input type="number" class="input-field" id="new-p3" placeholder="Prix (€)" min="0">
-                <input type="text" class="input-field" id="new-d3" placeholder="Description du tier">
-              </div>
-            </div>
-          </div>
-          <button class="btn-success" onclick="addService()">✦ Ajouter ce service</button>
-        </div>
-
-        <div class="service-list-admin" id="admin-service-list"></div>
-      </div>
-
-      <!-- TAB: PAYPAL -->
-      <div class="tab-content" id="tab-paypal">
-        <div class="paypal-settings" id="paypal-links-list"></div>
-      </div>
-
-      <!-- TAB: SETTINGS -->
-      <div class="tab-content" id="tab-settings">
-        <div style="display:flex;flex-direction:column;gap:16px;">
-          <div class="service-item-admin">
-            <h4 style="margin-bottom:8px;font-size:0.95rem;">🔑 Changer le mot de passe</h4>
-            <div style="display:flex;flex-direction:column;gap:8px;max-width:320px;">
-              <input type="password" class="input-field" id="new-pass1" placeholder="Nouveau mot de passe">
-              <input type="password" class="input-field" id="new-pass2" placeholder="Confirmer le mot de passe">
-              <button class="btn-primary" onclick="changePassword()" style="margin-top:4px;">Changer</button>
-              <div class="error-msg" id="passError"></div>
-            </div>
-          </div>
-          <div class="service-item-admin">
-            <h4 style="margin-bottom:8px;font-size:0.95rem;">🗑 Zone dangereuse</h4>
-            <p style="color:var(--muted);font-size:0.85rem;margin-bottom:12px;">Réinitialiser tous les services aux valeurs par défaut.</p>
-            <button class="btn-danger" onclick="resetToDefault()">Réinitialiser tout</button>
-          </div>
-          <div class="service-item-admin">
-            <h4 style="margin-bottom:8px;font-size:0.95rem;">ℹ️ À propos</h4>
-            <p style="color:var(--muted);font-size:0.85rem;line-height:1.6;">Site DevForge — Panneau d'administration.<br>Les données sont sauvegardées localement dans votre navigateur (localStorage).<br>Pour un déploiement permanent, hébergez ce fichier sur un serveur.</p>
-          </div>
+<!-- ===== ADMIN MODAL ===== -->
+<div class="overlay" id="adminOverlay" onclick="handleOvClick(event,'adminOverlay')">
+  <div class="modal admin-modal">
+    <div class="modal-head">
+      <h3>Panneau Admin <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);font-weight:400;margin-left:8px;">// RESTREINT</span></h3>
+      <button class="btn-close" onclick="closeOverlay('adminOverlay')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="admin-login-wall" style="padding:48px 28px;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:12px;">🔐</div>
+        <h4 style="font-size:1rem;font-weight:700;margin-bottom:6px;">Accès restreint</h4>
+        <p style="color:var(--text2);font-size:0.82rem;margin-bottom:20px;">Entrez le mot de passe administrateur</p>
+        <div style="max-width:280px;margin:0 auto;">
+          <input type="password" class="input mb12" id="admin-pw" placeholder="Mot de passe..." onkeypress="if(event.key==='Enter')loginAdmin()">
+          <button class="btn-primary" onclick="loginAdmin()">Accéder →</button>
+          <div class="err mt8" id="admin-pw-err"></div>
         </div>
       </div>
-    </div>
+      <div id="admin-panel" style="display:none;">
+        <div class="admin-tabs-bar">
+          <button class="a-tab active" onclick="aTab('services')">📦 Services</button>
+          <button class="a-tab" onclick="aTab('paypal')">💳 PayPal</button>
+          <button class="a-tab" onclick="aTab('users')">👥 Utilisateurs</button>
+          <button class="a-tab" onclick="aTab('team')">🏅 Équipe</button>
+          <button class="a-tab" onclick="aTab('settings')">⚙ Paramètres</button>
+        </div>
 
-    <!-- SAVE BAR -->
-    <div class="save-bar" id="saveBar" style="display:none;">
-      <div class="save-status" id="saveStatus">Modifications non sauvegardées</div>
+        <!-- SERVICES -->
+        <div class="a-tab-content active" id="atab-services">
+          <div class="add-form">
+            <h4>+ Ajouter un service</h4>
+            <div class="form-grid2">
+              <div class="form-group"><label>Nom</label><input type="text" class="input" id="ns-name" placeholder="Ex: Application Web"></div>
+              <div class="form-group"><label>Icône (emoji)</label><input type="text" class="input" id="ns-icon" placeholder="🚀" maxlength="4"></div>
+              <div class="form-group" style="grid-column:1/-1"><label>Description</label><input type="text" class="input" id="ns-desc" placeholder="Description courte..."></div>
+            </div>
+            <div class="tiers-grid" style="margin-bottom:12px;">
+              <div class="tier-box t1"><label>Utilisable</label><input type="number" class="input mb12" id="ns-p1" placeholder="Prix (€)" min="0"><input type="text" class="input" id="ns-d1" placeholder="Description..."></div>
+              <div class="tier-box t2"><label>Bonne qualité</label><input type="number" class="input mb12" id="ns-p2" placeholder="Prix (€)" min="0"><input type="text" class="input" id="ns-d2" placeholder="Description..."></div>
+              <div class="tier-box t3"><label>Fabuleux</label><input type="number" class="input mb12" id="ns-p3" placeholder="Prix (€)" min="0"><input type="text" class="input" id="ns-d3" placeholder="Description..."></div>
+            </div>
+            <button class="btn-success" onclick="addService()">✦ Ajouter</button>
+          </div>
+          <div id="admin-service-list"></div>
+        </div>
+
+        <!-- PAYPAL -->
+        <div class="a-tab-content" id="atab-paypal">
+          <div class="info-box">💡 Collez vos liens PayPal.me ici.<br>Ex: https://paypal.me/votrenom</div>
+          <div id="admin-paypal-list"></div>
+        </div>
+
+        <!-- USERS -->
+        <div class="a-tab-content" id="atab-users">
+          <p style="color:var(--text2);font-size:0.82rem;margin-bottom:16px;">Gérez les rôles des comptes. Les modérateurs peuvent répondre dans le support.</p>
+          <div id="admin-user-list"></div>
+        </div>
+
+        <!-- TEAM (public display) -->
+        <div class="a-tab-content" id="atab-team">
+          <div class="add-form">
+            <h4>+ Ajouter un membre d'équipe</h4>
+            <div class="form-grid2">
+              <div class="form-group"><label>Pseudo</label><input type="text" class="input" id="nt-name" placeholder="Ex: Capito"></div>
+              <div class="form-group"><label>Emoji avatar</label><input type="text" class="input" id="nt-avatar" placeholder="👾" maxlength="4"></div>
+              <div class="form-group"><label>Rôle</label>
+                <select class="input" id="nt-role">
+                  <option value="owner">Fondateur</option>
+                  <option value="dev">Développeur</option>
+                  <option value="mod">Modérateur</option>
+                  <option value="support">Support</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Tags (séparés par virgule)</label><input type="text" class="input" id="nt-tags" placeholder="Python, Discord, JS"></div>
+              <div class="form-group"><label>Statut en ligne</label>
+                <select class="input" id="nt-online">
+                  <option value="1">En ligne</option>
+                  <option value="0">Hors ligne</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn-success" onclick="addTeamMember()">✦ Ajouter</button>
+          </div>
+          <div id="admin-team-list"></div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="a-tab-content" id="atab-settings">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div class="admin-service-item">
+              <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:10px;">🔑 Changer le mot de passe admin</h4>
+              <div style="max-width:300px;display:flex;flex-direction:column;gap:8px;">
+                <input type="password" class="input" id="np1" placeholder="Nouveau mot de passe">
+                <input type="password" class="input" id="np2" placeholder="Confirmer">
+                <button class="btn-primary" onclick="changeAdminPass()">Changer</button>
+                <div id="pass-msg" class="err"></div>
+              </div>
+            </div>
+            <div class="admin-service-item">
+              <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">🔗 Webhook Discord</h4>
+              <p style="color:var(--text2);font-size:0.78rem;margin-bottom:10px;">Les paiements seront annoncés dans le salon #payments (ID: 1490306578749063178) via ce webhook.</p>
+              <input type="url" class="input mb12" id="discord-webhook" placeholder="https://discord.com/api/webhooks/...">
+              <button class="btn-success btn-sm" onclick="saveWebhook()">Sauvegarder le webhook</button>
+              <div id="webhook-msg" class="ok mt8" style="display:none;"></div>
+            </div>
+            <div class="admin-service-item">
+              <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">🗑 Zone dangereuse</h4>
+              <p style="color:var(--text2);font-size:0.78rem;margin-bottom:10px;">Réinitialiser tous les services aux valeurs par défaut.</p>
+              <button class="btn-danger" onclick="resetToDefault()">Réinitialiser tout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="save-bar" id="admin-save-bar" style="display:none;">
+      <div class="save-status" id="save-status">Modifications non sauvegardées</div>
       <div style="display:flex;gap:8px;">
         <button class="btn-danger btn-sm" onclick="discardChanges()">Annuler</button>
-        <button class="btn-primary btn-sm" onclick="saveChanges()">💾 Sauvegarder</button>
+        <button class="btn-accent btn-sm" onclick="saveChanges()">💾 Sauvegarder</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// ============================
-// DATA
-// ============================
+// ================================================
+//  DATA
+// ================================================
 const DEFAULT_SERVICES = [
-  {
-    id: 1, name: "Jeu vidéo PC", icon: "🖥️", iconBg: "icon-bg-1",
-    desc: "Développement de jeux complets pour Windows/Linux/Mac",
-    active: true,
-    tiers: [
-      { name: "Utilisable", price: 80, desc: "Gameplay basique, fonctionnel", paypal: "" },
-      { name: "De bonne qualité", price: 200, desc: "Graphismes soignés, polish", paypal: "" },
-      { name: "Fabuleux", price: 500, desc: "Production complète, effets premium", paypal: "" }
-    ]
-  },
-  {
-    id: 2, name: "Jeu vidéo Android", icon: "📱", iconBg: "icon-bg-2",
-    desc: "Jeux mobiles optimisés pour Android",
-    active: true,
-    tiers: [
-      { name: "Utilisable", price: 60, desc: "Gameplay simple, publié sur Play Store", paypal: "" },
-      { name: "De bonne qualité", price: 180, desc: "UI/UX mobile pensé, animations", paypal: "" },
-      { name: "Fabuleux", price: 450, desc: "Expérience AAA mobile, effets visuels", paypal: "" }
-    ]
-  },
-  {
-    id: 3, name: "Logiciel", icon: "⚙️", iconBg: "icon-bg-3",
-    desc: "Applications desktop ou utilitaires sur mesure",
-    active: true,
-    tiers: [
-      { name: "Utilisable", price: 50, desc: "Fonctionnel, interface simple", paypal: "" },
-      { name: "De bonne qualité", price: 150, desc: "Interface intuitive, bien documenté", paypal: "" },
-      { name: "Fabuleux", price: 400, desc: "UX premium, fonctionnalités avancées", paypal: "" }
-    ]
-  },
-  {
-    id: 4, name: "Plugin Minecraft Bedrock", icon: "🧱", iconBg: "icon-bg-4",
-    desc: "Add-ons et comportements pour serveurs Bedrock",
-    active: true,
-    tiers: [
-      { name: "Utilisable", price: 30, desc: "Plugin simple, bien fonctionnel", paypal: "" },
-      { name: "De bonne qualité", price: 80, desc: "Optimisé, configurable", paypal: "" },
-      { name: "Fabuleux", price: 200, desc: "Complexe, multi-fonctions, textures custom", paypal: "" }
-    ]
-  },
-  {
-    id: 5, name: "Plugin Minecraft Java", icon: "☕", iconBg: "icon-bg-5",
-    desc: "Plugins Bukkit/Spigot/Paper pour serveurs Java",
-    active: true,
-    tiers: [
-      { name: "Utilisable", price: 35, desc: "Fonctionnel, commandes de base", paypal: "" },
-      { name: "De bonne qualité", price: 90, desc: "API avancée, performances optimisées", paypal: "" },
-      { name: "Fabuleux", price: 220, desc: "Architecture solide, features premium", paypal: "" }
-    ]
-  },
-  {
-    id: 6, name: "Bot Discord", icon: "🤖", iconBg: "icon-bg-1",
-    desc: "Bots Discord personnalisés avec commandes et automatisations",
-    active: true,
-    tiers: [
-      { name: "Utilisable", price: 25, desc: "Commandes de base, modération simple", paypal: "" },
-      { name: "De bonne qualité", price: 70, desc: "Dashboard, slash commands, logs", paypal: "" },
-      { name: "Fabuleux", price: 180, desc: "Système complet, base de données, API", paypal: "" }
-    ]
-  },
-  {
-    id: 7, name: "Serveur Minecraft Bedrock", icon: "🌐", iconBg: "icon-bg-2",
-    desc: "Configuration et setup complet de serveur Bedrock",
-    active: true,
-    tiers: [
-      { name: "Utilisable", price: 20, desc: "Serveur de base configuré", paypal: "" },
-      { name: "De bonne qualité", price: 60, desc: "Plugins, anti-cheat, sécurité", paypal: "" },
-      { name: "Fabuleux", price: 160, desc: "Réseau complet, hub, mini-jeux", paypal: "" }
-    ]
-  },
-  {
-    id: 8, name: "Serveur Minecraft Java", icon: "🏰", iconBg: "icon-bg-3",
-    desc: "Setup complet de serveur Minecraft Java Edition",
-    active: true,
-    tiers: [
-      { name: "Utilisable", price: 25, desc: "Spigot/Paper configuré", paypal: "" },
-      { name: "De bonne qualité", price: 70, desc: "Plugins essentiels, optimisé", paypal: "" },
-      { name: "Fabuleux", price: 180, desc: "Réseau BungeeCord, architecture pro", paypal: "" }
-    ]
-  }
+  { id:1, name:"Jeu vidéo PC", icon:"🖥️", iconBg:"icon-bg-1", desc:"Développement de jeux complets pour Windows/Linux/Mac", active:true,
+    tiers:[{name:"Utilisable",price:80,desc:"Gameplay basique, fonctionnel",paypal:""},{name:"De bonne qualité",price:200,desc:"Graphismes soignés, polish",paypal:""},{name:"Fabuleux",price:500,desc:"Production complète, effets premium",paypal:""}]},
+  { id:2, name:"Jeu vidéo Android", icon:"📱", iconBg:"icon-bg-2", desc:"Jeux mobiles optimisés pour Android", active:true,
+    tiers:[{name:"Utilisable",price:60,desc:"Gameplay simple, publié sur Play Store",paypal:""},{name:"De bonne qualité",price:180,desc:"UI/UX mobile pensé, animations",paypal:""},{name:"Fabuleux",price:450,desc:"Expérience AAA mobile, effets visuels",paypal:""}]},
+  { id:3, name:"Logiciel", icon:"⚙️", iconBg:"icon-bg-3", desc:"Applications desktop ou utilitaires sur mesure", active:true,
+    tiers:[{name:"Utilisable",price:50,desc:"Fonctionnel, interface simple",paypal:""},{name:"De bonne qualité",price:150,desc:"Interface intuitive, bien documenté",paypal:""},{name:"Fabuleux",price:400,desc:"UX premium, fonctionnalités avancées",paypal:""}]},
+  { id:4, name:"Plugin Minecraft Bedrock", icon:"🧱", iconBg:"icon-bg-4", desc:"Add-ons et comportements pour serveurs Bedrock", active:true,
+    tiers:[{name:"Utilisable",price:30,desc:"Plugin simple, bien fonctionnel",paypal:""},{name:"De bonne qualité",price:80,desc:"Optimisé, configurable",paypal:""},{name:"Fabuleux",price:200,desc:"Complexe, multi-fonctions, textures custom",paypal:""}]},
+  { id:5, name:"Plugin Minecraft Java", icon:"☕", iconBg:"icon-bg-5", desc:"Plugins Bukkit/Spigot/Paper pour serveurs Java", active:true,
+    tiers:[{name:"Utilisable",price:35,desc:"Fonctionnel, commandes de base",paypal:""},{name:"De bonne qualité",price:90,desc:"API avancée, performances optimisées",paypal:""},{name:"Fabuleux",price:220,desc:"Architecture solide, features premium",paypal:""}]},
+  { id:6, name:"Bot Discord", icon:"🤖", iconBg:"icon-bg-1", desc:"Bots Discord personnalisés avec commandes et automatisations", active:true,
+    tiers:[{name:"Utilisable",price:25,desc:"Commandes de base, modération simple",paypal:""},{name:"De bonne qualité",price:70,desc:"Dashboard, slash commands, logs",paypal:""},{name:"Fabuleux",price:180,desc:"Système complet, base de données, API",paypal:""}]},
+  { id:7, name:"Serveur Minecraft Bedrock", icon:"🌐", iconBg:"icon-bg-2", desc:"Configuration et setup complet de serveur Bedrock", active:true,
+    tiers:[{name:"Utilisable",price:20,desc:"Serveur de base configuré",paypal:""},{name:"De bonne qualité",price:60,desc:"Plugins, anti-cheat, sécurité",paypal:""},{name:"Fabuleux",price:160,desc:"Réseau complet, hub, mini-jeux",paypal:""}]},
+  { id:8, name:"Serveur Minecraft Java", icon:"🏰", iconBg:"icon-bg-3", desc:"Setup complet de serveur Minecraft Java Edition", active:true,
+    tiers:[{name:"Utilisable",price:25,desc:"Spigot/Paper configuré",paypal:""},{name:"De bonne qualité",price:70,desc:"Plugins essentiels, optimisé",paypal:""},{name:"Fabuleux",price:180,desc:"Réseau BungeeCord, architecture pro",paypal:""}]}
 ];
 
-let services = [];
-let adminPassword = "admin123";
-let unsavedChanges = false;
-let isLoggedIn = false;
+const DEFAULT_TEAM = [
+  { id:1, name:"Capito", avatar:"👑", role:"owner", tags:["Fondateur","Full-stack","Game Dev"], online:true },
+  { id:2, name:"Élix", avatar:"⚡", role:"dev", tags:["Python","Discord.py","Backend"], online:true },
+  { id:3, name:"Nova", avatar:"🛡️", role:"mod", tags:["Support","Modération","Community"], online:false }
+];
 
-// ============================
-// LOCAL STORAGE
-// ============================
-function loadData() {
+const TIER_CLASSES = ['t1','t2','t3'];
+const TIER_ICONS = ['⚡','✦','👑'];
+const ROLE_LABELS = { owner:'Fondateur', dev:'Développeur', mod:'Modérateur', support:'Support' };
+const ROLE_CSS = { owner:'role-owner', dev:'role-dev', mod:'role-mod', support:'role-support' };
+
+let services = [];
+let team = [];
+let users = {}; // { username: { hash, role, emoji } }
+let messages = []; // { user, emoji, role, text, time }
+let adminPassword = "admin123";
+let currentUser = null; // { username, role, emoji }
+let discordWebhook = "";
+let unsaved = false;
+let adminLoggedIn = false;
+
+// ================================================
+//  STORAGE
+// ================================================
+function load() {
   try {
-    const saved = localStorage.getItem('devforge_services');
-    const savedPass = localStorage.getItem('devforge_password');
-    if (saved) services = JSON.parse(saved);
-    else services = JSON.parse(JSON.stringify(DEFAULT_SERVICES));
-    if (savedPass) adminPassword = savedPass;
+    services = JSON.parse(localStorage.getItem('cw_services') || 'null') || JSON.parse(JSON.stringify(DEFAULT_SERVICES));
+    team = JSON.parse(localStorage.getItem('cw_team') || 'null') || JSON.parse(JSON.stringify(DEFAULT_TEAM));
+    users = JSON.parse(localStorage.getItem('cw_users') || '{}');
+    messages = JSON.parse(localStorage.getItem('cw_messages') || '[]');
+    adminPassword = localStorage.getItem('cw_adminpw') || 'admin123';
+    discordWebhook = localStorage.getItem('cw_webhook') || '';
+    const cu = localStorage.getItem('cw_currentuser');
+    if (cu) currentUser = JSON.parse(cu);
   } catch(e) {
     services = JSON.parse(JSON.stringify(DEFAULT_SERVICES));
+    team = JSON.parse(JSON.stringify(DEFAULT_TEAM));
   }
 }
 
-function saveData() {
-  localStorage.setItem('devforge_services', JSON.stringify(services));
-  localStorage.setItem('devforge_password', adminPassword);
+function save() {
+  localStorage.setItem('cw_services', JSON.stringify(services));
+  localStorage.setItem('cw_team', JSON.stringify(team));
+  localStorage.setItem('cw_users', JSON.stringify(users));
+  localStorage.setItem('cw_messages', JSON.stringify(messages));
+  localStorage.setItem('cw_adminpw', adminPassword);
+  localStorage.setItem('cw_webhook', discordWebhook);
+  if (currentUser) localStorage.setItem('cw_currentuser', JSON.stringify(currentUser));
+  else localStorage.removeItem('cw_currentuser');
 }
 
-// ============================
-// RENDER PUBLIC
-// ============================
-const tierClasses = ['t1', 't2', 't3'];
-const tierIcons = ['⚡', '✦', '👑'];
+// Simple hash
+function hashPass(p) {
+  let h = 0;
+  for (let i = 0; i < p.length; i++) h = (Math.imul(31, h) + p.charCodeAt(i)) | 0;
+  return h.toString(36);
+}
 
+// ================================================
+//  RENDER SERVICES (public)
+// ================================================
 function renderServices() {
   const grid = document.getElementById('services-grid');
   grid.innerHTML = '';
-
   services.forEach((s, i) => {
     const card = document.createElement('div');
-    card.className = `service-card ${!s.active ? 'unavailable' : ''}`;
-    card.style.animationDelay = `${i * 0.08}s`;
+    card.className = `service-card${!s.active ? ' unavailable' : ''}`;
+    card.style.animationDelay = `${i * 0.07}s`;
 
     const tiersHtml = s.tiers.map((t, ti) => `
-      <div class="tier-row ${tierClasses[ti]}">
+      <div class="tier-row ${TIER_CLASSES[ti]}">
         <div class="tier-left">
-          <span class="tier-icon">${tierIcons[ti]}</span>
+          <span class="tier-ico">${TIER_ICONS[ti]}</span>
           <div>
             <div class="tier-name">${t.name}</div>
-            <div class="tier-desc">${t.desc || '—'}</div>
+            <div class="tier-subdesc">${t.desc || '—'}</div>
           </div>
         </div>
         <div class="tier-right">
           <div class="tier-price">${t.price}€</div>
           ${t.paypal
-            ? `<button class="paypal-btn" onclick="window.open('${t.paypal}','_blank')">PayPal →</button>`
-            : `<button class="paypal-btn" disabled title="Lien PayPal non configuré">Bientôt</button>`
-          }
+            ? `<button class="paypal-btn" onclick="handlePayment('${escHtml(s.name)}','${escHtml(t.name)}',${t.price},'${escHtml(t.paypal)}')">PayPal →</button>`
+            : `<button class="paypal-btn" disabled>Bientôt</button>`}
         </div>
       </div>
     `).join('');
 
     card.innerHTML = `
-      <div class="card-header">
+      <div class="card-top">
         <div class="card-icon ${s.iconBg}">${s.icon}</div>
         <div class="card-info">
-          <h3>${s.name}${!s.active ? '<span class="unavailable-badge">Indisponible</span>' : ''}</h3>
-          <p>${s.desc}</p>
+          <h3>${escHtml(s.name)}${!s.active ? '<span class="badge-na">Indisponible</span>' : ''}</h3>
+          <p>${escHtml(s.desc)}</p>
         </div>
       </div>
       <div class="card-tiers">${tiersHtml}</div>
     `;
-
     grid.appendChild(card);
   });
 }
 
-// ============================
-// ADMIN
-// ============================
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ================================================
+//  PAYMENT HANDLER
+// ================================================
+
+// Pending payment data (set before modal opens)
+let _pendingPayment = null;
+
+const TIER_NUMS = { 'Utilisable': 1, 'De bonne qualité': 2, 'Fabuleux': 3 };
+
+function handlePayment(serviceName, tierName, price, paypalUrl) {
+  // Store pending data
+  _pendingPayment = { serviceName, tierName, price, paypalUrl };
+
+  // Pre-fill email if user is logged in and has one
+  const emailInput = document.getElementById('pay-email');
+  emailInput.value = '';
+  document.getElementById('pay-email-err').textContent = '';
+
+  // Show summary
+  document.getElementById('pay-confirm-summary').innerHTML = `
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+      <span style="color:var(--text2);">Service</span>
+      <span style="font-weight:700;">${escHtml(serviceName)}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+      <span style="color:var(--text2);">Niveau</span>
+      <span style="font-weight:700;">${escHtml(tierName)}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;">
+      <span style="color:var(--text2);">Total</span>
+      <span style="font-weight:800;color:var(--green);">${price}€</span>
+    </div>
+  `;
+
+  document.getElementById('payConfirmOverlay').classList.add('open');
+  setTimeout(() => emailInput.focus(), 200);
+}
+
+async function confirmAndPay() {
+  if (!_pendingPayment) return;
+
+  const emailInput = document.getElementById('pay-email');
+  const email = emailInput.value.trim();
+  const err = document.getElementById('pay-email-err');
+
+  // Validate email
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    err.textContent = '✕ Veuillez entrer un email valide';
+    emailInput.focus();
+    return;
+  }
+
+  const { serviceName, tierName, price, paypalUrl } = _pendingPayment;
+  const buyerName = currentUser ? currentUser.username : 'Visiteur';
+
+  // Close modal & open PayPal
+  closeOverlay('payConfirmOverlay');
+  window.open(paypalUrl, '_blank');
+
+  // Show success banner
+  const bannerZone = document.getElementById('purchase-banner-zone');
+  bannerZone.innerHTML = `
+    <div class="purchase-banner">
+      <div class="purchase-banner-icon">✅</div>
+      <div>
+        <h4>Commande confirmée — ${escHtml(serviceName)} · ${escHtml(tierName)} · ${price}€</h4>
+        <p>
+          Un membre de l'équipe vous contactera prochainement à <strong style="color:var(--cyan);">${escHtml(email)}</strong>.<br>
+          En attendant, rejoignez la CapWorks Studio sur Discord :
+          <a href="https://discord.gg/52AJ2jgHda" target="_blank">discord.gg/52AJ2jgHda</a>
+        </p>
+      </div>
+    </div>
+  `;
+  setTimeout(() => bannerZone.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200);
+
+  // Discord webhook
+  if (discordWebhook) {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+
+    try {
+      await fetch(discordWebhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          embeds: [{
+            title: '💸 Paiement Reçu — CapWorks Studio',
+            color: 0x6c63ff,
+            description:
+              `**${buyerName}** a acheté le service **${serviceName}** — niveau **${tierName}** — **${price}€**\n` +
+              `📅 **${dateStr}** à **${timeStr}**\n\n` +
+              `📬 Contactez ici : \`${email}\``,
+            footer: { text: 'CapWorks Studio · Paiement PayPal' },
+            timestamp: now.toISOString()
+          }]
+        })
+      });
+    } catch(e) { console.warn('Webhook Discord error:', e); }
+  }
+
+  toast(`Commande confirmée ! Vérifiez votre email.`, 'success');
+  _pendingPayment = null;
+}
+
+// ================================================
+//  RENDER TEAM (public)
+// ================================================
+function renderTeam() {
+  const grid = document.getElementById('team-grid');
+  grid.innerHTML = '';
+  team.forEach((m, i) => {
+    const div = document.createElement('div');
+    div.className = 'team-card';
+    div.style.animationDelay = `${i * 0.08}s`;
+    const tagsHtml = m.tags.map(t => `<span class="team-tag">${escHtml(t)}</span>`).join('');
+    div.innerHTML = `
+      <div class="team-avatar${m.online ? ' online' : ''}">${m.avatar}</div>
+      <div class="team-name">${escHtml(m.name)}</div>
+      <div class="team-role ${ROLE_CSS[m.role] || ''}">${ROLE_LABELS[m.role] || m.role}</div>
+      <div class="team-tags">${tagsHtml}</div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// ================================================
+//  CHAT / SUPPORT
+// ================================================
+function renderChat() {
+  const area = document.getElementById('chat-area');
+  area.innerHTML = '';
+  if (messages.length === 0) {
+    area.innerHTML = `<div style="text-align:center;color:var(--text3);font-size:0.82rem;padding:40px 0;font-family:var(--font-mono);">— Aucun message pour l'instant —</div>`;
+    return;
+  }
+  messages.slice(-50).forEach(m => {
+    const isOwn = currentUser && m.user === currentUser.username;
+    const isMod = m.role === 'mod' || m.role === 'owner';
+    const div = document.createElement('div');
+    div.className = `chat-msg${isOwn ? ' own' : ''}`;
+
+    const nameCls = m.role === 'owner' ? 'is-owner' : (m.role === 'mod' ? 'is-mod' : '');
+    const badgeHtml = m.role === 'owner'
+      ? `<span class="msg-badge owner">Owner</span>`
+      : m.role === 'mod'
+        ? `<span class="msg-badge mod">Mod</span>`
+        : '';
+
+    div.innerHTML = `
+      <div class="msg-avatar">${m.emoji || '👤'}</div>
+      <div class="msg-body">
+        <div class="msg-meta">
+          <span class="msg-name ${nameCls}">${escHtml(m.user)}</span>
+          ${badgeHtml}
+          <span class="msg-time">${m.time}</span>
+        </div>
+        <div class="msg-bubble">${escHtml(m.text)}</div>
+      </div>
+    `;
+    area.appendChild(div);
+  });
+  area.scrollTop = area.scrollHeight;
+}
+
+function sendMsg() {
+  if (!currentUser) return;
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+
+  messages.push({
+    user: currentUser.username,
+    emoji: currentUser.emoji || '👤',
+    role: currentUser.role,
+    text,
+    time: timeStr
+  });
+
+  save();
+  input.value = '';
+  renderChat();
+}
+
+function updateChatUI() {
+  const input = document.getElementById('chat-input');
+  const send = document.getElementById('chat-send');
+  if (currentUser) {
+    input.disabled = false;
+    input.placeholder = 'Écrivez votre message...';
+    send.disabled = false;
+  } else {
+    input.disabled = true;
+    input.placeholder = 'Connectez-vous pour écrire...';
+    send.disabled = true;
+  }
+}
+
+// ================================================
+//  AUTH
+// ================================================
+const EMOJIS = ['😎','🧑‍💻','👾','🦊','🐺','🐉','🦋','🌟','⚡','🎯','🦁','🐸'];
+
+// Pending registration data (before email verified)
+let _pendingReg = null;
+let _otpCode = null;
+let _resendTimer = null;
+
+function openAuth(tab = 'login') {
+  document.getElementById('authOverlay').classList.add('open');
+  switchAuth(tab);
+}
+
+function switchAuth(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t, i) => {
+    t.classList.toggle('active', ['login','register'][i] === tab);
+  });
+  document.getElementById('auth-title').textContent = tab === 'login' ? 'Connexion' : 'Créer un compte';
+  const randomEmoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+  const form = document.getElementById('auth-form');
+
+  if (tab === 'login') {
+    form.innerHTML = `
+      <div class="form-group"><label>Pseudo</label><input type="text" class="input" id="l-user" placeholder="Votre pseudo..."></div>
+      <div class="form-group"><label>Mot de passe</label><input type="password" class="input" id="l-pass" placeholder="••••••••" onkeypress="if(event.key==='Enter')doLogin()"></div>
+      <div class="err" id="l-err"></div>
+      <div style="margin-top:16px;"><button class="btn-primary" onclick="doLogin()">Se connecter →</button></div>
+    `;
+  } else {
+    form.innerHTML = `
+      <div class="form-group"><label>Pseudo</label><input type="text" class="input" id="r-user" placeholder="Choisissez un pseudo..."></div>
+      <div class="form-group"><label>Email <span style="color:var(--red)">*</span></label><input type="email" class="input" id="r-email" placeholder="exemple@gmail.com"></div>
+      <div class="form-group"><label>Mot de passe</label><input type="password" class="input" id="r-pass" placeholder="Min. 4 caractères..."></div>
+      <div class="form-group"><label>Avatar (emoji)</label><input type="text" class="input" id="r-emoji" placeholder="${randomEmoji}" maxlength="4"></div>
+      <div class="err" id="r-err"></div>
+      <div style="margin-top:16px;"><button class="btn-primary" id="r-btn" onclick="doRegister()">Continuer →</button></div>
+    `;
+  }
+}
+
+function maskEmail(email) {
+  const [local, domain] = email.split('@');
+  const masked = local[0] + '*'.repeat(Math.max(local.length - 1, 3)) + '@' + domain;
+  return masked;
+}
+
+function generateOTP() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+async function doRegister() {
+  const u = document.getElementById('r-user').value.trim();
+  const email = document.getElementById('r-email').value.trim();
+  const p = document.getElementById('r-pass').value;
+  const e = document.getElementById('r-emoji').value.trim() || '👤';
+  const err = document.getElementById('r-err');
+
+  // Validations
+  if (!u || !email || !p) { err.textContent = '✕ Remplissez tous les champs'; return; }
+  if (u.length < 2 || u.length > 20) { err.textContent = '✕ Pseudo : 2–20 caractères'; return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = '✕ Email invalide'; return; }
+  if (p.length < 4) { err.textContent = '✕ Mot de passe trop court (min. 4)'; return; }
+  if (users[u]) { err.textContent = '✕ Ce pseudo est déjà pris'; return; }
+
+  // Store pending data
+  _pendingReg = { u, email, p, e };
+  _otpCode = generateOTP();
+
+  // Disable button & show loading
+  const btn = document.getElementById('r-btn');
+  btn.disabled = true;
+  btn.textContent = 'Envoi du code...';
+  err.textContent = '';
+
+  // Send email via EmailJS
+  try {
+    await emailjs.send('service_kee805w', 'template_7p1rzxb', {
+      to_email: email,
+      to_name: u,
+      code: _otpCode
+    });
+    showVerifyStep(email);
+  } catch(ex) {
+    console.error('EmailJS error:', ex);
+    err.textContent = '✕ Erreur lors de l\'envoi. Vérifiez votre email et réessayez.';
+    btn.disabled = false;
+    btn.textContent = 'Continuer →';
+  }
+}
+
+function showVerifyStep(email) {
+  document.getElementById('auth-title').textContent = 'Vérification';
+  document.querySelectorAll('.auth-tab').forEach(t => t.style.display = 'none');
+
+  const form = document.getElementById('auth-form');
+  form.innerHTML = `
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:2rem;margin-bottom:10px;">📬</div>
+      <p style="color:var(--text2);font-size:0.85rem;line-height:1.7;">
+        Un email a été envoyé à<br>
+        <span class="email-masked">${maskEmail(email)}</span><br>
+        <span style="color:var(--text3);font-size:0.78rem;">Vérifie aussi tes spams.</span>
+      </p>
+    </div>
+    <label style="display:block;font-size:0.72rem;font-weight:700;color:var(--text2);letter-spacing:0.5px;text-transform:uppercase;text-align:center;margin-bottom:4px;">Tape le code à 6 chiffres</label>
+    <div class="otp-row">
+      <input class="otp-input" id="otp0" maxlength="1" type="text" inputmode="numeric" oninput="otpInput(this,0)" onkeydown="otpKey(event,0)">
+      <input class="otp-input" id="otp1" maxlength="1" type="text" inputmode="numeric" oninput="otpInput(this,1)" onkeydown="otpKey(event,1)">
+      <input class="otp-input" id="otp2" maxlength="1" type="text" inputmode="numeric" oninput="otpInput(this,2)" onkeydown="otpKey(event,2)">
+      <input class="otp-input" id="otp3" maxlength="1" type="text" inputmode="numeric" oninput="otpInput(this,3)" onkeydown="otpKey(event,3)">
+      <input class="otp-input" id="otp4" maxlength="1" type="text" inputmode="numeric" oninput="otpInput(this,4)" onkeydown="otpKey(event,4)">
+      <input class="otp-input" id="otp5" maxlength="1" type="text" inputmode="numeric" oninput="otpInput(this,5)" onkeydown="otpKey(event,5)">
+    </div>
+    <div class="err" id="otp-err" style="text-align:center;"></div>
+    <div style="margin-top:16px;"><button class="btn-primary" id="otp-btn" onclick="verifyOTP()">Vérifier →</button></div>
+    <div style="text-align:center;margin-top:14px;">
+      <button class="resend-link" id="resend-btn" onclick="resendOTP()" disabled id="resend-btn">Renvoyer le code (<span id="resend-count">60</span>s)</button>
+    </div>
+    <div style="text-align:center;margin-top:8px;">
+      <button class="resend-link" onclick="switchAuth('register')" style="color:var(--text3);">← Modifier mes infos</button>
+    </div>
+  `;
+
+  // Focus first input
+  setTimeout(() => document.getElementById('otp0').focus(), 100);
+
+  // Start resend countdown
+  let secs = 60;
+  _resendTimer = setInterval(() => {
+    secs--;
+    const el = document.getElementById('resend-count');
+    const btn = document.getElementById('resend-btn');
+    if (!el) { clearInterval(_resendTimer); return; }
+    if (secs <= 0) {
+      clearInterval(_resendTimer);
+      btn.disabled = false;
+      btn.textContent = 'Renvoyer le code';
+    } else {
+      el.textContent = secs;
+    }
+  }, 1000);
+}
+
+function otpInput(el, idx) {
+  // Only allow digits
+  el.value = el.value.replace(/\D/g, '');
+  if (el.value) {
+    el.classList.add('filled');
+    // Auto-advance
+    if (idx < 5) document.getElementById(`otp${idx + 1}`).focus();
+    else verifyOTP(); // auto-verify on last digit
+  } else {
+    el.classList.remove('filled');
+  }
+}
+
+function otpKey(e, idx) {
+  if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+    document.getElementById(`otp${idx - 1}`).focus();
+  }
+}
+
+function getOTPValue() {
+  return [0,1,2,3,4,5].map(i => document.getElementById(`otp${i}`)?.value || '').join('');
+}
+
+function verifyOTP() {
+  const entered = getOTPValue();
+  const err = document.getElementById('otp-err');
+
+  if (entered.length < 6) { err.textContent = '✕ Entrez les 6 chiffres'; return; }
+
+  if (entered !== _otpCode) {
+    err.textContent = '✕ Code incorrect, réessayez';
+    [0,1,2,3,4,5].forEach(i => {
+      const el = document.getElementById(`otp${i}`);
+      el.classList.add('error');
+      setTimeout(() => el.classList.remove('error'), 500);
+    });
+    return;
+  }
+
+  // Code correct → create account
+  clearInterval(_resendTimer);
+  const { u, email, p, e } = _pendingReg;
+  users[u] = { hash: hashPass(p), role: 'user', emoji: e, email };
+  currentUser = { username: u, role: 'user', emoji: e };
+  _pendingReg = null;
+  _otpCode = null;
+  save();
+
+  // Restore tabs
+  document.querySelectorAll('.auth-tab').forEach(t => t.style.display = '');
+  closeOverlay('authOverlay');
+  updateHeaderUser();
+  updateChatUI();
+  renderChat();
+  toast(`✓ Email vérifié ! Bienvenue, ${u} !`, 'success');
+}
+
+async function resendOTP() {
+  if (!_pendingReg) return;
+  _otpCode = generateOTP();
+  const btn = document.getElementById('resend-btn');
+  btn.disabled = true;
+  btn.textContent = 'Envoi...';
+
+  try {
+    await emailjs.send('service_kee805w', 'template_7p1rzxb', {
+      to_email: _pendingReg.email,
+      to_name: _pendingReg.u,
+      code: _otpCode
+    });
+    // Reset countdown
+    let secs = 60;
+    btn.innerHTML = 'Renvoyer le code (<span id="resend-count">60</span>s)';
+    _resendTimer = setInterval(() => {
+      secs--;
+      const el = document.getElementById('resend-count');
+      if (!el) { clearInterval(_resendTimer); return; }
+      if (secs <= 0) {
+        clearInterval(_resendTimer);
+        btn.disabled = false;
+        btn.textContent = 'Renvoyer le code';
+      } else {
+        el.textContent = secs;
+      }
+    }, 1000);
+    toast('Code renvoyé !', 'success');
+  } catch(ex) {
+    btn.disabled = false;
+    btn.textContent = 'Renvoyer le code';
+    toast('Erreur d\'envoi', 'error');
+  }
+}
+
+function doLogin() {
+  const u = document.getElementById('l-user').value.trim();
+  const p = document.getElementById('l-pass').value;
+  const err = document.getElementById('l-err');
+  if (!u || !p) { err.textContent = '✕ Remplissez tous les champs'; return; }
+  if (!users[u]) { err.textContent = '✕ Compte introuvable'; return; }
+  if (users[u].hash !== hashPass(p)) { err.textContent = '✕ Mot de passe incorrect'; return; }
+
+  currentUser = { username: u, role: users[u].role, emoji: users[u].emoji };
+  save();
+  closeOverlay('authOverlay');
+  updateHeaderUser();
+  updateChatUI();
+  renderChat();
+  toast(`Bienvenue, ${u} !`, 'success');
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('cw_currentuser');
+  updateHeaderUser();
+  updateChatUI();
+  renderChat();
+  toast('Déconnecté.', 'success');
+}
+
+function updateHeaderUser() {
+  const hr = document.getElementById('headerRight');
+  if (currentUser) {
+    const roleBadge = currentUser.role !== 'user'
+      ? `<span style="font-size:0.65rem;background:rgba(108,99,255,0.2);color:var(--accent);padding:1px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">${currentUser.role === 'mod' ? 'Mod' : currentUser.role === 'owner' ? 'Owner' : currentUser.role}</span>`
+      : '';
+    hr.innerHTML = `
+      <button class="btn-ghost" onclick="openAdmin()">⚙ Admin</button>
+      <div class="user-indicator" onclick="logout()" title="Cliquer pour se déconnecter">
+        <div class="user-dot"></div>
+        ${currentUser.emoji} ${escHtml(currentUser.username)} ${roleBadge}
+        <span style="color:var(--text3);font-size:0.65rem;">✕</span>
+      </div>
+    `;
+  } else {
+    hr.innerHTML = `
+      <button class="btn-ghost" onclick="openAdmin()">⚙ Admin</button>
+      <button class="btn-accent" onclick="openAuth('login')">Connexion</button>
+    `;
+  }
+}
+
+// ================================================
+//  ADMIN
+// ================================================
 function openAdmin() {
   document.getElementById('adminOverlay').classList.add('open');
-  document.getElementById('adminPassword').value = '';
-  document.getElementById('loginError').textContent = '';
-  if (!isLoggedIn) {
-    document.getElementById('adminLogin').style.display = 'block';
-    document.getElementById('adminContent').classList.remove('visible');
-    document.getElementById('saveBar').style.display = 'none';
-  }
-  setTimeout(() => document.getElementById('adminPassword').focus?.(), 100);
-}
-
-function closeAdmin() {
-  document.getElementById('adminOverlay').classList.remove('open');
-}
-
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById('adminOverlay')) closeAdmin();
+  if (adminLoggedIn) return;
+  document.getElementById('admin-pw').value = '';
+  document.getElementById('admin-pw-err').textContent = '';
 }
 
 function loginAdmin() {
-  const val = document.getElementById('adminPassword').value;
-  if (val === adminPassword) {
-    isLoggedIn = true;
-    document.getElementById('adminLogin').style.display = 'none';
-    document.getElementById('adminContent').classList.add('visible');
-    document.getElementById('saveBar').style.display = 'flex';
-    renderAdminServices();
-    renderPaypalLinks();
-  } else {
-    document.getElementById('loginError').textContent = '✕ Mot de passe incorrect';
-    document.getElementById('adminPassword').style.borderColor = 'var(--accent3)';
-    setTimeout(() => {
-      document.getElementById('adminPassword').style.borderColor = '';
-    }, 1500);
+  const pw = document.getElementById('admin-pw').value;
+  if (pw !== adminPassword) {
+    document.getElementById('admin-pw-err').textContent = '✕ Mot de passe incorrect';
+    return;
   }
+  adminLoggedIn = true;
+  document.getElementById('admin-login-wall').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+  document.getElementById('admin-save-bar').style.display = 'flex';
+  document.getElementById('discord-webhook').value = discordWebhook;
+  renderAdminAll();
 }
 
-function switchTab(name) {
-  document.querySelectorAll('.admin-tab').forEach((t, i) => {
-    t.classList.toggle('active', ['services','paypal','settings'][i] === name);
+function aTab(name) {
+  document.querySelectorAll('.a-tab').forEach((t, i) => {
+    t.classList.toggle('active', ['services','paypal','users','team','settings'][i] === name);
   });
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.getElementById(`tab-${name}`).classList.add('active');
+  document.querySelectorAll('.a-tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(`atab-${name}`).classList.add('active');
 }
 
-// ============================
-// ADMIN: SERVICE LIST
-// ============================
+function renderAdminAll() {
+  renderAdminServices();
+  renderAdminPaypal();
+  renderAdminUsers();
+  renderAdminTeam();
+}
+
+// --- Admin Services ---
 function renderAdminServices() {
   const list = document.getElementById('admin-service-list');
   list.innerHTML = '';
-
   services.forEach((s, si) => {
     const div = document.createElement('div');
-    div.className = 'service-item-admin';
+    div.className = 'admin-service-item';
     div.innerHTML = `
-      <div class="item-header">
-        <div class="item-title-row">
-          <input type="text" class="input-field" value="${s.icon}" maxlength="4"
-            onchange="updateService(${si}, 'icon', this.value)"
-            style="width:60px;text-align:center;font-size:1.3rem;padding:6px;">
-          <input type="text" class="input-field" value="${s.name}"
-            onchange="updateService(${si}, 'name', this.value)"
-            style="flex:1;font-weight:700;">
-          <label class="toggle-switch" title="Actif / Inactif">
-            <button class="toggle ${s.active ? 'on' : ''}" onclick="toggleService(${si}, this)"></button>
-            <span style="font-size:0.75rem;color:var(--muted);">${s.active ? 'Actif' : 'Inactif'}</span>
-          </label>
+      <div class="flex-row-sb mb12">
+        <div class="flex-row gap8">
+          <input type="text" class="input" value="${escHtml(s.icon)}" maxlength="4" onchange="services[${si}].icon=this.value;markUnsaved();" style="width:54px;text-align:center;font-size:1.2rem;padding:6px;">
+          <input type="text" class="input" value="${escHtml(s.name)}" onchange="services[${si}].name=this.value;markUnsaved();" style="flex:1;font-weight:700;">
+          <button class="toggle${s.active?' on':''}" onclick="services[${si}].active=!services[${si}].active;this.classList.toggle('on',services[${si}].active);markUnsaved();"></button>
         </div>
-        <div class="item-actions">
-          <button class="btn-danger btn-sm" onclick="deleteService(${si})">🗑</button>
-        </div>
+        <button class="btn-danger btn-sm" style="margin-left:10px;" onclick="delService(${si})">🗑</button>
       </div>
-      <div style="margin-bottom:12px;">
-        <input type="text" class="input-field" value="${s.desc}"
-          placeholder="Description..."
-          onchange="updateService(${si}, 'desc', this.value)"
-          style="width:100%;">
-      </div>
-      <div class="tiers-editor">
+      <input type="text" class="input mb12" value="${escHtml(s.desc)}" onchange="services[${si}].desc=this.value;markUnsaved();" placeholder="Description..." style="width:100%;">
+      <div class="tiers-grid">
         ${s.tiers.map((t, ti) => `
-          <div class="tier-editor-box ${tierClasses[ti]}">
+          <div class="tier-box ${TIER_CLASSES[ti]}">
             <label>${t.name}</label>
-            <div class="tier-inputs">
-              <input type="number" class="input-field" value="${t.price}" min="0"
-                placeholder="Prix (€)"
-                onchange="updateTier(${si}, ${ti}, 'price', parseFloat(this.value)||0)">
-              <input type="text" class="input-field" value="${t.desc}"
-                placeholder="Courte description..."
-                onchange="updateTier(${si}, ${ti}, 'desc', this.value)">
-            </div>
+            <input type="number" class="input mb12" value="${t.price}" min="0" onchange="services[${si}].tiers[${ti}].price=parseFloat(this.value)||0;markUnsaved();" placeholder="Prix (€)">
+            <input type="text" class="input" value="${escHtml(t.desc)}" onchange="services[${si}].tiers[${ti}].desc=this.value;markUnsaved();" placeholder="Description courte...">
           </div>
         `).join('')}
       </div>
@@ -1230,91 +2099,49 @@ function renderAdminServices() {
   });
 }
 
-function updateService(si, key, val) {
-  services[si][key] = val;
-  markUnsaved();
-}
-
-function updateTier(si, ti, key, val) {
-  services[si].tiers[ti][key] = val;
-  markUnsaved();
-}
-
-function toggleService(si, btn) {
-  services[si].active = !services[si].active;
-  btn.classList.toggle('on', services[si].active);
-  btn.nextElementSibling.textContent = services[si].active ? 'Actif' : 'Inactif';
-  markUnsaved();
-}
-
-function deleteService(si) {
+function delService(si) {
   if (!confirm(`Supprimer "${services[si].name}" ?`)) return;
   services.splice(si, 1);
   renderAdminServices();
-  renderPaypalLinks();
+  renderAdminPaypal();
   markUnsaved();
 }
 
 function addService() {
-  const name = document.getElementById('new-name').value.trim();
-  const icon = document.getElementById('new-icon').value.trim() || '📦';
-  const desc = document.getElementById('new-desc').value.trim();
-  const p1 = parseFloat(document.getElementById('new-p1').value) || 0;
-  const p2 = parseFloat(document.getElementById('new-p2').value) || 0;
-  const p3 = parseFloat(document.getElementById('new-p3').value) || 0;
-  const d1 = document.getElementById('new-d1').value.trim();
-  const d2 = document.getElementById('new-d2').value.trim();
-  const d3 = document.getElementById('new-d3').value.trim();
-
-  if (!name) { alert('Entrez un nom pour le service.'); return; }
-
-  const iconBgs = ['icon-bg-1','icon-bg-2','icon-bg-3','icon-bg-4','icon-bg-5'];
-  const newId = Math.max(0, ...services.map(s => s.id)) + 1;
-
-  services.push({
-    id: newId,
-    name, icon, desc, active: true,
-    iconBg: iconBgs[newId % 5],
-    tiers: [
-      { name: "Utilisable", price: p1, desc: d1, paypal: "" },
-      { name: "De bonne qualité", price: p2, desc: d2, paypal: "" },
-      { name: "Fabuleux", price: p3, desc: d3, paypal: "" }
-    ]
-  });
-
-  ['new-name','new-icon','new-desc','new-p1','new-p2','new-p3','new-d1','new-d2','new-d3']
-    .forEach(id => { document.getElementById(id).value = ''; });
-
+  const name = document.getElementById('ns-name').value.trim();
+  const icon = document.getElementById('ns-icon').value.trim() || '📦';
+  const desc = document.getElementById('ns-desc').value.trim();
+  const p1 = parseFloat(document.getElementById('ns-p1').value) || 0;
+  const p2 = parseFloat(document.getElementById('ns-p2').value) || 0;
+  const p3 = parseFloat(document.getElementById('ns-p3').value) || 0;
+  const d1 = document.getElementById('ns-d1').value.trim();
+  const d2 = document.getElementById('ns-d2').value.trim();
+  const d3 = document.getElementById('ns-d3').value.trim();
+  if (!name) { toast('Entrez un nom', 'error'); return; }
+  const bgs = ['icon-bg-1','icon-bg-2','icon-bg-3','icon-bg-4','icon-bg-5'];
+  const id = Math.max(0, ...services.map(s => s.id)) + 1;
+  services.push({ id, name, icon, iconBg: bgs[id % 5], desc, active: true,
+    tiers: [{name:'Utilisable',price:p1,desc:d1,paypal:''},{name:'De bonne qualité',price:p2,desc:d2,paypal:''},{name:'Fabuleux',price:p3,desc:d3,paypal:''}] });
+  ['ns-name','ns-icon','ns-desc','ns-p1','ns-p2','ns-p3','ns-d1','ns-d2','ns-d3'].forEach(id => document.getElementById(id).value = '');
   renderAdminServices();
-  renderPaypalLinks();
+  renderAdminPaypal();
   markUnsaved();
+  toast('Service ajouté !', 'success');
 }
 
-// ============================
-// ADMIN: PAYPAL LINKS
-// ============================
-function renderPaypalLinks() {
-  const list = document.getElementById('paypal-links-list');
-  list.innerHTML = `
-    <div style="margin-bottom:16px;padding:16px;background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.2);border-radius:10px;">
-      <p style="font-size:0.8rem;color:var(--accent2);font-family:'Space Mono',monospace;line-height:1.6;">
-        💡 Collez vos liens PayPal.me ou boutons PayPal ici.<br>Ex: https://paypal.me/votrenom
-      </p>
-    </div>
-  `;
-
+// --- Admin PayPal ---
+function renderAdminPaypal() {
+  const list = document.getElementById('admin-paypal-list');
+  list.innerHTML = '';
   services.forEach((s, si) => {
     const div = document.createElement('div');
-    div.className = 'paypal-setting-item';
+    div.className = 'admin-service-item';
     div.innerHTML = `
-      <h4>${s.icon} ${s.name}</h4>
+      <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:12px;">${s.icon} ${escHtml(s.name)}</h4>
       ${s.tiers.map((t, ti) => `
         <div style="margin-bottom:10px;">
-          <p style="color:${['var(--tier1)','var(--tier2)','var(--tier3)'][ti]};font-size:0.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">${tierIcons[ti]} ${t.name} — ${t.price}€</p>
-          <input type="url" class="input-field" value="${t.paypal || ''}"
-            placeholder="https://paypal.me/..."
-            onchange="updateTier(${si}, ${ti}, 'paypal', this.value)"
-            style="width:100%;">
+          <p style="font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:${['var(--tier1)','var(--tier2)','var(--tier3)'][ti]};margin-bottom:5px;">${TIER_ICONS[ti]} ${t.name} — ${t.price}€</p>
+          <input type="url" class="input" value="${escHtml(t.paypal||'')}" placeholder="https://paypal.me/..." onchange="services[${si}].tiers[${ti}].paypal=this.value;markUnsaved();" style="width:100%;">
         </div>
       `).join('')}
     `;
@@ -1322,73 +2149,207 @@ function renderPaypalLinks() {
   });
 }
 
-// ============================
-// SAVE / DISCARD
-// ============================
-function markUnsaved() {
-  unsavedChanges = true;
-  const s = document.getElementById('saveStatus');
-  s.textContent = '● Modifications non sauvegardées';
-  s.classList.remove('saved');
+// --- Admin Users ---
+function renderAdminUsers() {
+  const list = document.getElementById('admin-user-list');
+  list.innerHTML = '';
+  const usernames = Object.keys(users);
+  if (!usernames.length) {
+    list.innerHTML = `<p style="color:var(--text3);font-size:0.82rem;font-family:var(--font-mono);">Aucun utilisateur inscrit pour le moment.</p>`;
+    return;
+  }
+  usernames.forEach(u => {
+    const ud = users[u];
+    const div = document.createElement('div');
+    div.className = 'user-admin-item';
+    div.innerHTML = `
+      <div class="user-admin-info">
+        <div class="user-admin-avatar">${ud.emoji || '👤'}</div>
+        <div>
+          <div class="user-admin-name">${escHtml(u)}</div>
+          <div class="user-admin-role">${ud.role}</div>
+        </div>
+      </div>
+      <div class="flex-row gap8">
+        <select class="input" style="padding:6px 10px;font-size:0.78rem;" onchange="setUserRole('${escHtml(u)}',this.value)">
+          <option value="user"${ud.role==='user'?' selected':''}>Utilisateur</option>
+          <option value="mod"${ud.role==='mod'?' selected':''}>Modérateur</option>
+          <option value="owner"${ud.role==='owner'?' selected':''}>Owner</option>
+        </select>
+        <button class="btn-danger btn-sm" onclick="deleteUser('${escHtml(u)}')">🗑</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
 }
 
-function saveChanges() {
-  saveData();
-  renderServices();
-  unsavedChanges = false;
-  const s = document.getElementById('saveStatus');
-  s.textContent = '✓ Sauvegardé !';
-  s.classList.add('saved');
-  setTimeout(() => {
-    s.textContent = 'Tout est sauvegardé';
-  }, 2000);
+function setUserRole(u, role) {
+  users[u].role = role;
+  if (currentUser && currentUser.username === u) { currentUser.role = role; save(); updateHeaderUser(); }
+  save();
+  renderAdminUsers();
+  toast(`Rôle de ${u} changé en ${role}`, 'success');
 }
 
-function discardChanges() {
-  if (!confirm('Annuler toutes les modifications ?')) return;
-  loadData();
-  renderAdminServices();
-  renderPaypalLinks();
-  renderServices();
-  unsavedChanges = false;
-  document.getElementById('saveStatus').textContent = 'Modifications annulées';
+function deleteUser(u) {
+  if (!confirm(`Supprimer le compte "${u}" ?`)) return;
+  delete users[u];
+  if (currentUser && currentUser.username === u) logout();
+  save();
+  renderAdminUsers();
+  toast(`Compte ${u} supprimé`, 'success');
 }
 
-function changePassword() {
-  const p1 = document.getElementById('new-pass1').value;
-  const p2 = document.getElementById('new-pass2').value;
-  const err = document.getElementById('passError');
-  if (!p1) { err.textContent = 'Entrez un mot de passe'; return; }
-  if (p1 !== p2) { err.textContent = '✕ Les mots de passe ne correspondent pas'; return; }
-  if (p1.length < 4) { err.textContent = '✕ Minimum 4 caractères'; return; }
+// --- Admin Team ---
+function renderAdminTeam() {
+  const list = document.getElementById('admin-team-list');
+  list.innerHTML = '';
+  team.forEach((m, i) => {
+    const div = document.createElement('div');
+    div.className = 'user-admin-item';
+    div.innerHTML = `
+      <div class="user-admin-info">
+        <div class="user-admin-avatar">${m.avatar}</div>
+        <div>
+          <div class="user-admin-name">${escHtml(m.name)}</div>
+          <div class="user-admin-role">${ROLE_LABELS[m.role] || m.role} ${m.online ? '🟢' : '⚫'}</div>
+        </div>
+      </div>
+      <div class="flex-row gap8">
+        <button class="toggle${m.online?' on':''}" onclick="team[${i}].online=!team[${i}].online;this.classList.toggle('on',team[${i}].online);markUnsaved();" title="En ligne"></button>
+        <button class="btn-danger btn-sm" onclick="deleteTeamMember(${i})">🗑</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function addTeamMember() {
+  const name = document.getElementById('nt-name').value.trim();
+  const avatar = document.getElementById('nt-avatar').value.trim() || '👤';
+  const role = document.getElementById('nt-role').value;
+  const tagsRaw = document.getElementById('nt-tags').value;
+  const online = document.getElementById('nt-online').value === '1';
+  const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+  if (!name) { toast('Entrez un pseudo', 'error'); return; }
+  team.push({ id: Date.now(), name, avatar, role, tags, online });
+  ['nt-name','nt-avatar','nt-tags'].forEach(id => document.getElementById(id).value = '');
+  renderAdminTeam();
+  renderTeam();
+  markUnsaved();
+  toast('Membre ajouté !', 'success');
+}
+
+function deleteTeamMember(i) {
+  if (!confirm(`Retirer "${team[i].name}" de l'équipe ?`)) return;
+  team.splice(i, 1);
+  renderAdminTeam();
+  renderTeam();
+  markUnsaved();
+}
+
+// --- Settings ---
+function changeAdminPass() {
+  const p1 = document.getElementById('np1').value;
+  const p2 = document.getElementById('np2').value;
+  const msg = document.getElementById('pass-msg');
+  if (!p1) { msg.textContent = '✕ Entrez un mot de passe'; return; }
+  if (p1.length < 4) { msg.textContent = '✕ Minimum 4 caractères'; return; }
+  if (p1 !== p2) { msg.textContent = '✕ Les mots de passe ne correspondent pas'; return; }
   adminPassword = p1;
-  saveData();
-  err.style.color = 'var(--green)';
-  err.textContent = '✓ Mot de passe changé !';
-  document.getElementById('new-pass1').value = '';
-  document.getElementById('new-pass2').value = '';
-  setTimeout(() => {
-    err.textContent = '';
-    err.style.color = '';
-  }, 3000);
+  save();
+  msg.className = 'ok mt8';
+  msg.textContent = '✓ Mot de passe changé !';
+  document.getElementById('np1').value = '';
+  document.getElementById('np2').value = '';
+  setTimeout(() => { msg.textContent = ''; msg.className = 'err'; }, 3000);
+}
+
+function saveWebhook() {
+  discordWebhook = document.getElementById('discord-webhook').value.trim();
+  save();
+  const msg = document.getElementById('webhook-msg');
+  msg.style.display = 'block';
+  msg.textContent = '✓ Webhook sauvegardé !';
+  setTimeout(() => { msg.style.display = 'none'; }, 3000);
 }
 
 function resetToDefault() {
-  if (!confirm('Réinitialiser TOUS les services aux valeurs par défaut ? Cette action est irréversible.')) return;
+  if (!confirm('Réinitialiser TOUS les services ? Action irréversible.')) return;
   services = JSON.parse(JSON.stringify(DEFAULT_SERVICES));
-  saveData();
-  renderAdminServices();
-  renderPaypalLinks();
+  team = JSON.parse(JSON.stringify(DEFAULT_TEAM));
+  save();
   renderServices();
-  markUnsaved();
-  saveChanges();
+  renderTeam();
+  renderAdminAll();
+  toast('Réinitialisé !', 'success');
 }
 
-// ============================
-// INIT
-// ============================
-loadData();
+// --- Save ---
+function markUnsaved() {
+  unsaved = true;
+  const s = document.getElementById('save-status');
+  s.textContent = '● Modifications non sauvegardées';
+  s.className = 'save-status';
+}
+
+function saveChanges() {
+  save();
+  renderServices();
+  renderTeam();
+  unsaved = false;
+  const s = document.getElementById('save-status');
+  s.textContent = '✓ Sauvegardé !';
+  s.className = 'save-status saved';
+  setTimeout(() => { s.textContent = 'Tout est à jour'; }, 2000);
+}
+
+function discardChanges() {
+  if (!confirm('Annuler les modifications ?')) return;
+  load();
+  renderServices();
+  renderTeam();
+  renderAdminAll();
+  unsaved = false;
+  document.getElementById('save-status').textContent = 'Modifications annulées';
+}
+
+// ================================================
+//  OVERLAY HELPERS
+// ================================================
+function closeOverlay(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function handleOvClick(e, id) {
+  if (e.target === document.getElementById(id)) closeOverlay(id);
+}
+
+// ================================================
+//  TOAST
+// ================================================
+function toast(msg, type = 'success') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `${type === 'success' ? '✓' : '✕'} ${msg}`;
+  document.body.appendChild(t);
+  setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateY(8px)';
+    t.style.transition = 'all 0.3s';
+    setTimeout(() => t.remove(), 300);
+  }, 3000);
+}
+
+// ================================================
+//  INIT
+// ================================================
+load();
 renderServices();
+renderTeam();
+renderChat();
+updateHeaderUser();
+updateChatUI();
 </script>
 </body>
 </html>
