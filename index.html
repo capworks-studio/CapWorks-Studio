@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CapWeb — Services sur mesure</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a28;
+    --border: #2a2a40;
+    --accent: #7c5cfc;
+    --accent2: #00e5ff;
+    --accent3: #ff6b6b;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+    --gold: #ffd700;
+    --green: #00ff88;
+    --tier1: #6b6b8a;
+    --tier2: #7c5cfc;
+    --tier3: #ffd700;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BACKGROUND GRID */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* GLOW ORB */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(124,92,252,0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 0 40px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,15,0.8);
+    position: sticky;
+    top: 0;
+  }
+
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+  .logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  .admin-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .admin-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 100px 40px 80px;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent2);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: 1px solid rgba(0,229,255,0.3);
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    animation: pulse 3s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,229,255,0.2); }
+    50% { box-shadow: 0 0 0 8px rgba(0,229,255,0); }
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -3px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  /* ===== TIER LEGEND ===== */
+  .tier-legend {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 80px;
+    flex-wrap: wrap;
+  }
+
+  .tier-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .tier-badge .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  .tier-badge.t1 { background: rgba(107,107,138,0.15); border: 1px solid rgba(107,107,138,0.3); color: var(--tier1); }
+  .tier-badge.t1 .dot { background: var(--tier1); }
+  .tier-badge.t2 { background: rgba(124,92,252,0.15); border: 1px solid rgba(124,92,252,0.3); color: var(--tier2); }
+  .tier-badge.t2 .dot { background: var(--tier2); }
+  .tier-badge.t3 { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3); color: var(--tier3); }
+  .tier-badge.t3 .dot { background: var(--tier3); box-shadow: 0 0 8px var(--tier3); }
+
+  /* ===== SECTION TITLE ===== */
+  .section-title {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .section-title h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+
+  .section-title .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* ===== SERVICES GRID ===== */
+  .services-section {
+    position: relative;
+    z-index: 1;
+    padding: 0 40px 100px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  #services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
+  }
+
+  /* SERVICE CARD */
+  .service-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .service-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent);
+    box-shadow: 0 20px 60px rgba(124,92,252,0.15);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    padding: 28px 28px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .card-info h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+
+  .card-info p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  /* TIERS */
+  .card-tiers {
+    padding: 20px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tier-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-radius: 10px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tier-row::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .tier-row:hover::before { opacity: 1; }
+
+  .tier-row.t1 { background: rgba(107,107,138,0.08); border: 1px solid rgba(107,107,138,0.2); }
+  .tier-row.t1::before { background: rgba(107,107,138,0.08); }
+  .tier-row.t1 .tier-name { color: var(--tier1); }
+
+  .tier-row.t2 { background: rgba(124,92,252,0.08); border: 1px solid rgba(124,92,252,0.2); }
+  .tier-row.t2::before { background: rgba(124,92,252,0.08); }
+  .tier-row.t2 .tier-name { color: var(--tier2); }
+
+  .tier-row.t3 { background: rgba(255,215,0,0.06); border: 1px solid rgba(255,215,0,0.2); }
+  .tier-row.t3::before { background: rgba(255,215,0,0.06); }
+  .tier-row.t3 .tier-name { color: var(--tier3); }
+
+  .tier-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tier-icon { font-size: 1rem; }
+
+  .tier-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .tier-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 1px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .tier-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .tier-price {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .tier-row.t1 .tier-price { color: var(--tier1); }
+  .tier-row.t2 .tier-price { color: var(--tier2); }
+  .tier-row.t3 .tier-price { color: var(--tier3); }
+
+  .paypal-btn {
+    background: #0070ba;
+    color: white;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .paypal-btn:hover { background: #005ea6; transform: scale(1.05); }
+  .paypal-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
+
+  /* UNAVAILABLE CARD */
+  .service-card.unavailable {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .unavailable-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    background: rgba(255,107,107,0.15);
+    color: var(--accent3);
+    border: 1px solid rgba(255,107,107,0.3);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ===== ADMIN PANEL ===== */
+  .admin-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .admin-overlay.open { display: flex; }
+
+  .admin-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 860px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: scale(0.95) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .admin-header {
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 1;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .admin-header h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .admin-header h2 span {
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin-left: 10px;
+    letter-spacing: 1px;
+  }
+
+  .close-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+  .close-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+
+  /* LOGIN */
+  .admin-login {
+    padding: 60px 32px;
+    text-align: center;
+  }
+
+  .admin-login h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .admin-login p {
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-size: 0.9rem;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .input-field {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .input-field:focus { border-color: var(--accent); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: #6a4de8; transform: translateY(-1px); }
+
+  .btn-danger {
+    background: rgba(255,107,107,0.15);
+    color: var(--accent3);
+    border: 1px solid rgba(255,107,107,0.3);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-danger:hover { background: rgba(255,107,107,0.25); }
+
+  .btn-success {
+    background: rgba(0,255,136,0.15);
+    color: var(--green);
+    border: 1px solid rgba(0,255,136,0.3);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-success:hover { background: rgba(0,255,136,0.25); }
+
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    border-radius: 6px;
+  }
+
+  .error-msg {
+    color: var(--accent3);
+    font-size: 0.8rem;
+    font-family: 'Space Mono', monospace;
+    margin-top: 8px;
+  }
+
+  /* ADMIN CONTENT */
+  .admin-content { padding: 32px; display: none; }
+  .admin-content.visible { display: block; }
+
+  .admin-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+
+  .admin-tab {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+  }
+
+  .admin-tab.active {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* SERVICE EDITOR */
+  .service-list-admin { display: flex; flex-direction: column; gap: 16px; }
+
+  .service-item-admin {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .service-item-admin .item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .item-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .item-actions { display: flex; gap: 8px; }
+
+  .tiers-editor {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .tier-editor-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .tier-editor-box label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .tier-editor-box.t1 label { color: var(--tier1); }
+  .tier-editor-box.t2 label { color: var(--tier2); }
+  .tier-editor-box.t3 label { color: var(--tier3); }
+
+  .tier-inputs { display: flex; flex-direction: column; gap: 6px; }
+
+  .add-service-form {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .add-service-form h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--accent2);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-field label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .form-field.full-width { grid-column: 1 / -1; }
+
+  /* PAYPAL SETTINGS */
+  .paypal-settings { display: flex; flex-direction: column; gap: 20px; }
+  .paypal-setting-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .paypal-setting-item h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .paypal-setting-item p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .toggle {
+    width: 44px; height: 24px;
+    background: var(--border);
+    border-radius: 100px;
+    position: relative;
+    transition: background 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    background: white;
+    border-radius: 50%;
+    top: 3px; left: 3px;
+    transition: transform 0.2s;
+  }
+
+  .toggle.on { background: var(--green); }
+  .toggle.on::after { transform: translateX(20px); }
+
+  .save-bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .save-status {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .save-status.saved { color: var(--green); }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 40px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    header { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 60px 20px 40px; }
+    .services-section { padding: 0 20px 60px; }
+    #services-grid { grid-template-columns: 1fr; }
+    .tiers-editor { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .admin-panel { max-height: 100vh; border-radius: 0; }
+    .tier-right { flex-direction: column; gap: 6px; align-items: flex-end; }
+  }
+
+  /* ICON BACKGROUNDS */
+  .icon-bg-1 { background: rgba(0,229,255,0.1); }
+  .icon-bg-2 { background: rgba(0,255,136,0.1); }
+  .icon-bg-3 { background: rgba(124,92,252,0.1); }
+  .icon-bg-4 { background: rgba(255,107,107,0.1); }
+  .icon-bg-5 { background: rgba(255,215,0,0.1); }
+
+  select.input-field option { background: var(--surface2); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">Cap<span>Web</span></div>
+  <nav class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <button class="admin-btn" onclick="openAdmin()">⚙ Admin</button>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">✦ Développement sur commande</div>
+  <h1>
+    Votre projet,<br>
+    <span class="line2">livré avec soin</span>
+  </h1>
+  <p>Jeux, logiciels, bots, serveurs — je développe ce que vous imaginez. Choisissez votre niveau de qualité.</p>
+
+  <div class="tier-legend">
+    <div class="tier-badge t1"><div class="dot"></div>Utilisable</div>
+    <div class="tier-badge t2"><div class="dot"></div>De bonne qualité</div>
+    <div class="tier-badge t3"><div class="dot"></div>Fabuleux</div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services-section" id="services">
+  <div class="section-title">
+    <span class="label">// mes services</span>
+    <h2>Ce que je peux créer</h2>
+  </div>
+  <div id="services-grid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div>DevForge — Développement sur mesure &nbsp;·&nbsp; Tous droits réservés</div>
+  <div style="margin-top:8px;color:#3a3a5c">Paiement sécurisé via PayPal</div>
+</footer>
+
+<!-- ADMIN OVERLAY -->
+<div class="admin-overlay" id="adminOverlay" onclick="handleOverlayClick(event)">
+  <div class="admin-panel">
+    <div class="admin-header">
+      <h2>Panneau Admin <span>// ACCÈS RESTREINT</span></h2>
+      <button class="close-btn" onclick="closeAdmin()">✕</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="admin-login" id="adminLogin">
+      <h3>🔐 Connexion requise</h3>
+      <p>Entrez le mot de passe pour accéder au panneau d'administration</p>
+      <div class="login-form">
+        <input type="password" class="input-field" id="adminPassword" placeholder="Mot de passe..." onkeypress="if(event.key==='Enter') loginAdmin()">
+        <button class="btn-primary" onclick="loginAdmin()">Accéder →</button>
+        <div class="error-msg" id="loginError"></div>
+      </div>
+    </div>
+
+    <!-- ADMIN CONTENT -->
+    <div class="admin-content" id="adminContent">
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('services')">📦 Services</button>
+        <button class="admin-tab" onclick="switchTab('paypal')">💳 PayPal</button>
+        <button class="admin-tab" onclick="switchTab('settings')">⚙ Paramètres</button>
+      </div>
+
+      <!-- TAB: SERVICES -->
+      <div class="tab-content active" id="tab-services">
+        <div class="add-service-form">
+          <h3>+ Ajouter un nouveau service</h3>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Nom du service</label>
+              <input type="text" class="input-field" id="new-name" placeholder="Ex: Application Web">
+            </div>
+            <div class="form-field">
+              <label>Icône (emoji)</label>
+              <input type="text" class="input-field" id="new-icon" placeholder="🚀" maxlength="4">
+            </div>
+            <div class="form-field full-width">
+              <label>Description courte</label>
+              <input type="text" class="input-field" id="new-desc" placeholder="Décrivez brièvement le service...">
+            </div>
+          </div>
+          <div class="tiers-editor" style="margin-bottom:16px;">
+            <div class="tier-editor-box t1">
+              <label>Utilisable</label>
+              <div class="tier-inputs">
+                <input type="number" class="input-field" id="new-p1" placeholder="Prix (€)" min="0">
+                <input type="text" class="input-field" id="new-d1" placeholder="Description du tier">
+              </div>
+            </div>
+            <div class="tier-editor-box t2">
+              <label>Bonne qualité</label>
+              <div class="tier-inputs">
+                <input type="number" class="input-field" id="new-p2" placeholder="Prix (€)" min="0">
+                <input type="text" class="input-field" id="new-d2" placeholder="Description du tier">
+              </div>
+            </div>
+            <div class="tier-editor-box t3">
+              <label>Fabuleux</label>
+              <div class="tier-inputs">
+                <input type="number" class="input-field" id="new-p3" placeholder="Prix (€)" min="0">
+                <input type="text" class="input-field" id="new-d3" placeholder="Description du tier">
+              </div>
+            </div>
+          </div>
+          <button class="btn-success" onclick="addService()">✦ Ajouter ce service</button>
+        </div>
+
+        <div class="service-list-admin" id="admin-service-list"></div>
+      </div>
+
+      <!-- TAB: PAYPAL -->
+      <div class="tab-content" id="tab-paypal">
+        <div class="paypal-settings" id="paypal-links-list"></div>
+      </div>
+
+      <!-- TAB: SETTINGS -->
+      <div class="tab-content" id="tab-settings">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="service-item-admin">
+            <h4 style="margin-bottom:8px;font-size:0.95rem;">🔑 Changer le mot de passe</h4>
+            <div style="display:flex;flex-direction:column;gap:8px;max-width:320px;">
+              <input type="password" class="input-field" id="new-pass1" placeholder="Nouveau mot de passe">
+              <input type="password" class="input-field" id="new-pass2" placeholder="Confirmer le mot de passe">
+              <button class="btn-primary" onclick="changePassword()" style="margin-top:4px;">Changer</button>
+              <div class="error-msg" id="passError"></div>
+            </div>
+          </div>
+          <div class="service-item-admin">
+            <h4 style="margin-bottom:8px;font-size:0.95rem;">🗑 Zone dangereuse</h4>
+            <p style="color:var(--muted);font-size:0.85rem;margin-bottom:12px;">Réinitialiser tous les services aux valeurs par défaut.</p>
+            <button class="btn-danger" onclick="resetToDefault()">Réinitialiser tout</button>
+          </div>
+          <div class="service-item-admin">
+            <h4 style="margin-bottom:8px;font-size:0.95rem;">ℹ️ À propos</h4>
+            <p style="color:var(--muted);font-size:0.85rem;line-height:1.6;">Site DevForge — Panneau d'administration.<br>Les données sont sauvegardées localement dans votre navigateur (localStorage).<br>Pour un déploiement permanent, hébergez ce fichier sur un serveur.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAVE BAR -->
+    <div class="save-bar" id="saveBar" style="display:none;">
+      <div class="save-status" id="saveStatus">Modifications non sauvegardées</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-danger btn-sm" onclick="discardChanges()">Annuler</button>
+        <button class="btn-primary btn-sm" onclick="saveChanges()">💾 Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================
+// DATA
+// ============================
+const DEFAULT_SERVICES = [
+  {
+    id: 1, name: "Jeu vidéo PC", icon: "🖥️", iconBg: "icon-bg-1",
+    desc: "Développement de jeux complets pour Windows/Linux/Mac",
+    active: true,
+    tiers: [
+      { name: "Utilisable", price: 80, desc: "Gameplay basique, fonctionnel", paypal: "" },
+      { name: "De bonne qualité", price: 200, desc: "Graphismes soignés, polish", paypal: "" },
+      { name: "Fabuleux", price: 500, desc: "Production complète, effets premium", paypal: "" }
+    ]
+  },
+  {
+    id: 2, name: "Jeu vidéo Android", icon: "📱", iconBg: "icon-bg-2",
+    desc: "Jeux mobiles optimisés pour Android",
+    active: true,
+    tiers: [
+      { name: "Utilisable", price: 60, desc: "Gameplay simple, publié sur Play Store", paypal: "" },
+      { name: "De bonne qualité", price: 180, desc: "UI/UX mobile pensé, animations", paypal: "" },
+      { name: "Fabuleux", price: 450, desc: "Expérience AAA mobile, effets visuels", paypal: "" }
+    ]
+  },
+  {
+    id: 3, name: "Logiciel", icon: "⚙️", iconBg: "icon-bg-3",
+    desc: "Applications desktop ou utilitaires sur mesure",
+    active: true,
+    tiers: [
+      { name: "Utilisable", price: 50, desc: "Fonctionnel, interface simple", paypal: "" },
+      { name: "De bonne qualité", price: 150, desc: "Interface intuitive, bien documenté", paypal: "" },
+      { name: "Fabuleux", price: 400, desc: "UX premium, fonctionnalités avancées", paypal: "" }
+    ]
+  },
+  {
+    id: 4, name: "Plugin Minecraft Bedrock", icon: "🧱", iconBg: "icon-bg-4",
+    desc: "Add-ons et comportements pour serveurs Bedrock",
+    active: true,
+    tiers: [
+      { name: "Utilisable", price: 30, desc: "Plugin simple, bien fonctionnel", paypal: "" },
+      { name: "De bonne qualité", price: 80, desc: "Optimisé, configurable", paypal: "" },
+      { name: "Fabuleux", price: 200, desc: "Complexe, multi-fonctions, textures custom", paypal: "" }
+    ]
+  },
+  {
+    id: 5, name: "Plugin Minecraft Java", icon: "☕", iconBg: "icon-bg-5",
+    desc: "Plugins Bukkit/Spigot/Paper pour serveurs Java",
+    active: true,
+    tiers: [
+      { name: "Utilisable", price: 35, desc: "Fonctionnel, commandes de base", paypal: "" },
+      { name: "De bonne qualité", price: 90, desc: "API avancée, performances optimisées", paypal: "" },
+      { name: "Fabuleux", price: 220, desc: "Architecture solide, features premium", paypal: "" }
+    ]
+  },
+  {
+    id: 6, name: "Bot Discord", icon: "🤖", iconBg: "icon-bg-1",
+    desc: "Bots Discord personnalisés avec commandes et automatisations",
+    active: true,
+    tiers: [
+      { name: "Utilisable", price: 25, desc: "Commandes de base, modération simple", paypal: "" },
+      { name: "De bonne qualité", price: 70, desc: "Dashboard, slash commands, logs", paypal: "" },
+      { name: "Fabuleux", price: 180, desc: "Système complet, base de données, API", paypal: "" }
+    ]
+  },
+  {
+    id: 7, name: "Serveur Minecraft Bedrock", icon: "🌐", iconBg: "icon-bg-2",
+    desc: "Configuration et setup complet de serveur Bedrock",
+    active: true,
+    tiers: [
+      { name: "Utilisable", price: 20, desc: "Serveur de base configuré", paypal: "" },
+      { name: "De bonne qualité", price: 60, desc: "Plugins, anti-cheat, sécurité", paypal: "" },
+      { name: "Fabuleux", price: 160, desc: "Réseau complet, hub, mini-jeux", paypal: "" }
+    ]
+  },
+  {
+    id: 8, name: "Serveur Minecraft Java", icon: "🏰", iconBg: "icon-bg-3",
+    desc: "Setup complet de serveur Minecraft Java Edition",
+    active: true,
+    tiers: [
+      { name: "Utilisable", price: 25, desc: "Spigot/Paper configuré", paypal: "" },
+      { name: "De bonne qualité", price: 70, desc: "Plugins essentiels, optimisé", paypal: "" },
+      { name: "Fabuleux", price: 180, desc: "Réseau BungeeCord, architecture pro", paypal: "" }
+    ]
+  }
+];
+
+let services = [];
+let adminPassword = "admin123";
+let unsavedChanges = false;
+let isLoggedIn = false;
+
+// ============================
+// LOCAL STORAGE
+// ============================
+function loadData() {
+  try {
+    const saved = localStorage.getItem('devforge_services');
+    const savedPass = localStorage.getItem('devforge_password');
+    if (saved) services = JSON.parse(saved);
+    else services = JSON.parse(JSON.stringify(DEFAULT_SERVICES));
+    if (savedPass) adminPassword = savedPass;
+  } catch(e) {
+    services = JSON.parse(JSON.stringify(DEFAULT_SERVICES));
+  }
+}
+
+function saveData() {
+  localStorage.setItem('devforge_services', JSON.stringify(services));
+  localStorage.setItem('devforge_password', adminPassword);
+}
+
+// ============================
+// RENDER PUBLIC
+// ============================
+const tierClasses = ['t1', 't2', 't3'];
+const tierIcons = ['⚡', '✦', '👑'];
+
+function renderServices() {
+  const grid = document.getElementById('services-grid');
+  grid.innerHTML = '';
+
+  services.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = `service-card ${!s.active ? 'unavailable' : ''}`;
+    card.style.animationDelay = `${i * 0.08}s`;
+
+    const tiersHtml = s.tiers.map((t, ti) => `
+      <div class="tier-row ${tierClasses[ti]}">
+        <div class="tier-left">
+          <span class="tier-icon">${tierIcons[ti]}</span>
+          <div>
+            <div class="tier-name">${t.name}</div>
+            <div class="tier-desc">${t.desc || '—'}</div>
+          </div>
+        </div>
+        <div class="tier-right">
+          <div class="tier-price">${t.price}€</div>
+          ${t.paypal
+            ? `<button class="paypal-btn" onclick="window.open('${t.paypal}','_blank')">PayPal →</button>`
+            : `<button class="paypal-btn" disabled title="Lien PayPal non configuré">Bientôt</button>`
+          }
+        </div>
+      </div>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-icon ${s.iconBg}">${s.icon}</div>
+        <div class="card-info">
+          <h3>${s.name}${!s.active ? '<span class="unavailable-badge">Indisponible</span>' : ''}</h3>
+          <p>${s.desc}</p>
+        </div>
+      </div>
+      <div class="card-tiers">${tiersHtml}</div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+// ============================
+// ADMIN
+// ============================
+function openAdmin() {
+  document.getElementById('adminOverlay').classList.add('open');
+  document.getElementById('adminPassword').value = '';
+  document.getElementById('loginError').textContent = '';
+  if (!isLoggedIn) {
+    document.getElementById('adminLogin').style.display = 'block';
+    document.getElementById('adminContent').classList.remove('visible');
+    document.getElementById('saveBar').style.display = 'none';
+  }
+  setTimeout(() => document.getElementById('adminPassword').focus?.(), 100);
+}
+
+function closeAdmin() {
+  document.getElementById('adminOverlay').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('adminOverlay')) closeAdmin();
+}
+
+function loginAdmin() {
+  const val = document.getElementById('adminPassword').value;
+  if (val === adminPassword) {
+    isLoggedIn = true;
+    document.getElementById('adminLogin').style.display = 'none';
+    document.getElementById('adminContent').classList.add('visible');
+    document.getElementById('saveBar').style.display = 'flex';
+    renderAdminServices();
+    renderPaypalLinks();
+  } else {
+    document.getElementById('loginError').textContent = '✕ Mot de passe incorrect';
+    document.getElementById('adminPassword').style.borderColor = 'var(--accent3)';
+    setTimeout(() => {
+      document.getElementById('adminPassword').style.borderColor = '';
+    }, 1500);
+  }
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.admin-tab').forEach((t, i) => {
+    t.classList.toggle('active', ['services','paypal','settings'][i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+}
+
+// ============================
+// ADMIN: SERVICE LIST
+// ============================
+function renderAdminServices() {
+  const list = document.getElementById('admin-service-list');
+  list.innerHTML = '';
+
+  services.forEach((s, si) => {
+    const div = document.createElement('div');
+    div.className = 'service-item-admin';
+    div.innerHTML = `
+      <div class="item-header">
+        <div class="item-title-row">
+          <input type="text" class="input-field" value="${s.icon}" maxlength="4"
+            onchange="updateService(${si}, 'icon', this.value)"
+            style="width:60px;text-align:center;font-size:1.3rem;padding:6px;">
+          <input type="text" class="input-field" value="${s.name}"
+            onchange="updateService(${si}, 'name', this.value)"
+            style="flex:1;font-weight:700;">
+          <label class="toggle-switch" title="Actif / Inactif">
+            <button class="toggle ${s.active ? 'on' : ''}" onclick="toggleService(${si}, this)"></button>
+            <span style="font-size:0.75rem;color:var(--muted);">${s.active ? 'Actif' : 'Inactif'}</span>
+          </label>
+        </div>
+        <div class="item-actions">
+          <button class="btn-danger btn-sm" onclick="deleteService(${si})">🗑</button>
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <input type="text" class="input-field" value="${s.desc}"
+          placeholder="Description..."
+          onchange="updateService(${si}, 'desc', this.value)"
+          style="width:100%;">
+      </div>
+      <div class="tiers-editor">
+        ${s.tiers.map((t, ti) => `
+          <div class="tier-editor-box ${tierClasses[ti]}">
+            <label>${t.name}</label>
+            <div class="tier-inputs">
+              <input type="number" class="input-field" value="${t.price}" min="0"
+                placeholder="Prix (€)"
+                onchange="updateTier(${si}, ${ti}, 'price', parseFloat(this.value)||0)">
+              <input type="text" class="input-field" value="${t.desc}"
+                placeholder="Courte description..."
+                onchange="updateTier(${si}, ${ti}, 'desc', this.value)">
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function updateService(si, key, val) {
+  services[si][key] = val;
+  markUnsaved();
+}
+
+function updateTier(si, ti, key, val) {
+  services[si].tiers[ti][key] = val;
+  markUnsaved();
+}
+
+function toggleService(si, btn) {
+  services[si].active = !services[si].active;
+  btn.classList.toggle('on', services[si].active);
+  btn.nextElementSibling.textContent = services[si].active ? 'Actif' : 'Inactif';
+  markUnsaved();
+}
+
+function deleteService(si) {
+  if (!confirm(`Supprimer "${services[si].name}" ?`)) return;
+  services.splice(si, 1);
+  renderAdminServices();
+  renderPaypalLinks();
+  markUnsaved();
+}
+
+function addService() {
+  const name = document.getElementById('new-name').value.trim();
+  const icon = document.getElementById('new-icon').value.trim() || '📦';
+  const desc = document.getElementById('new-desc').value.trim();
+  const p1 = parseFloat(document.getElementById('new-p1').value) || 0;
+  const p2 = parseFloat(document.getElementById('new-p2').value) || 0;
+  const p3 = parseFloat(document.getElementById('new-p3').value) || 0;
+  const d1 = document.getElementById('new-d1').value.trim();
+  const d2 = document.getElementById('new-d2').value.trim();
+  const d3 = document.getElementById('new-d3').value.trim();
+
+  if (!name) { alert('Entrez un nom pour le service.'); return; }
+
+  const iconBgs = ['icon-bg-1','icon-bg-2','icon-bg-3','icon-bg-4','icon-bg-5'];
+  const newId = Math.max(0, ...services.map(s => s.id)) + 1;
+
+  services.push({
+    id: newId,
+    name, icon, desc, active: true,
+    iconBg: iconBgs[newId % 5],
+    tiers: [
+      { name: "Utilisable", price: p1, desc: d1, paypal: "" },
+      { name: "De bonne qualité", price: p2, desc: d2, paypal: "" },
+      { name: "Fabuleux", price: p3, desc: d3, paypal: "" }
+    ]
+  });
+
+  ['new-name','new-icon','new-desc','new-p1','new-p2','new-p3','new-d1','new-d2','new-d3']
+    .forEach(id => { document.getElementById(id).value = ''; });
+
+  renderAdminServices();
+  renderPaypalLinks();
+  markUnsaved();
+}
+
+// ============================
+// ADMIN: PAYPAL LINKS
+// ============================
+function renderPaypalLinks() {
+  const list = document.getElementById('paypal-links-list');
+  list.innerHTML = `
+    <div style="margin-bottom:16px;padding:16px;background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.2);border-radius:10px;">
+      <p style="font-size:0.8rem;color:var(--accent2);font-family:'Space Mono',monospace;line-height:1.6;">
+        💡 Collez vos liens PayPal.me ou boutons PayPal ici.<br>Ex: https://paypal.me/votrenom
+      </p>
+    </div>
+  `;
+
+  services.forEach((s, si) => {
+    const div = document.createElement('div');
+    div.className = 'paypal-setting-item';
+    div.innerHTML = `
+      <h4>${s.icon} ${s.name}</h4>
+      ${s.tiers.map((t, ti) => `
+        <div style="margin-bottom:10px;">
+          <p style="color:${['var(--tier1)','var(--tier2)','var(--tier3)'][ti]};font-size:0.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">${tierIcons[ti]} ${t.name} — ${t.price}€</p>
+          <input type="url" class="input-field" value="${t.paypal || ''}"
+            placeholder="https://paypal.me/..."
+            onchange="updateTier(${si}, ${ti}, 'paypal', this.value)"
+            style="width:100%;">
+        </div>
+      `).join('')}
+    `;
+    list.appendChild(div);
+  });
+}
+
+// ============================
+// SAVE / DISCARD
+// ============================
+function markUnsaved() {
+  unsavedChanges = true;
+  const s = document.getElementById('saveStatus');
+  s.textContent = '● Modifications non sauvegardées';
+  s.classList.remove('saved');
+}
+
+function saveChanges() {
+  saveData();
+  renderServices();
+  unsavedChanges = false;
+  const s = document.getElementById('saveStatus');
+  s.textContent = '✓ Sauvegardé !';
+  s.classList.add('saved');
+  setTimeout(() => {
+    s.textContent = 'Tout est sauvegardé';
+  }, 2000);
+}
+
+function discardChanges() {
+  if (!confirm('Annuler toutes les modifications ?')) return;
+  loadData();
+  renderAdminServices();
+  renderPaypalLinks();
+  renderServices();
+  unsavedChanges = false;
+  document.getElementById('saveStatus').textContent = 'Modifications annulées';
+}
+
+function changePassword() {
+  const p1 = document.getElementById('new-pass1').value;
+  const p2 = document.getElementById('new-pass2').value;
+  const err = document.getElementById('passError');
+  if (!p1) { err.textContent = 'Entrez un mot de passe'; return; }
+  if (p1 !== p2) { err.textContent = '✕ Les mots de passe ne correspondent pas'; return; }
+  if (p1.length < 4) { err.textContent = '✕ Minimum 4 caractères'; return; }
+  adminPassword = p1;
+  saveData();
+  err.style.color = 'var(--green)';
+  err.textContent = '✓ Mot de passe changé !';
+  document.getElementById('new-pass1').value = '';
+  document.getElementById('new-pass2').value = '';
+  setTimeout(() => {
+    err.textContent = '';
+    err.style.color = '';
+  }, 3000);
+}
+
+function resetToDefault() {
+  if (!confirm('Réinitialiser TOUS les services aux valeurs par défaut ? Cette action est irréversible.')) return;
+  services = JSON.parse(JSON.stringify(DEFAULT_SERVICES));
+  saveData();
+  renderAdminServices();
+  renderPaypalLinks();
+  renderServices();
+  markUnsaved();
+  saveChanges();
+}
+
+// ============================
+// INIT
+// ============================
+loadData();
+renderServices();
+</script>
+</body>
+</html>
