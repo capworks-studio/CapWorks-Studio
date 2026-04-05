@@ -549,7 +549,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
         <div class="admin-tabs-bar">
           <button class="a-tab active" onclick="aTab('services')">📦 Services</button>
           <button class="a-tab" onclick="aTab('paypal')">💳 PayPal</button>
-          <button class="a-tab" onclick="aTab('users')">👥 Utilisateurs</button>
+          <button class="a-tab" onclick="aTab('users')">👥 Utilisateurs <span id="admin-user-count-badge" style="background:var(--accent);color:white;font-size:0.58rem;padding:1px 5px;border-radius:8px;margin-left:3px;font-weight:700;vertical-align:middle;display:none;"></span></button>
           <button class="a-tab" onclick="aTab('support-admin')">🎟 Support</button>
           <button class="a-tab" onclick="aTab('team')">🏅 Équipe</button>
           <button class="a-tab" onclick="aTab('settings')">⚙ Paramètres</button>
@@ -582,7 +582,13 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 
         <!-- USERS -->
         <div class="a-tab-content" id="atab-users">
-          <div class="info-box">👑 Accordez le rôle <strong>Supporter</strong> aux utilisateurs ayant payé pour débloquer le support. Vous pouvez aussi modifier leur email, emoji ou mot de passe.</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <div class="info-box" style="margin-bottom:0;flex:1;">👑 Accordez le rôle <strong>Supporter</strong> aux utilisateurs ayant payé pour débloquer le support. Vous pouvez aussi modifier leur email, emoji ou mot de passe.</div>
+            <div style="display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:0.68rem;color:var(--green);background:rgba(0,245,147,0.07);border:1px solid rgba(0,245,147,0.25);padding:6px 12px;border-radius:8px;white-space:nowrap;">
+              <div class="blink" style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>
+              Temps réel · <span id="admin-rt-count">0</span> utilisateur(s)
+            </div>
+          </div>
           <div id="admin-user-list"></div>
         </div>
 
@@ -705,33 +711,75 @@ let adminLoggedIn = false;
 let activeTicket = null; // username whose ticket is open in support view
 
 // ================================================
-//  STORAGE
+//  STORAGE — Persistent file-based storage via window.storage
 // ================================================
-function load() {
+let _storageReady = false;
+let _saveDebounce = null;
+
+async function load() {
   try {
-    services = JSON.parse(localStorage.getItem('cw_services') || 'null') || JSON.parse(JSON.stringify(DEFAULT_SERVICES));
-    team = JSON.parse(localStorage.getItem('cw_team') || 'null') || JSON.parse(JSON.stringify(DEFAULT_TEAM));
-    users = JSON.parse(localStorage.getItem('cw_users') || '{}');
-    tickets = JSON.parse(localStorage.getItem('cw_tickets') || '{}');
-    adminPassword = localStorage.getItem('cw_adminpw') || 'admin123';
-    discordWebhook = localStorage.getItem('cw_webhook') || '';
-    const cu = localStorage.getItem('cw_currentuser');
-    if (cu) currentUser = JSON.parse(cu);
+    const [svcRes, teamRes, usersRes, ticketsRes, cfgRes, cuRes] = await Promise.all([
+      safeGet('cw_services'),
+      safeGet('cw_team'),
+      safeGet('cw_users'),
+      safeGet('cw_tickets'),
+      safeGet('cw_config'),
+      safeGet('cw_currentuser'),
+    ]);
+    services = svcRes ? JSON.parse(svcRes) : JSON.parse(JSON.stringify(DEFAULT_SERVICES));
+    team     = teamRes ? JSON.parse(teamRes) : JSON.parse(JSON.stringify(DEFAULT_TEAM));
+    users    = usersRes ? JSON.parse(usersRes) : {};
+    tickets  = ticketsRes ? JSON.parse(ticketsRes) : {};
+    if (cfgRes) {
+      const cfg = JSON.parse(cfgRes);
+      adminPassword  = cfg.adminPassword || 'admin123';
+      discordWebhook = cfg.discordWebhook || '';
+    }
+    if (cuRes) currentUser = JSON.parse(cuRes);
   } catch(e) {
+    console.warn('Load error', e);
     services = JSON.parse(JSON.stringify(DEFAULT_SERVICES));
     team = JSON.parse(JSON.stringify(DEFAULT_TEAM));
   }
+  _storageReady = true;
+}
+
+async function safeGet(key) {
+  try {
+    const r = await window.storage.get(key);
+    return r ? r.value : null;
+  } catch(e) { return null; }
+}
+
+async function safeSet(key, value) {
+  try { await window.storage.set(key, value); } catch(e) { console.warn('Storage set error', key, e); }
 }
 
 function save() {
-  localStorage.setItem('cw_services', JSON.stringify(services));
-  localStorage.setItem('cw_team', JSON.stringify(team));
-  localStorage.setItem('cw_users', JSON.stringify(users));
-  localStorage.setItem('cw_tickets', JSON.stringify(tickets));
-  localStorage.setItem('cw_adminpw', adminPassword);
-  localStorage.setItem('cw_webhook', discordWebhook);
-  if (currentUser) localStorage.setItem('cw_currentuser', JSON.stringify(currentUser));
-  else localStorage.removeItem('cw_currentuser');
+  if (!_storageReady) return;
+  // Debounce saves to avoid hammering storage
+  clearTimeout(_saveDebounce);
+  _saveDebounce = setTimeout(() => _doSave(), 120);
+}
+
+async function _doSave() {
+  await Promise.all([
+    safeSet('cw_services', JSON.stringify(services)),
+    safeSet('cw_team', JSON.stringify(team)),
+    safeSet('cw_users', JSON.stringify(users)),
+    safeSet('cw_tickets', JSON.stringify(tickets)),
+    safeSet('cw_config', JSON.stringify({ adminPassword, discordWebhook })),
+    currentUser
+      ? safeSet('cw_currentuser', JSON.stringify(currentUser))
+      : window.storage.delete('cw_currentuser').catch(()=>{}),
+  ]);
+  // After saving users, broadcast update to admin panel if open
+  if (adminLoggedIn) {
+    const usersTab = document.getElementById('atab-users');
+    if (usersTab && usersTab.classList.contains('active')) {
+      renderAdminUsers();
+    }
+  }
 }
 
 function hashPass(p) {
@@ -765,6 +813,29 @@ window.addEventListener('beforeunload', () => {
 setInterval(() => {
   if (!document.hidden && currentUser) setOnlineStatus(true);
 }, 30000);
+
+// Real-time polling: refresh users in admin panel every 4 seconds
+setInterval(async () => {
+  if (!adminLoggedIn) return;
+  try {
+    const usersRes = await safeGet('cw_users');
+    if (usersRes) {
+      const fresh = JSON.parse(usersRes);
+      // Only re-render if data actually changed
+      if (JSON.stringify(fresh) !== JSON.stringify(users)) {
+        users = fresh;
+        const usersTab = document.getElementById('atab-users');
+        if (usersTab) renderAdminUsers();
+        // Also refresh tickets
+        const ticketsRes = await safeGet('cw_tickets');
+        if (ticketsRes) tickets = JSON.parse(ticketsRes);
+        if (document.getElementById('atab-support-admin')?.classList.contains('active')) {
+          renderAdminTickets();
+        }
+      }
+    }
+  } catch(e) {}
+}, 4000);
 
 // ================================================
 //  RENDER SERVICES
@@ -1363,17 +1434,26 @@ function verifyOTP() {
   }
   clearInterval(_resendTimer);
   const { u, email, p, e } = _pendingReg;
-  users[u] = { hash: hashPass(p), role: 'user', emoji: e, email, supporter: false, online: true };
+  users[u] = { hash: hashPass(p), role: 'user', emoji: e, email, supporter: false, online: true, createdAt: new Date().toISOString() };
   currentUser = { username: u, role: 'user', emoji: e };
   _pendingReg = null; _otpCode = null;
-  save();
+  // Save immediately and then refresh admin panel
+  await _doSave();
   document.querySelectorAll('.auth-tab').forEach(t => t.style.display = '');
   closeOverlay('authOverlay');
   updateHeaderUser();
   renderSupport();
   toast(`✓ Bienvenue, ${u} !`, 'success');
-  save();
-  renderAdminUsers();
+  // Instantly update admin panel users list if admin is open
+  if (adminLoggedIn) {
+    renderAdminUsers();
+    // Flash the users tab badge
+    const usersTabBtn = document.querySelector('.a-tab[onclick*="users"]');
+    if (usersTabBtn) {
+      usersTabBtn.style.color = 'var(--green)';
+      setTimeout(() => { usersTabBtn.style.color = ''; }, 2000);
+    }
+  }
 }
 
 async function resendOTP() {
@@ -1416,7 +1496,7 @@ function logout() {
   setOnlineStatus(false);
   currentUser = null;
   activeTicket = null;
-  localStorage.removeItem('cw_currentuser');
+  window.storage.delete('cw_currentuser').catch(()=>{});
   updateHeaderUser();
   renderSupport();
   toast('Déconnecté.', 'success');
@@ -1534,11 +1614,22 @@ function renderAdminPaypal() {
   });
 }
 
-// Admin Users — full edit
+// Admin Users — full edit (real-time)
 function renderAdminUsers() {
   const list = document.getElementById('admin-user-list');
+  if (!list) return;
   list.innerHTML = '';
   const usernames = Object.keys(users);
+  
+  // Update live count indicators
+  const rtCount = document.getElementById('admin-rt-count');
+  if (rtCount) rtCount.textContent = usernames.length;
+  const badge = document.getElementById('admin-user-count-badge');
+  if (badge) {
+    if (usernames.length > 0) { badge.textContent = usernames.length; badge.style.display = ''; }
+    else badge.style.display = 'none';
+  }
+  
   if (!usernames.length) { list.innerHTML = `<p class="empty-state">Aucun utilisateur inscrit.</p>`; return; }
   usernames.forEach(u => {
     const ud = users[u];
@@ -1549,7 +1640,8 @@ function renderAdminUsers() {
         <div class="user-admin-avatar">${ud.emoji || '👤'}</div>
         <div>
           <div class="user-admin-name">${escHtml(u)}</div>
-          <div class="user-admin-role">${ud.role} · ${ud.email || 'pas d\'email'} · ${ud.supporter ? '⭐ Supporter' : 'non-supporter'}</div>
+          <div class="user-admin-role">${ud.role} · ${ud.email || 'pas d\'email'} · ${ud.supporter ? '⭐ Supporter' : 'non-supporter'} · <span style="color:${ud.online?'var(--green)':\'var(--text3)'}">${ud.online ? '🟢 En ligne' : '⚫ Hors ligne'}</span></div>
+          ${ud.createdAt ? `<div style="font-size:0.62rem;color:var(--text3);font-family:var(--font-mono);margin-top:1px;">inscrit le ${new Date(ud.createdAt).toLocaleDateString('fr-FR', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div>` : ''}
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;min-width:260px;">
@@ -1772,12 +1864,17 @@ function toast(msg, type = 'success') {
 // ================================================
 //  INIT
 // ================================================
-load();
-renderServices();
-renderTeam();
-renderSupport();
-updateHeaderUser();
-if (currentUser) setOnlineStatus(true);
+// Bootstrap — load() is async (file-based storage)
+(async () => {
+  // Show loading state
+  document.getElementById('services-grid').innerHTML = '<div class="empty-state" style="grid-column:1/-1;">⏳ Chargement...</div>';
+  await load();
+  renderServices();
+  renderTeam();
+  renderSupport();
+  updateHeaderUser();
+  if (currentUser) setOnlineStatus(true);
+})();
 </script>
 </body>
 </html>
