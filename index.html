@@ -385,7 +385,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 <!-- HEADER -->
 <header>
   <div class="logo">
-    <img src="CWS_Logo.png" alt="CapWorks Studio Logo" class="logo-img">
+    <img src="https://raw.githubusercontent.com/Capky/CapWorks-Studio/main/CWS_Logo.png" alt="CapWorks Studio Logo" class="logo-img">
     CapWorks<span> Studio</span>
   </div>
 
@@ -401,6 +401,17 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
     <button class="btn-accent" onclick="openAuth('login')">Connexion</button>
   </div>
 </header>
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
 
 <!-- HERO -->
 <section class="hero">
