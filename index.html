@@ -290,9 +290,21 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 .purchase-banner a { color: var(--accent); text-decoration: none; font-weight: 600; }
 
 /* SETTINGS MODAL */
-.settings-modal { max-width: 520px; }
+.settings-modal { max-width: 560px; max-height: 88vh; overflow: hidden; display: flex; flex-direction: column; }
 .settings-section { margin-bottom: 24px; }
 .settings-section h4 { font-size: 0.82rem; font-weight: 700; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.settings-tab-bar { display: flex; gap: 2px; background: var(--surface2); padding: 4px; border-radius: 10px; margin-bottom: 20px; overflow-x: auto; }
+.settings-tab { flex: 1; padding: 8px 10px; background: transparent; border: none; color: var(--text2); font-family: var(--font-head); font-size: 0.78rem; font-weight: 600; border-radius: 7px; cursor: pointer; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.settings-tab.active { background: var(--surface3); color: var(--text); }
+.settings-tab:hover:not(.active) { color: var(--text); }
+.settings-tab-badge { background: var(--accent); color: white; font-size: 0.58rem; padding: 1px 5px; border-radius: 8px; font-weight: 700; line-height: 1.4; }
+.settings-avatar-preview { display: flex; align-items: center; gap: 14px; padding: 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; }
+.settings-avatar-big { width: 52px; height: 52px; border-radius: 50%; background: var(--surface3); border: 2px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; transition: all 0.2s; }
+.purchase-history-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; transition: border-color 0.2s; }
+.purchase-history-item:hover { border-color: var(--border2); }
+.purchase-summary-bar { display: flex; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 4px; }
+.purchase-summary-bar > div { flex: 1; padding: 12px 16px; text-align: center; border-right: 1px solid var(--border); }
+.purchase-summary-bar > div:last-child { border-right: none; }
 
 /* Admin ticket viewer */
 .ticket-admin-list { display: flex; flex-direction: column; gap: 10px; }
@@ -523,7 +535,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
       <h3>⚙ Paramètres du compte</h3>
       <button class="btn-close" onclick="closeOverlay('settingsOverlay')">✕</button>
     </div>
-    <div class="modal-body" id="settings-body"></div>
+    <div class="modal-body" id="settings-body" style="overflow-y:auto;flex:1;padding:24px 28px;"></div>
   </div>
 </div>
 
@@ -550,6 +562,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
           <button class="a-tab active" onclick="aTab('services')">📦 Services</button>
           <button class="a-tab" onclick="aTab('paypal')">💳 PayPal</button>
           <button class="a-tab" onclick="aTab('users')">👥 Utilisateurs <span id="admin-user-count-badge" style="background:var(--accent);color:white;font-size:0.58rem;padding:1px 5px;border-radius:8px;margin-left:3px;font-weight:700;vertical-align:middle;display:none;"></span></button>
+          <button class="a-tab" onclick="aTab('purchases-admin')">🛒 Achats <span id="admin-purchase-badge" style="background:var(--gold);color:var(--bg);font-size:0.58rem;padding:1px 5px;border-radius:8px;margin-left:3px;font-weight:800;vertical-align:middle;display:none;"></span></button>
           <button class="a-tab" onclick="aTab('support-admin')">🎟 Support</button>
           <button class="a-tab" onclick="aTab('team')">🏅 Équipe</button>
           <button class="a-tab" onclick="aTab('settings')">⚙ Paramètres</button>
@@ -590,6 +603,18 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
             </div>
           </div>
           <div id="admin-user-list"></div>
+        </div>
+
+        <!-- PURCHASES ADMIN -->
+        <div class="a-tab-content" id="atab-purchases-admin">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+            <div>
+              <div style="font-weight:700;font-size:0.95rem;margin-bottom:3px;">📋 Toutes les commandes</div>
+              <div style="font-size:0.75rem;color:var(--text2);">Gérez les statuts de livraison des achats clients</div>
+            </div>
+            <div id="admin-purchase-stats" style="display:flex;gap:12px;"></div>
+          </div>
+          <div id="admin-purchases-list"></div>
         </div>
 
         <!-- SUPPORT ADMIN -->
@@ -701,8 +726,9 @@ const EMOJIS = ['😎','🧑‍💻','👾','🦊','🐺','🐉','🦋','🌟','
 
 let services = [];
 let team = [];
-let users = {}; // { username: { hash, role, emoji, email, supporter, online } }
+let users = {}; // { username: { hash, role, emoji, email, supporter, online, createdAt } }
 let tickets = {}; // { username: [ { id, user, emoji, role, text, time } ] }
+let purchases = []; // [ { id, username, email, serviceName, tierName, price, date, status } ]
 let adminPassword = "admin123";
 let currentUser = null;
 let discordWebhook = "";
@@ -718,18 +744,20 @@ let _saveDebounce = null;
 
 async function load() {
   try {
-    const [svcRes, teamRes, usersRes, ticketsRes, cfgRes, cuRes] = await Promise.all([
+    const [svcRes, teamRes, usersRes, ticketsRes, cfgRes, cuRes, purchasesRes] = await Promise.all([
       safeGet('cw_services'),
       safeGet('cw_team'),
       safeGet('cw_users'),
       safeGet('cw_tickets'),
       safeGet('cw_config'),
       safeGet('cw_currentuser'),
+      safeGet('cw_purchases'),
     ]);
-    services = svcRes ? JSON.parse(svcRes) : JSON.parse(JSON.stringify(DEFAULT_SERVICES));
-    team     = teamRes ? JSON.parse(teamRes) : JSON.parse(JSON.stringify(DEFAULT_TEAM));
-    users    = usersRes ? JSON.parse(usersRes) : {};
-    tickets  = ticketsRes ? JSON.parse(ticketsRes) : {};
+    services  = svcRes ? JSON.parse(svcRes) : JSON.parse(JSON.stringify(DEFAULT_SERVICES));
+    team      = teamRes ? JSON.parse(teamRes) : JSON.parse(JSON.stringify(DEFAULT_TEAM));
+    users     = usersRes ? JSON.parse(usersRes) : {};
+    tickets   = ticketsRes ? JSON.parse(ticketsRes) : {};
+    purchases = purchasesRes ? JSON.parse(purchasesRes) : [];
     if (cfgRes) {
       const cfg = JSON.parse(cfgRes);
       adminPassword  = cfg.adminPassword || 'admin123';
@@ -768,6 +796,7 @@ async function _doSave() {
     safeSet('cw_team', JSON.stringify(team)),
     safeSet('cw_users', JSON.stringify(users)),
     safeSet('cw_tickets', JSON.stringify(tickets)),
+    safeSet('cw_purchases', JSON.stringify(purchases)),
     safeSet('cw_config', JSON.stringify({ adminPassword, discordWebhook })),
     currentUser
       ? safeSet('cw_currentuser', JSON.stringify(currentUser))
@@ -925,6 +954,20 @@ async function confirmAndPay() {
           description:`**${buyerName}** a acheté **${serviceName}** — niveau **${tierName}** — **${price}€**\n📅 ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}\n📬 \`${email}\``,
           footer:{ text:'CapWorks Studio · Paiement PayPal' }, timestamp: now.toISOString() }] }) });
     } catch(e) { console.warn('Webhook error', e); }
+  }
+  // Record purchase for history
+  if (currentUser) {
+    purchases.push({
+      id: Date.now(),
+      username: currentUser.username,
+      email: email,
+      serviceName,
+      tierName,
+      price,
+      date: new Date().toISOString(),
+      status: 'pending'
+    });
+    save();
   }
   toast('Commande confirmée !', 'success');
   _pendingPayment = null;
@@ -1189,63 +1232,199 @@ function openSettings() {
   document.getElementById('settingsOverlay').classList.add('open');
 }
 
-function renderSettings() {
+function renderSettings(tab) {
+  if (!tab) tab = 'profile';
   const ud = users[currentUser.username] || {};
-  document.getElementById('settings-body').innerHTML = `
-    <div class="settings-section">
-      <h4>👤 Profil</h4>
-      <div class="form-group">
-        <label>Emoji avatar</label>
-        <input type="text" class="input" id="set-emoji" value="${escHtml(currentUser.emoji || '👤')}" maxlength="4" placeholder="👤">
+  const myPurchases = purchases.filter(p => p.username === currentUser.username);
+  const totalSpent = myPurchases.reduce((s, p) => s + (p.price || 0), 0);
+
+  const tabBar = `
+    <div class="settings-tab-bar">
+      <button class="settings-tab${tab==='profile'?' active':''}" onclick="renderSettings('profile')">👤 Profil</button>
+      <button class="settings-tab${tab==='purchases'?' active':''}" onclick="renderSettings('purchases')">🛒 Achats <span class="settings-tab-badge">${myPurchases.length}</span></button>
+      <button class="settings-tab${tab==='security'?' active':''}" onclick="renderSettings('security')">🔑 Sécurité</button>
+      <button class="settings-tab${tab==='danger'?' active':''}" onclick="renderSettings('danger')">⚠️ Compte</button>
+    </div>`;
+
+  let tabContent = '';
+
+  if (tab === 'profile') {
+    tabContent = `
+      <div class="settings-section">
+        <h4>👤 Profil</h4>
+        <div class="settings-avatar-preview">
+          <div class="settings-avatar-big" id="set-avatar-preview">${escHtml(currentUser.emoji || '👤')}</div>
+          <div>
+            <div style="font-weight:700;font-size:1rem;">${escHtml(currentUser.username)}</div>
+            <div style="font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);margin-top:3px;">${ud.role || 'user'}${ud.supporter ? ' · ⭐ Supporter' : ''}</div>
+            ${ud.createdAt ? `<div style="font-size:0.68rem;color:var(--text3);font-family:var(--font-mono);margin-top:2px;">Membre depuis ${new Date(ud.createdAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})}</div>` : ''}
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Emoji avatar</label>
+          <input type="text" class="input" id="set-emoji" value="${escHtml(currentUser.emoji || '👤')}" maxlength="4" placeholder="👤"
+            oninput="const el=document.getElementById('set-avatar-preview');if(el)el.textContent=this.value||'👤'">
+        </div>
+        <div class="form-group">
+          <label>Adresse email</label>
+          <input type="email" class="input" id="set-email" value="${escHtml(ud.email || '')}" placeholder="exemple@mail.com">
+        </div>
       </div>
-    </div>
-    <div class="settings-section">
-      <h4>📧 Email</h4>
-      <div class="form-group">
-        <label>Adresse email</label>
-        <input type="email" class="input" id="set-email" value="${escHtml(ud.email || '')}" placeholder="exemple@mail.com">
+      <div id="set-msg" class="err" style="margin-bottom:12px;"></div>
+      <button class="btn-primary" onclick="saveSettings()">💾 Sauvegarder le profil</button>`;
+  }
+
+  else if (tab === 'purchases') {
+    const statusLabel = { pending:'⏳ En attente', confirmed:'✅ Confirmé', delivered:'📦 Livré' };
+    const statusColor = { pending:'var(--gold)', confirmed:'var(--cyan)', delivered:'var(--green)' };
+    const purchasesHtml = myPurchases.length === 0
+      ? `<div class="empty-state" style="padding:32px 0;">— Aucun achat enregistré —<br><span style="font-size:0.75rem;margin-top:6px;display:block;">Vos commandes PayPal apparaîtront ici après paiement</span></div>`
+      : [...myPurchases].reverse().map(p => {
+          const d = new Date(p.date);
+          const dateStr = d.toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+          const timeStr = d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+          const st = p.status || 'pending';
+          return `
+            <div class="purchase-history-item">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;">
+                <div>
+                  <div style="font-weight:700;font-size:0.92rem;">${escHtml(p.serviceName)}</div>
+                  <div style="font-size:0.72rem;color:var(--text2);margin-top:3px;">Niveau : <span style="font-weight:600;">${escHtml(p.tierName)}</span></div>
+                  <div style="font-size:0.68rem;color:var(--text3);font-family:var(--font-mono);margin-top:4px;">📅 ${dateStr} à ${timeStr}</div>
+                  ${p.email ? `<div style="font-size:0.68rem;color:var(--text3);font-family:var(--font-mono);">📬 ${escHtml(p.email)}</div>` : ''}
+                </div>
+                <div style="text-align:right;flex-shrink:0;">
+                  <div style="font-family:var(--font-mono);font-weight:800;font-size:1.05rem;color:var(--green);">${p.price}€</div>
+                  <div style="font-size:0.65rem;font-weight:700;color:${statusColor[st]};margin-top:4px;font-family:var(--font-mono);background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;">${statusLabel[st]||st}</div>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+
+    const summaryHtml = myPurchases.length > 0 ? `
+      <div class="purchase-summary-bar">
+        <div><span style="color:var(--text3);font-size:0.65rem;font-family:var(--font-mono);">TOTAL DÉPENSÉ</span><br><span style="font-family:var(--font-mono);font-weight:800;font-size:1.05rem;color:var(--gold);">${totalSpent}€</span></div>
+        <div><span style="color:var(--text3);font-size:0.65rem;font-family:var(--font-mono);">COMMANDES</span><br><span style="font-family:var(--font-mono);font-weight:800;font-size:1.05rem;color:var(--cyan);">${myPurchases.length}</span></div>
+        <div><span style="color:var(--text3);font-size:0.65rem;font-family:var(--font-mono);">STATUT</span><br><span style="font-size:0.8rem;font-weight:700;">${ud.supporter ? '⭐ Supporter' : '—'}</span></div>
+      </div>` : '';
+
+    tabContent = `
+      <div class="settings-section" style="margin-bottom:0;">
+        <h4>🛒 Historique des achats</h4>
+        ${summaryHtml}
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px;">${purchasesHtml}</div>
+        <p style="font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);margin-top:14px;line-height:1.7;">💡 Après chaque paiement PayPal confirmé, votre achat est enregistré ici. Contactez un admin si le statut n'est pas mis à jour.</p>
+      </div>`;
+  }
+
+  else if (tab === 'security') {
+    tabContent = `
+      <div class="settings-section">
+        <h4>🔑 Changer le mot de passe</h4>
+        <div class="form-group"><label>Mot de passe actuel</label><input type="password" class="input" id="set-pw-cur" placeholder="••••••••"></div>
+        <div class="form-group"><label>Nouveau mot de passe</label><input type="password" class="input" id="set-pw-new" placeholder="Min. 4 caractères"></div>
+        <div class="form-group"><label>Confirmer</label><input type="password" class="input" id="set-pw-conf" placeholder="••••••••"></div>
+        <div id="set-msg" class="err" style="margin-bottom:12px;"></div>
+        <button class="btn-primary" onclick="savePasswordOnly()">🔑 Changer le mot de passe</button>
       </div>
-    </div>
-    <div class="settings-section">
-      <h4>🔑 Mot de passe</h4>
-      <div class="form-group"><label>Mot de passe actuel</label><input type="password" class="input" id="set-pw-cur" placeholder="••••••••"></div>
-      <div class="form-group"><label>Nouveau mot de passe</label><input type="password" class="input" id="set-pw-new" placeholder="Min. 4 caractères"></div>
-      <div class="form-group"><label>Confirmer</label><input type="password" class="input" id="set-pw-conf" placeholder="••••••••"></div>
-    </div>
-    <div id="set-msg" class="err" style="margin-bottom:12px;"></div>
-    <button class="btn-primary" onclick="saveSettings()">💾 Sauvegarder</button>
-  `;
+      <div class="settings-section">
+        <h4>📋 Informations du compte</h4>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;font-family:var(--font-mono);font-size:0.72rem;color:var(--text2);line-height:2.2;">
+          <div>Pseudo : <span style="color:var(--accent);font-weight:700;">${escHtml(currentUser.username)}</span></div>
+          <div>Rôle : <span style="color:var(--text);">${ud.role || 'user'}</span></div>
+          <div>Email : <span style="color:var(--text);">${ud.email || 'non renseigné'}</span></div>
+          ${ud.createdAt ? `<div>Inscrit le : <span style="color:var(--text);">${new Date(ud.createdAt).toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</span></div>` : ''}
+        </div>
+      </div>`;
+  }
+
+  else if (tab === 'danger') {
+    tabContent = `
+      <div class="settings-section">
+        <h4 style="color:var(--red);">⚠️ Zone dangereuse</h4>
+        <div style="background:rgba(255,77,109,0.05);border:1px solid rgba(255,77,109,0.2);border-radius:12px;padding:20px;">
+          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;">
+            <div style="font-size:1.8rem;flex-shrink:0;">🗑️</div>
+            <div>
+              <div style="font-weight:700;font-size:0.95rem;margin-bottom:6px;color:var(--red);">Supprimer mon compte</div>
+              <div style="font-size:0.78rem;color:var(--text2);line-height:1.7;">Cette action est <strong style="color:var(--red);">irréversible</strong>. Votre profil, vos messages de support et votre accès seront définitivement supprimés. Votre historique d'achats sera conservé côté admin.</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Confirmez avec votre mot de passe</label>
+            <input type="password" class="input" id="del-confirm-pw" placeholder="Votre mot de passe actuel" onkeypress="if(event.key==='Enter')deleteOwnAccount()">
+          </div>
+          <div id="del-msg" class="err" style="margin-bottom:12px;"></div>
+          <button class="btn-danger" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;" onclick="deleteOwnAccount()">🗑️ Supprimer définitivement mon compte</button>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('settings-body').innerHTML = tabBar + `<div style="padding-bottom:4px;">${tabContent}</div>`;
 }
 
 function saveSettings() {
-  const emoji = document.getElementById('set-emoji').value.trim() || '👤';
-  const email = document.getElementById('set-email').value.trim();
-  const curPw = document.getElementById('set-pw-cur').value;
-  const newPw = document.getElementById('set-pw-new').value;
-  const confPw = document.getElementById('set-pw-conf').value;
-  const msg = document.getElementById('set-msg');
-  msg.className = 'err';
-
+  const emojiEl = document.getElementById('set-emoji');
+  const emailEl = document.getElementById('set-email');
+  if (!emojiEl) return;
+  const emoji = emojiEl.value.trim() || '👤';
+  const email = emailEl ? emailEl.value.trim() : '';
   const ud = users[currentUser.username];
   if (!ud) return;
-
-  // Password change
-  if (newPw || curPw) {
-    if (!curPw) { msg.textContent = '✕ Entrez votre mot de passe actuel'; return; }
-    if (ud.hash !== hashPass(curPw)) { msg.textContent = '✕ Mot de passe actuel incorrect'; return; }
-    if (!newPw || newPw.length < 4) { msg.textContent = '✕ Nouveau mot de passe trop court'; return; }
-    if (newPw !== confPw) { msg.textContent = '✕ Les mots de passe ne correspondent pas'; return; }
-    ud.hash = hashPass(newPw);
-  }
-
   ud.emoji = emoji;
   if (email) ud.email = email;
   currentUser.emoji = emoji;
   save();
   updateHeaderUser();
+  renderSettings('profile');
+  toast('✓ Profil sauvegardé !', 'success');
+}
+
+function savePasswordOnly() {
+  const curPw = document.getElementById('set-pw-cur').value;
+  const newPw = document.getElementById('set-pw-new').value;
+  const confPw = document.getElementById('set-pw-conf').value;
+  const msg = document.getElementById('set-msg');
+  msg.className = 'err';
+  const ud = users[currentUser.username];
+  if (!ud) return;
+  if (!curPw) { msg.textContent = '✕ Entrez votre mot de passe actuel'; return; }
+  if (ud.hash !== hashPass(curPw)) { msg.textContent = '✕ Mot de passe actuel incorrect'; return; }
+  if (!newPw || newPw.length < 4) { msg.textContent = '✕ Nouveau mot de passe trop court'; return; }
+  if (newPw !== confPw) { msg.textContent = '✕ Les mots de passe ne correspondent pas'; return; }
+  ud.hash = hashPass(newPw);
+  save();
   msg.className = 'ok';
-  msg.textContent = '✓ Paramètres sauvegardés !';
-  setTimeout(() => { msg.textContent = ''; }, 3000);
+  msg.textContent = '✓ Mot de passe changé !';
+  document.getElementById('set-pw-cur').value = '';
+  document.getElementById('set-pw-new').value = '';
+  document.getElementById('set-pw-conf').value = '';
+  setTimeout(() => { msg.textContent = ''; msg.className = 'err'; }, 3000);
+}
+
+async function deleteOwnAccount() {
+  const pwEl = document.getElementById('del-confirm-pw');
+  const msg = document.getElementById('del-msg');
+  if (!pwEl) return;
+  const pw = pwEl.value;
+  msg.className = 'err';
+  const ud = users[currentUser.username];
+  if (!ud) return;
+  if (!pw) { msg.textContent = '✕ Entrez votre mot de passe pour confirmer'; return; }
+  if (ud.hash !== hashPass(pw)) { msg.textContent = '✕ Mot de passe incorrect'; return; }
+  if (!confirm('Êtes-vous sûr(e) de vouloir supprimer définitivement votre compte "' + currentUser.username + '" ? Cette action est irréversible.')) return;
+  const username = currentUser.username;
+  delete users[username];
+  if (tickets[username]) delete tickets[username];
+  purchases.filter(p => p.username === username).forEach(p => { p.deletedUser = true; });
+  currentUser = null;
+  activeTicket = null;
+  await _doSave();
+  window.storage.delete('cw_currentuser').catch(()=>{});
+  closeOverlay('settingsOverlay');
+  updateHeaderUser();
+  renderSupport();
+  toast('Compte supprimé définitivement.', 'success');
 }
 
 // ================================================
@@ -1525,7 +1704,7 @@ function loginAdmin() {
 }
 
 function aTab(name) {
-  const tabs = ['services','paypal','users','support-admin','team','settings'];
+  const tabs = ['services','paypal','users','purchases-admin','support-admin','team','settings'];
   document.querySelectorAll('.a-tab').forEach((t, i) => t.classList.toggle('active', tabs[i] === name));
   document.querySelectorAll('.a-tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById(`atab-${name}`).classList.add('active');
@@ -1535,6 +1714,7 @@ function renderAdminAll() {
   renderAdminServices();
   renderAdminPaypal();
   renderAdminUsers();
+  renderAdminPurchases();
   renderAdminTickets();
   renderAdminTeam();
 }
@@ -1702,6 +1882,83 @@ function deleteUser(u) {
   if (currentUser && currentUser.username === u) logout();
   save(); renderAdminUsers();
   toast(`Compte ${u} supprimé`, 'success');
+}
+
+// Admin Purchases
+function renderAdminPurchases() {
+  const list = document.getElementById('admin-purchases-list');
+  const stats = document.getElementById('admin-purchase-stats');
+  if (!list) return;
+  list.innerHTML = '';
+  const totalRevenue = purchases.reduce((s, p) => s + (p.price || 0), 0);
+  const pending = purchases.filter(p => (p.status || 'pending') === 'pending').length;
+  if (stats) stats.innerHTML = `
+    <div style="text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;">
+      <div style="font-family:var(--font-mono);font-weight:800;font-size:1rem;color:var(--green);">${totalRevenue}\u20ac</div>
+      <div style="font-size:0.62rem;color:var(--text3);font-family:var(--font-mono);">TOTAL CA</div>
+    </div>
+    <div style="text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;">
+      <div style="font-family:var(--font-mono);font-weight:800;font-size:1rem;color:var(--cyan);">${purchases.length}</div>
+      <div style="font-size:0.62rem;color:var(--text3);font-family:var(--font-mono);">COMMANDES</div>
+    </div>
+    <div style="text-align:center;background:var(--surface2);border:1px solid rgba(255,201,71,0.3);border-radius:8px;padding:8px 14px;">
+      <div style="font-family:var(--font-mono);font-weight:800;font-size:1rem;color:var(--gold);">${pending}</div>
+      <div style="font-size:0.62rem;color:var(--text3);font-family:var(--font-mono);">EN ATTENTE</div>
+    </div>`;
+  const badge = document.getElementById('admin-purchase-badge');
+  if (badge) { if (pending > 0) { badge.textContent = pending; badge.style.display = ''; } else badge.style.display = 'none'; }
+  if (!purchases.length) { list.innerHTML = '<p class="empty-state">Aucune commande enregistr\u00e9e.</p>'; return; }
+  const statusLabel = { pending:'\u23f3 En attente', confirmed:'\u2705 Confirm\u00e9', delivered:'\ud83d\udce6 Livr\u00e9' };
+  const statusColor = { pending:'var(--gold)', confirmed:'var(--cyan)', delivered:'var(--green)' };
+  const statusBg    = { pending:'rgba(255,201,71,0.08)', confirmed:'rgba(0,212,255,0.08)', delivered:'rgba(0,245,147,0.08)' };
+  [...purchases].reverse().forEach((p, ri) => {
+    const idx = purchases.length - 1 - ri;
+    const d = new Date(p.date);
+    const dateStr = d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
+    const timeStr = d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    const st = p.status || 'pending';
+    const ud = users[p.username];
+    const div = document.createElement('div');
+    div.className = 'user-admin-item';
+    div.style.cssText = 'border-left:3px solid ' + (statusColor[st]||'var(--border2)') + ';margin-bottom:10px;';
+    div.innerHTML = `
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+          <span style="font-size:1rem;">${ud ? ud.emoji || '\ud83d\udc64' : '\ud83d\udc64'}</span>
+          <span style="font-weight:700;font-size:0.9rem;">${escHtml(p.username)}</span>
+          <span style="font-family:var(--font-mono);font-size:0.68rem;background:${statusBg[st]};color:${statusColor[st]};border:1px solid ${statusColor[st]};padding:2px 7px;border-radius:5px;font-weight:700;">${statusLabel[st]||st}</span>
+          ${p.deletedUser ? '<span style="font-size:0.62rem;color:var(--text3);font-family:var(--font-mono);">[compte supprim\u00e9]</span>' : ''}
+        </div>
+        <div style="font-size:0.82rem;color:var(--text2);margin-bottom:2px;">${escHtml(p.serviceName)} \u00b7 <span style="font-weight:600;">${escHtml(p.tierName)}</span></div>
+        <div style="font-size:0.68rem;color:var(--text3);font-family:var(--font-mono);">\ud83d\udcc5 ${dateStr} \u00e0 ${timeStr} \u00b7 \ud83d\udce8 ${escHtml(p.email || '\u2014')}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;">
+        <div style="font-family:var(--font-mono);font-weight:800;font-size:1rem;color:var(--green);">${p.price}\u20ac</div>
+        <select class="input" style="font-size:0.72rem;padding:5px 8px;width:140px;" onchange="adminSetPurchaseStatus(${idx},this.value)">
+          <option value="pending"${st==='pending'?' selected':''}>\u23f3 En attente</option>
+          <option value="confirmed"${st==='confirmed'?' selected':''}>\u2705 Confirm\u00e9</option>
+          <option value="delivered"${st==='delivered'?' selected':''}>\ud83d\udce6 Livr\u00e9</option>
+        </select>
+        <button class="btn-danger btn-sm" onclick="adminDeletePurchase(${idx})">\ud83d\uddd1</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function adminSetPurchaseStatus(idx, status) {
+  if (!purchases[idx]) return;
+  purchases[idx].status = status;
+  save();
+  renderAdminPurchases();
+  toast('Statut mis \u00e0 jour : ' + status, 'success');
+}
+
+function adminDeletePurchase(idx) {
+  if (!confirm("Supprimer cette commande de l'historique ?")) return;
+  purchases.splice(idx, 1);
+  save();
+  renderAdminPurchases();
+  toast('Commande supprim\u00e9e', 'success');
 }
 
 // Admin Support tickets
