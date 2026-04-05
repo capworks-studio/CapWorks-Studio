@@ -1372,6 +1372,8 @@ function verifyOTP() {
   updateHeaderUser();
   renderSupport();
   toast(`✓ Bienvenue, ${u} !`, 'success');
+  save();
+  renderAdminUsers();
 }
 
 async function resendOTP() {
@@ -1428,6 +1430,7 @@ function openAdmin() {
   if (adminLoggedIn) return;
   document.getElementById('admin-pw').value = '';
   document.getElementById('admin-pw-err').textContent = '';
+  renderAdminUsers();
 }
 
 function loginAdmin() {
