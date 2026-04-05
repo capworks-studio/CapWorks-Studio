@@ -401,6 +401,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
     <button class="btn-accent" onclick="openAuth('login')">Connexion</button>
   </div>
 </header>
+<style>
 .logo {
   display: flex;
   align-items: center;
@@ -408,11 +409,14 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 }
 
 .logo-img {
-  width: 2px;
-  height: 2px;
+  width: 32px;
+  height: 32px;
+  max-width: 32px;
+  max-height: 32px;
   object-fit: contain;
-  display: block;
+  display: inline-block;
 }
+</style>
 
 <!-- HERO -->
 <section class="hero">
