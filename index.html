@@ -604,7 +604,24 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
             </div>
 
             <div class="admin-service-item">
-              <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">🔗 Webhook Discord</h4>
+              <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">📧 Configuration EmailJS</h4>
+              <p style="color:var(--text2);font-size:0.78rem;margin-bottom:12px;line-height:1.6;">
+                EmailJS est utilisé pour envoyer les codes OTP lors de l'inscription.<br>
+                <span style="color:var(--text3);">Créez un compte sur <a href="https://emailjs.com" target="_blank" style="color:var(--accent);">emailjs.com</a> → récupérez votre Public Key, Service ID et Template ID.</span>
+              </p>
+              <div style="display:flex;flex-direction:column;gap:8px;max-width:460px;">
+                <input type="text" class="input" id="ejs-pubkey" placeholder="Public Key (ex: -Y8WjfvgdGTW69eYQ)" style="font-family:var(--font-mono);font-size:0.8rem;">
+                <input type="text" class="input" id="ejs-service" placeholder="Service ID (ex: service_xxxxxx)" style="font-family:var(--font-mono);font-size:0.8rem;">
+                <input type="text" class="input" id="ejs-template" placeholder="Template ID (ex: template_xxxxxx)" style="font-family:var(--font-mono);font-size:0.8rem;">
+                <div style="display:flex;gap:8px;">
+                  <button class="btn-success btn-sm" onclick="saveEmailJSConfig()">💾 Sauvegarder</button>
+                  <button class="btn-ghost btn-sm" onclick="testEmailJSConfig()">📧 Tester</button>
+                </div>
+                <div id="ejs-msg" class="ok" style="display:none;"></div>
+              </div>
+            </div>
+
+            <div class="admin-service-item">
               <p style="color:var(--text2);font-size:0.78rem;margin-bottom:10px;">Les paiements seront annoncés via ce webhook.</p>
               <input type="url" class="input mb12" id="discord-webhook" placeholder="https://discord.com/api/webhooks/...">
               <button class="btn-success btn-sm" onclick="saveWebhook()">Sauvegarder</button>
@@ -681,6 +698,11 @@ let jsonbinKey = "";
 let syncInterval = null;
 let lastSyncTime = null;
 
+// EmailJS config
+let emailjsPublicKey = "-Y8WjfvgdGTW69eYQ";
+let emailjsServiceId = "service_kee805w";
+let emailjsTemplateId = "template_ueewv6y";
+
 // ================================================
 //  STORAGE
 // ================================================
@@ -694,6 +716,9 @@ function load() {
     discordWebhook = localStorage.getItem('cw_webhook') || '';
     jsonbinId = localStorage.getItem('cw_jsonbin_id') || '';
     jsonbinKey = localStorage.getItem('cw_jsonbin_key') || '';
+    emailjsPublicKey = localStorage.getItem('cw_ejs_pubkey') || '-Y8WjfvgdGTW69eYQ';
+    emailjsServiceId = localStorage.getItem('cw_ejs_service') || 'service_kee805w';
+    emailjsTemplateId = localStorage.getItem('cw_ejs_template') || 'template_ueewv6y';
     const cu = localStorage.getItem('cw_currentuser');
     if (cu) currentUser = JSON.parse(cu);
   } catch(e) {
@@ -711,6 +736,9 @@ function save() {
   localStorage.setItem('cw_webhook', discordWebhook);
   localStorage.setItem('cw_jsonbin_id', jsonbinId);
   localStorage.setItem('cw_jsonbin_key', jsonbinKey);
+  localStorage.setItem('cw_ejs_pubkey', emailjsPublicKey);
+  localStorage.setItem('cw_ejs_service', emailjsServiceId);
+  localStorage.setItem('cw_ejs_template', emailjsTemplateId);
   if (currentUser) localStorage.setItem('cw_currentuser', JSON.stringify(currentUser));
   else localStorage.removeItem('cw_currentuser');
 }
@@ -925,6 +953,11 @@ function renderServices() {
 let _pendingPayment = null;
 
 function handlePayment(serviceName, tierName, price, paypalUrl) {
+  if (!currentUser) {
+    toast('Connectez-vous pour acheter un service', 'error');
+    openAuth('login');
+    return;
+  }
   _pendingPayment = { serviceName, tierName, price, paypalUrl };
   const emailInput = document.getElementById('pay-email');
   emailInput.value = currentUser && users[currentUser.username]?.email ? users[currentUser.username].email : '';
@@ -940,7 +973,12 @@ function handlePayment(serviceName, tierName, price, paypalUrl) {
 
 // Handler for free services — no PayPal needed
 function handleFreeService(serviceName, tierName) {
-  const buyerName = currentUser ? currentUser.username : 'Visiteur';
+  if (!currentUser) {
+    toast('Connectez-vous pour accéder à ce service', 'error');
+    openAuth('login');
+    return;
+  }
+  const buyerName = currentUser.username;
   const bannerZone = document.getElementById('purchase-banner-zone');
   bannerZone.innerHTML = `
     <div class="purchase-banner">
@@ -976,9 +1014,13 @@ async function confirmAndPay() {
   bannerZone.innerHTML = `
     <div class="purchase-banner">
       <div class="purchase-banner-icon">✅</div>
-      <div>
+      <div style="flex:1;">
         <h4>Commande confirmée — ${escHtml(serviceName)} · ${escHtml(tierName)} · ${price}€</h4>
         <p>Un membre de l'équipe vous contactera prochainement à <strong style="color:var(--cyan);">${escHtml(email)}</strong>.<br>Rejoignez-nous sur Discord : <a href="https://discord.gg/52AJ2jgHda" target="_blank">discord.gg/52AJ2jgHda</a></p>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,77,109,0.2);">
+          <button class="btn-danger btn-sm" onclick="cancelOrder('${escHtml(serviceName)}','${escHtml(tierName)}',${price},'${escHtml(email)}',this)">🗑 Annuler la commande</button>
+          <span style="font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);margin-left:10px;">Une demande d'annulation sera envoyée au support.</span>
+        </div>
       </div>
     </div>
   `;
@@ -992,6 +1034,59 @@ async function confirmAndPay() {
   }
   toast('Commande confirmée !', 'success');
   _pendingPayment = null;
+
+  // Auto-message dans le support
+  if (currentUser) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    if (!tickets[currentUser.username]) tickets[currentUser.username] = [];
+    tickets[currentUser.username].push({
+      user: currentUser.username,
+      emoji: currentUser.emoji || '👤',
+      role: currentUser.role,
+      text: `Je suis intéressé par votre service "${serviceName}" pour le niveau "${tierName}" (${price}€). Je viens de procéder au paiement via PayPal avec l'adresse : ${email}. Merci de confirmer la prise en charge de ma commande.`,
+      time: timeStr,
+      type: 'order'
+    });
+    save();
+    renderSupport();
+    document.getElementById('support').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => toast('Message automatique envoyé dans le support !', 'success'), 800);
+  }
+}
+
+function cancelOrder(serviceName, tierName, price, email, btn) {
+  if (!confirm(`Annuler la commande "${serviceName} — ${tierName}" ? Un message sera envoyé au support.`)) return;
+  btn.closest('.purchase-banner').innerHTML = `
+    <div class="purchase-banner-icon">❌</div>
+    <div>
+      <h4 style="color:var(--red);">Commande annulée — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4>
+      <p>Votre demande d'annulation a été transmise au support. Un modérateur vous contactera prochainement.</p>
+    </div>
+  `;
+  if (currentUser) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    if (!tickets[currentUser.username]) tickets[currentUser.username] = [];
+    tickets[currentUser.username].push({
+      user: currentUser.username,
+      emoji: currentUser.emoji || '👤',
+      role: currentUser.role,
+      text: `⚠️ ANNULATION DE COMMANDE ⚠️\nJe souhaite annuler ma commande pour le service "${serviceName}" — niveau "${tierName}" — ${price}€ (email : ${email}). Merci de traiter ma demande d'annulation et de me rembourser si le paiement a été effectué.`,
+      time: timeStr,
+      type: 'cancel'
+    });
+    save();
+    renderSupport();
+  }
+  if (discordWebhook) {
+    const now = new Date();
+    fetch(discordWebhook, { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ embeds: [{ title:'❌ Annulation de commande — CapWorks Studio', color:0xff4d6d,
+        description:`**${currentUser ? currentUser.username : 'Visiteur'}** annule sa commande\n**Service :** ${serviceName}\n**Niveau :** ${tierName}\n**Prix :** ${price}€\n📬 \`${email}\`\n📅 ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`,
+        footer:{ text:'CapWorks Studio · Annulation' }, timestamp: now.toISOString() }] }) }).catch(()=>{});
+  }
+  toast('Annulation envoyée au support', 'success');
 }
 
 // ================================================
@@ -1373,7 +1468,8 @@ async function doRegister() {
   const btn = document.getElementById('r-btn');
   btn.disabled = true; btn.textContent = 'Envoi du code...'; err.textContent = '';
   try {
-    await emailjs.send('service_kee805w', 'template_ueewv6y', { to_email: email, to_name: u, code: _otpCode });
+    emailjs.init(emailjsPublicKey);
+    await emailjs.send(emailjsServiceId, emailjsTemplateId, { to_email: email, to_name: u, code: _otpCode });
     showVerifyStep(email);
   } catch(ex) {
     err.textContent = '✕ Erreur lors de l\'envoi.';
@@ -1456,7 +1552,8 @@ async function resendOTP() {
   const btn = document.getElementById('resend-btn');
   btn.disabled = true; btn.textContent = 'Envoi...';
   try {
-    await emailjs.send('service_kee805w', 'template_ueewv6y', { to_email: _pendingReg.email, to_name: _pendingReg.u, code: _otpCode });
+    emailjs.init(emailjsPublicKey);
+    await emailjs.send(emailjsServiceId, emailjsTemplateId, { to_email: _pendingReg.email, to_name: _pendingReg.u, code: _otpCode });
     let secs = 60;
     btn.innerHTML = 'Renvoyer (<span id="resend-count">60</span>s)';
     _resendTimer = setInterval(() => {
