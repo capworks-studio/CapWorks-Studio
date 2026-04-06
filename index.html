@@ -368,6 +368,18 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 #festive-deco { position: fixed; inset: 0; pointer-events: none; z-index: 9998; overflow: hidden; }
 .festive-particle { position: absolute; font-size: 1.2rem; opacity: 0.6; animation: festive-fall linear infinite; pointer-events: none; }
 @keyframes festive-fall { 0% { transform: translateY(-5vh) rotate(0deg); opacity: 0.7; } 100% { transform: translateY(105vh) rotate(360deg); opacity: 0; } }
+.festive-particle { position: absolute; top: -40px; font-size: 1.2rem; opacity: 0; animation: festive-fall linear forwards; pointer-events: none; }
+@keyframes festive-fall { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 5% { opacity: 0.7; } 90% { opacity: 0.5; } 100% { transform: translateY(calc(100vh + 60px)) rotate(360deg); opacity: 0; } }
+
+/* Festive greeting banner */
+.festive-banner { position: relative; z-index: 2; text-align: center; padding: 14px 20px; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; background: linear-gradient(90deg, rgba(108,99,255,0.08), rgba(0,212,255,0.06), rgba(108,99,255,0.08)); border-bottom: 1px solid var(--border); animation: fadeUp 0.5s ease; display: none; }
+.festive-banner .festive-banner-text { font-family: var(--font-head); }
+[data-festive="christmas"] .festive-banner { display: block; background: linear-gradient(90deg, rgba(192,57,43,0.1), rgba(39,174,96,0.08), rgba(192,57,43,0.1)); }
+[data-festive="newyear"] .festive-banner { display: block; background: linear-gradient(90deg, rgba(241,196,15,0.1), rgba(52,152,219,0.08), rgba(241,196,15,0.1)); }
+[data-festive="valentines"] .festive-banner { display: block; background: linear-gradient(90deg, rgba(231,76,60,0.1), rgba(233,30,99,0.08), rgba(231,76,60,0.1)); }
+[data-festive="easter"] .festive-banner { display: block; background: linear-gradient(90deg, rgba(233,30,156,0.1), rgba(142,68,173,0.08), rgba(233,30,156,0.1)); }
+[data-festive="aprilfools"] .festive-banner { display: block; background: linear-gradient(90deg, rgba(255,107,107,0.1), rgba(254,202,87,0.08), rgba(255,107,107,0.1)); }
+[data-festive="halloween"] .festive-banner { display: block; background: linear-gradient(90deg, rgba(230,126,34,0.1), rgba(155,89,182,0.08), rgba(230,126,34,0.1)); }
 
 /* Theme toggle button */
 .theme-toggle { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; padding: 0; }
@@ -411,11 +423,16 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
   </div>
 </header>
 
+<!-- FESTIVE GREETING BANNER -->
+<div class="festive-banner" id="festive-banner">
+  <span class="festive-banner-text" id="festive-banner-text"></span>
+</div>
+
 <!-- HERO -->
 <section class="hero">
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
-  <div class="hero-tag"><div class="blink"></div> Développement sur demande, Version 2.4</div>
+  <div class="hero-tag"><div class="blink"></div> Développement sur demande, Version 2.3.0</div>
   <h1>Avec la CapWorks Studio,<br><em>vos projets commencent maintenant</em></h1>
   <p>Jeux, logiciels, bots, serveurs — nous développons ce que vous imaginez. Choisissez votre niveau de qualité.</p>
   <div class="tier-legend">
@@ -682,6 +699,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
               <div style="display:flex;flex-direction:column;gap:8px;max-width:460px;">
                 <select class="input" id="festive-select" onchange="setFestiveMode(this.value)">
                   <option value="">Aucun (thème normal)</option>
+                  <option value="auto">📅 Automatique (selon la date)</option>
                   <option value="christmas">🎄 Noël</option>
                   <option value="newyear">🎆 Nouvel An</option>
                   <option value="valentines">💕 Saint-Valentin</option>
@@ -689,6 +707,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
                   <option value="aprilfools">🤡 Poisson d'avril</option>
                   <option value="halloween">🎃 Halloween</option>
                 </select>
+                <p id="festive-auto-info" style="font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);display:none;"></p>
                 <div id="festive-msg" class="ok" style="display:none;"></div>
               </div>
             </div>
@@ -2162,6 +2181,15 @@ const FESTIVE_LABELS = {
   easter: '🐣 Pâques', aprilfools: '🤡 Poisson d\'avril', halloween: '🎃 Halloween'
 };
 
+const FESTIVE_GREETINGS = {
+  christmas: '🎄 Joyeux Noël et bonnes fêtes ! 🎅',
+  newyear: '🎆 Bonne année ! Meilleurs vœux ! ✨',
+  valentines: '💕 Joyeuse Saint-Valentin ! 🌹',
+  easter: '🐣 Joyeuses Pâques ! 🐰',
+  aprilfools: '🐟 Poisson d\'avril ! Ne vous faites pas avoir ! 🤡',
+  halloween: '🎃 Joyeux Halloween ! Frissons garantis ! 👻'
+};
+
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', currentTheme);
   const btn = document.getElementById('themeBtn');
@@ -2186,8 +2214,48 @@ function setFestiveMode(mode) {
     msg.className = 'ok';
     msg.textContent = mode ? `✓ Mode ${FESTIVE_LABELS[mode] || mode} activé !` : '✓ Mode festif désactivé';
     setTimeout(() => { msg.style.display = 'none'; }, 3000);
+  const autoInfo = document.getElementById('festive-auto-info');
+  if (mode === 'auto') {
+    const resolved = getAutoFestive();
+    if (autoInfo) {
+      autoInfo.style.display = 'block';
+      autoInfo.textContent = resolved ? `➤ Actuellement : ${FESTIVE_LABELS[resolved]}` : '➤ Aucune fête détectée pour aujourd\'hui';
+    }
+    if (msg) {
+      msg.style.display = 'block'; msg.className = 'ok';
+      msg.textContent = '✓ Mode automatique activé !';
+      setTimeout(() => { msg.style.display = 'none'; }, 3000);
+    }
+    toast('Mode festif automatique activé !', 'success');
+  } else {
+    if (autoInfo) autoInfo.style.display = 'none';
+    if (msg) {
+      msg.style.display = 'block'; msg.className = 'ok';
+      msg.textContent = mode ? `✓ Mode ${FESTIVE_LABELS[mode]} activé !` : '✓ Mode festif désactivé';
+      setTimeout(() => { msg.style.display = 'none'; }, 3000);
+    }
+    toast(mode ? `Mode ${FESTIVE_LABELS[mode]} activé !` : 'Mode festif désactivé', 'success');
   }
   toast(mode ? `Mode ${FESTIVE_LABELS[mode] || mode} activé !` : 'Mode festif désactivé', 'success');
+}
+
+function getAutoFestive() {
+  const now = new Date();
+  const m = now.getMonth() + 1; // 1-12
+  const d = now.getDate();
+  // Christmas: Dec 15 - Jan 2
+  if ((m === 12 && d >= 15) || (m === 1 && d <= 2)) return 'christmas';
+  // New Year: Jan 1 - Jan 5
+  if (m === 1 && d >= 1 && d <= 5) return 'newyear';
+  // Valentine's: Feb 10 - Feb 16
+  if (m === 2 && d >= 10 && d <= 16) return 'valentines';
+  // Easter: roughly late March - mid April
+  if ((m === 3 && d >= 25) || (m === 4 && d <= 20)) return 'easter';
+  // April Fools: Apr 1
+  if (m === 4 && d === 1) return 'aprilfools';
+  // Halloween: Oct 25 - Nov 1
+  if ((m === 10 && d >= 25) || (m === 11 && d === 1)) return 'halloween';
+  return '';
 }
 
 function applyFestive() {
@@ -2196,15 +2264,35 @@ function applyFestive() {
   if (currentFestive) {
     document.documentElement.setAttribute('data-festive', currentFestive);
     spawnFestiveParticles();
+  // Resolve the actual festive mode
+  let resolvedFestive = currentFestive;
+  if (currentFestive === 'auto') resolvedFestive = getAutoFestive();
+  // Apply theme
+  if (resolvedFestive) {
+    document.documentElement.setAttribute('data-festive', resolvedFestive);
+    spawnFestiveParticles(resolvedFestive);
   } else {
     document.documentElement.removeAttribute('data-festive');
+  }
+  // Update greeting banner
+  const banner = document.getElementById('festive-banner');
+  const bannerText = document.getElementById('festive-banner-text');
+  if (banner && bannerText) {
+    if (resolvedFestive && FESTIVE_GREETINGS[resolvedFestive]) {
+      bannerText.textContent = FESTIVE_GREETINGS[resolvedFestive];
+    } else {
+      bannerText.textContent = '';
+    }
   }
 }
 
 function spawnFestiveParticles() {
+function spawnFestiveParticles(resolvedFestive) {
   const deco = document.getElementById('festive-deco');
   if (!deco || !currentFestive) return;
   const particles = FESTIVE_PARTICLES[currentFestive] || [];
+  if (!deco || !resolvedFestive) return;
+  const particles = FESTIVE_PARTICLES[resolvedFestive] || [];
   if (!particles.length) return;
   deco.innerHTML = '';
   for (let i = 0; i < 20; i++) {
@@ -2216,7 +2304,25 @@ function spawnFestiveParticles() {
     p.style.animationDelay = (Math.random() * 10) + 's';
     p.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
     deco.appendChild(p);
+  // Spawn particles in staggered waves so they don't all appear at top
+  function spawnWave(count, baseDelay) {
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('span');
+      p.className = 'festive-particle';
+      p.textContent = particles[Math.floor(Math.random() * particles.length)];
+      p.style.left = Math.random() * 100 + '%';
+      const duration = 8 + Math.random() * 10;
+      p.style.animationDuration = duration + 's';
+      p.style.animationDelay = (baseDelay + Math.random() * 3) + 's';
+      p.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+      p.style.animationIterationCount = 'infinite';
+      deco.appendChild(p);
+    }
   }
+  // Stagger 3 waves so particles appear gradually
+  spawnWave(7, 0);
+  spawnWave(7, 3);
+  spawnWave(6, 6);
 }
 
 // ================================================
