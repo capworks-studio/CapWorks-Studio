@@ -983,9 +983,13 @@ function handleFreeService(serviceName, tierName) {
   bannerZone.innerHTML = `
     <div class="purchase-banner">
       <div class="purchase-banner-icon">🎉</div>
-      <div>
+      <div style="flex:1;">
         <h4>Service gratuit sélectionné — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4>
         <p>Rejoignez-nous sur Discord pour démarrer votre demande : <a href="https://discord.gg/52AJ2jgHda" target="_blank">discord.gg/52AJ2jgHda</a></p>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,77,109,0.2);">
+          <button class="btn-danger btn-sm" onclick="cancelFreeOrder('${escHtml(serviceName)}','${escHtml(tierName)}',this)">🗑 Annuler la demande</button>
+          <span style="font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);margin-left:10px;">Une demande d'annulation sera envoyée au support.</span>
+        </div>
       </div>
     </div>
   `;
@@ -997,7 +1001,59 @@ function handleFreeService(serviceName, tierName) {
         description:`**${buyerName}** a demandé **${serviceName}** — niveau **${tierName}** — **GRATUIT**\n📅 ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`,
         footer:{ text:'CapWorks Studio · Service Gratuit' }, timestamp: now.toISOString() }] }) }).catch(()=>{});
   }
+  // Auto-message dans le support
+  if (currentUser) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    if (!tickets[currentUser.username]) tickets[currentUser.username] = [];
+    tickets[currentUser.username].push({
+      user: currentUser.username,
+      emoji: currentUser.emoji || '👤',
+      role: currentUser.role,
+      text: `Je suis intéressé par votre service "${serviceName}" pour le niveau "${tierName}" (Gratuit). Merci de confirmer la prise en charge de ma demande.`,
+      time: timeStr,
+      type: 'order'
+    });
+    save();
+    renderSupport();
+    document.getElementById('support').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => toast('Message automatique envoyé dans le support !', 'success'), 800);
+  }
   toast('Demande envoyée !', 'success');
+}
+
+function cancelFreeOrder(serviceName, tierName, btn) {
+  if (!confirm(`Annuler la demande "${serviceName} — ${tierName}" ? Un message sera envoyé au support.`)) return;
+  btn.closest('.purchase-banner').innerHTML = `
+    <div class="purchase-banner-icon">❌</div>
+    <div>
+      <h4 style="color:var(--red);">Demande annulée — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4>
+      <p>Votre demande d'annulation a été transmise au support. Un modérateur vous contactera prochainement.</p>
+    </div>
+  `;
+  if (currentUser) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    if (!tickets[currentUser.username]) tickets[currentUser.username] = [];
+    tickets[currentUser.username].push({
+      user: currentUser.username,
+      emoji: currentUser.emoji || '👤',
+      role: currentUser.role,
+      text: `⚠️ ANNULATION DE DEMANDE ⚠️\nJe souhaite annuler ma demande pour le service "${serviceName}" — niveau "${tierName}" (Gratuit). Merci de traiter ma demande d'annulation.`,
+      time: timeStr,
+      type: 'cancel'
+    });
+    save();
+    renderSupport();
+  }
+  if (discordWebhook) {
+    const now = new Date();
+    fetch(discordWebhook, { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ embeds: [{ title:'❌ Annulation de demande — CapWorks Studio', color:0xff4d6d,
+        description:`**${currentUser ? currentUser.username : 'Visiteur'}** annule sa demande\n**Service :** ${serviceName}\n**Niveau :** ${tierName}\n**Prix :** Gratuit\n📅 ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`,
+        footer:{ text:'CapWorks Studio · Annulation' }, timestamp: now.toISOString() }] }) }).catch(()=>{});
+  }
+  toast('Annulation envoyée au support', 'success');
 }
 
 async function confirmAndPay() {
@@ -1615,6 +1671,9 @@ function loginAdmin() {
   document.getElementById('discord-webhook').value = discordWebhook;
   document.getElementById('jsonbin-id').value = jsonbinId;
   document.getElementById('jsonbin-key').value = jsonbinKey;
+  document.getElementById('ejs-pubkey').value = emailjsPublicKey;
+  document.getElementById('ejs-service').value = emailjsServiceId;
+  document.getElementById('ejs-template').value = emailjsTemplateId;
   renderAdminAll();
   // Start real-time sync when admin logs in
   if (jsonbinId && jsonbinKey) startAutoSync();
@@ -1904,6 +1963,45 @@ function changeAdminPass() {
   msg.className = 'ok mt8'; msg.textContent = '✓ Mot de passe changé !';
   document.getElementById('np1').value = ''; document.getElementById('np2').value = '';
   setTimeout(() => { msg.textContent = ''; msg.className = 'err'; }, 3000);
+}
+
+// EmailJS config
+function saveEmailJSConfig() {
+  const pk = document.getElementById('ejs-pubkey').value.trim();
+  const sid = document.getElementById('ejs-service').value.trim();
+  const tid = document.getElementById('ejs-template').value.trim();
+  const msg = document.getElementById('ejs-msg');
+  if (!pk || !sid || !tid) {
+    msg.style.display='block'; msg.className='err'; msg.textContent='\u2715 Remplissez les trois champs';
+    return;
+  }
+  emailjsPublicKey = pk;
+  emailjsServiceId = sid;
+  emailjsTemplateId = tid;
+  emailjs.init(emailjsPublicKey);
+  save();
+  msg.style.display='block'; msg.className='ok'; msg.textContent='\u2713 Configuration EmailJS sauvegard\u00e9e !';
+  setTimeout(() => { msg.style.display='none'; }, 3000);
+}
+
+async function testEmailJSConfig() {
+  const pk = document.getElementById('ejs-pubkey').value.trim();
+  const sid = document.getElementById('ejs-service').value.trim();
+  const tid = document.getElementById('ejs-template').value.trim();
+  const msg = document.getElementById('ejs-msg');
+  if (!pk || !sid || !tid) {
+    msg.style.display='block'; msg.className='err'; msg.textContent='\u2715 Remplissez les trois champs d\'abord';
+    return;
+  }
+  msg.style.display='block'; msg.className='ok'; msg.textContent='\u27f3 Test en cours...';
+  try {
+    emailjs.init(pk);
+    await emailjs.send(sid, tid, { to_email: 'test@test.com', to_name: 'Test', code: '000000' });
+    msg.className='ok'; msg.textContent='\u2713 Email envoy\u00e9 avec succ\u00e8s !';
+    setTimeout(() => { msg.style.display='none'; }, 4000);
+  } catch(e) {
+    msg.className='err'; msg.textContent='\u2715 Erreur : ' + (e.text || e.message || 'V\u00e9rifiez vos identifiants EmailJS');
+  }
 }
 
 function saveWebhook() {
