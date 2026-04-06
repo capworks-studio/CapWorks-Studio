@@ -2214,6 +2214,7 @@ function setFestiveMode(mode) {
     msg.className = 'ok';
     msg.textContent = mode ? `✓ Mode ${FESTIVE_LABELS[mode] || mode} activé !` : '✓ Mode festif désactivé';
     setTimeout(() => { msg.style.display = 'none'; }, 3000);
+  }
   const autoInfo = document.getElementById('festive-auto-info');
   if (mode === 'auto') {
     const resolved = getAutoFestive();
@@ -2221,39 +2222,20 @@ function setFestiveMode(mode) {
       autoInfo.style.display = 'block';
       autoInfo.textContent = resolved ? `➤ Actuellement : ${FESTIVE_LABELS[resolved]}` : '➤ Aucune fête détectée pour aujourd\'hui';
     }
-    if (msg) {
-      msg.style.display = 'block'; msg.className = 'ok';
-      msg.textContent = '✓ Mode automatique activé !';
-      setTimeout(() => { msg.style.display = 'none'; }, 3000);
-    }
-    toast('Mode festif automatique activé !', 'success');
-  } else {
-    if (autoInfo) autoInfo.style.display = 'none';
-    if (msg) {
-      msg.style.display = 'block'; msg.className = 'ok';
-      msg.textContent = mode ? `✓ Mode ${FESTIVE_LABELS[mode]} activé !` : '✓ Mode festif désactivé';
-      setTimeout(() => { msg.style.display = 'none'; }, 3000);
-    }
-    toast(mode ? `Mode ${FESTIVE_LABELS[mode]} activé !` : 'Mode festif désactivé', 'success');
+  } else if (autoInfo) {
+    autoInfo.style.display = 'none';
   }
-  toast(mode ? `Mode ${FESTIVE_LABELS[mode] || mode} activé !` : 'Mode festif désactivé', 'success');
 }
 
 function getAutoFestive() {
   const now = new Date();
-  const m = now.getMonth() + 1; // 1-12
+  const m = now.getMonth() + 1;
   const d = now.getDate();
-  // Christmas: Dec 15 - Jan 2
   if ((m === 12 && d >= 15) || (m === 1 && d <= 2)) return 'christmas';
-  // New Year: Jan 1 - Jan 5
   if (m === 1 && d >= 1 && d <= 5) return 'newyear';
-  // Valentine's: Feb 10 - Feb 16
   if (m === 2 && d >= 10 && d <= 16) return 'valentines';
-  // Easter: roughly late March - mid April
   if ((m === 3 && d >= 25) || (m === 4 && d <= 20)) return 'easter';
-  // April Fools: Apr 1
   if (m === 4 && d === 1) return 'aprilfools';
-  // Halloween: Oct 25 - Nov 1
   if ((m === 10 && d >= 25) || (m === 11 && d === 1)) return 'halloween';
   return '';
 }
@@ -2261,101 +2243,56 @@ function getAutoFestive() {
 function applyFestive() {
   const deco = document.getElementById('festive-deco');
   if (deco) deco.innerHTML = '';
-  if (currentFestive) {
-    document.documentElement.setAttribute('data-festive', currentFestive);
-    spawnFestiveParticles();
-  // Resolve the actual festive mode
+
   let resolvedFestive = currentFestive;
   if (currentFestive === 'auto') resolvedFestive = getAutoFestive();
-  // Apply theme
+
   if (resolvedFestive) {
     document.documentElement.setAttribute('data-festive', resolvedFestive);
     spawnFestiveParticles(resolvedFestive);
   } else {
     document.documentElement.removeAttribute('data-festive');
   }
-  // Update greeting banner
+
+  // Banner
   const banner = document.getElementById('festive-banner');
   const bannerText = document.getElementById('festive-banner-text');
   if (banner && bannerText) {
-    if (resolvedFestive && FESTIVE_GREETINGS[resolvedFestive]) {
-      bannerText.textContent = FESTIVE_GREETINGS[resolvedFestive];
-    } else {
-      bannerText.textContent = '';
-    }
+    bannerText.textContent = resolvedFestive && FESTIVE_GREETINGS[resolvedFestive] 
+      ? FESTIVE_GREETINGS[resolvedFestive] 
+      : '';
   }
 }
 
-function spawnFestiveParticles() {
-function spawnFestiveParticles(resolvedFestive) {
+function spawnFestiveParticles(resolvedFestive = null) {
   const deco = document.getElementById('festive-deco');
-  if (!deco || !currentFestive) return;
-  const particles = FESTIVE_PARTICLES[currentFestive] || [];
-  if (!deco || !resolvedFestive) return;
-  const particles = FESTIVE_PARTICLES[resolvedFestive] || [];
+  if (!deco) return;
+
+  const mode = resolvedFestive || currentFestive;
+  if (!mode) return;
+
+  const particles = FESTIVE_PARTICLES[mode] || [];
   if (!particles.length) return;
+
   deco.innerHTML = '';
-  for (let i = 0; i < 20; i++) {
-    const p = document.createElement('span');
-    p.className = 'festive-particle';
-    p.textContent = particles[Math.floor(Math.random() * particles.length)];
-    p.style.left = Math.random() * 100 + '%';
-    p.style.animationDuration = (6 + Math.random() * 8) + 's';
-    p.style.animationDelay = (Math.random() * 10) + 's';
-    p.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
-    deco.appendChild(p);
-  // Spawn particles in staggered waves so they don't all appear at top
+
   function spawnWave(count, baseDelay) {
     for (let i = 0; i < count; i++) {
       const p = document.createElement('span');
       p.className = 'festive-particle';
       p.textContent = particles[Math.floor(Math.random() * particles.length)];
       p.style.left = Math.random() * 100 + '%';
-      const duration = 8 + Math.random() * 10;
-      p.style.animationDuration = duration + 's';
+      p.style.animationDuration = (8 + Math.random() * 10) + 's';
       p.style.animationDelay = (baseDelay + Math.random() * 3) + 's';
       p.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
       p.style.animationIterationCount = 'infinite';
       deco.appendChild(p);
     }
   }
-  // Stagger 3 waves so particles appear gradually
-  spawnWave(7, 0);
+
+  spawnWave(8, 0);
   spawnWave(7, 3);
-  spawnWave(6, 6);
-}
-
-// ================================================
-//  OVERLAY HELPERS
-// ================================================
-function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
-function handleOvClick(e, id) { if (e.target === document.getElementById(id)) closeOverlay(id); }
-
-// ================================================
-//  TOAST
-// ================================================
-function toast(msg, type = 'success') {
-  const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  t.innerHTML = `${type === 'success' ? '✓' : '✕'} ${msg}`;
-  document.body.appendChild(t);
-  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; t.style.transition = 'all 0.3s'; setTimeout(() => t.remove(), 300); }, 3000);
-}
-
-// ================================================
-//  INIT
-// ================================================
-load();
-applyTheme();
-applyFestive();
-renderServices();
-renderTeam();
-renderSupport();
-updateHeaderUser();
-if (currentUser) setOnlineStatus(true);
-if (jsonbinId && jsonbinKey) {
-  setSyncBadge('syncing', '⟳ Connexion...');
-  pullUsersFromJsonBin();
+  spawnWave(7, 6);
 }
 </script>
 </body>
