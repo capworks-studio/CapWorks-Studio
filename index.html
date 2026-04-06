@@ -366,8 +366,50 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 
 /* Festive decorations overlay */
 #festive-deco { position: fixed; inset: 0; pointer-events: none; z-index: 9998; overflow: hidden; }
-.festive-particle { position: absolute; font-size: 1.2rem; opacity: 0.6; animation: festive-fall linear infinite; pointer-events: none; }
-@keyframes festive-fall { 0% { transform: translateY(-5vh) rotate(0deg); opacity: 0.7; } 100% { transform: translateY(105vh) rotate(360deg); opacity: 0; } }
+.festive-particle {
+  position: absolute;
+  top: -60px;
+  font-size: 1.2rem;
+  opacity: 0;
+  animation: festive-fall linear forwards;
+  pointer-events: none;
+}
+@keyframes festive-fall {
+  0%   { transform: translateY(0) rotate(0deg);    opacity: 0;   }
+  5%   { opacity: 0.75; }
+  90%  { opacity: 0.55; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+/* Festive hero banner */
+#festive-hero-banner {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 auto 36px;
+  padding: 12px 28px;
+  border-radius: 100px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  animation: festive-banner-in 0.6s cubic-bezier(.2,.8,.3,1) both;
+  max-width: fit-content;
+}
+#festive-hero-banner.visible { display: flex; }
+@keyframes festive-banner-in {
+  from { opacity: 0; transform: translateY(-14px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* Per-theme banner colours */
+[data-festive="christmas"]  #festive-hero-banner { background: rgba(192,57,43,0.12);  border: 1px solid rgba(192,57,43,0.35);  color: #e74c3c; }
+[data-festive="newyear"]    #festive-hero-banner { background: rgba(241,196,15,0.1);  border: 1px solid rgba(241,196,15,0.35);  color: #f1c40f; }
+[data-festive="valentines"] #festive-hero-banner { background: rgba(231,76,60,0.1);   border: 1px solid rgba(231,76,60,0.35);   color: #e74c3c; }
+[data-festive="easter"]     #festive-hero-banner { background: rgba(233,30,156,0.1);  border: 1px solid rgba(233,30,156,0.35);  color: #e91e9c; }
+[data-festive="aprilfools"] #festive-hero-banner { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.35); color: #ff6b6b; }
+[data-festive="halloween"]  #festive-hero-banner { background: rgba(230,126,34,0.1);  border: 1px solid rgba(230,126,34,0.35);  color: #e67e22; }
+.festive-banner-pulse { animation: festive-pulse 2s ease-in-out infinite; display: inline-block; }
+@keyframes festive-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
 
 /* Theme toggle button */
 .theme-toggle { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; padding: 0; }
@@ -418,6 +460,11 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
   <div class="hero-tag"><div class="blink"></div> Développement sur demande, Version 2.4</div>
   <h1>Avec la CapWorks Studio,<br><em>vos projets commencent maintenant</em></h1>
   <p>Jeux, logiciels, bots, serveurs — nous développons ce que vous imaginez. Choisissez votre niveau de qualité.</p>
+  <div id="festive-hero-banner">
+    <span class="festive-banner-pulse" id="festive-banner-emoji"></span>
+    <span id="festive-banner-text"></span>
+    <span class="festive-banner-pulse" id="festive-banner-emoji2"></span>
+  </div>
   <div class="tier-legend">
     <div class="tier-pill t1"><div class="dot"></div>Utilisable</div>
     <div class="tier-pill t2"><div class="dot"></div>De bonne qualité</div>
@@ -682,6 +729,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
               <div style="display:flex;flex-direction:column;gap:8px;max-width:460px;">
                 <select class="input" id="festive-select" onchange="setFestiveMode(this.value)">
                   <option value="">Aucun (thème normal)</option>
+                  <option value="auto">✨ Automatique (selon le jour)</option>
                   <option value="christmas">🎄 Noël</option>
                   <option value="newyear">🎆 Nouvel An</option>
                   <option value="valentines">💕 Saint-Valentin</option>
@@ -689,6 +737,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
                   <option value="aprilfools">🤡 Poisson d'avril</option>
                   <option value="halloween">🎃 Halloween</option>
                 </select>
+                <div id="festive-auto-info" style="display:none;margin-top:8px;padding:10px 12px;background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.25);border-radius:8px;font-size:0.76rem;color:var(--text2);font-family:var(--font-mono);line-height:1.6;"></div>
                 <div id="festive-msg" class="ok" style="display:none;"></div>
               </div>
             </div>
@@ -2149,18 +2198,74 @@ function discardChanges() {
 //  THEME & FESTIVE MODE
 // ================================================
 const FESTIVE_PARTICLES = {
-  christmas: ['❄','🎄','🎅','⭐','🎁','🔔'],
-  newyear: ['🎆','🎇','✨','🥂','🎊','🎉'],
+  christmas:  ['❄','🎄','🎅','⭐','🎁','🔔'],
+  newyear:    ['🎆','🎇','✨','🥂','🎊','🎉'],
   valentines: ['❤','💕','💖','🌹','💘','💝'],
-  easter: ['🐣','🐰','🥚','🌷','🦋','🌸'],
+  easter:     ['🐣','🐰','🥚','🌷','🦋','🌸'],
   aprilfools: ['🤡','🎭','😜','🃏','🎪','🐟'],
-  halloween: ['🎃','👻','🦇','🕷','💀','🕸']
+  halloween:  ['🎃','👻','🦇','🕷','💀','🕸']
 };
 
 const FESTIVE_LABELS = {
-  christmas: '🎄 Noël', newyear: '🎆 Nouvel An', valentines: '💕 Saint-Valentin',
-  easter: '🐣 Pâques', aprilfools: '🤡 Poisson d\'avril', halloween: '🎃 Halloween'
+  christmas:  '🎄 Noël',
+  newyear:    '🎆 Nouvel An',
+  valentines: '💕 Saint-Valentin',
+  easter:     '🐣 Pâques',
+  aprilfools: '🤡 Poisson d\'avril',
+  halloween:  '🎃 Halloween'
 };
+
+const FESTIVE_BANNERS = {
+  christmas:  { emoji: '🎄', text: 'Joyeux Noël à tous ! 🎁', emoji2: '❄️' },
+  newyear:    { emoji: '🎆', text: 'Bonne Année ! Que 2025 soit incroyable', emoji2: '✨' },
+  valentines: { emoji: '❤️', text: 'Joyeuse Saint-Valentin !', emoji2: '💕' },
+  easter:     { emoji: '🐣', text: 'Joyeuses Pâques à vous !', emoji2: '🌷' },
+  aprilfools: { emoji: '🤡', text: 'Poisson d\'avril ! Méfiez-vous... 🐟', emoji2: '🎭' },
+  halloween:  { emoji: '🎃', text: 'Joyeux Halloween ! Boo 👻', emoji2: '🕸️' }
+};
+
+// ---- Auto-detection based on current date ----
+function getAutoFestiveMode() {
+  const now  = new Date();
+  const m    = now.getMonth() + 1; // 1-12
+  const d    = now.getDate();
+
+  // Noël — 20–31 déc
+  if (m === 12 && d >= 20) return 'christmas';
+  // Nouvel An — 1er janv.
+  if (m === 1  && d <= 3)  return 'newyear';
+  // Saint-Valentin — 13–14 fév
+  if (m === 2  && d >= 13 && d <= 14) return 'valentines';
+  // Pâques — calcul approximatif (algorithme de Meeus)
+  const easter = getEasterDate(now.getFullYear());
+  const easterStart = new Date(easter); easterStart.setDate(easterStart.getDate() - 2);
+  const easterEnd   = new Date(easter); easterEnd.setDate(easterEnd.getDate() + 1);
+  if (now >= easterStart && now <= easterEnd) return 'easter';
+  // Poisson d'avril — 1er avril
+  if (m === 4  && d === 1) return 'aprilfools';
+  // Halloween — 28–31 oct
+  if (m === 10 && d >= 28) return 'halloween';
+
+  return ''; // rien de festif
+}
+
+function getEasterDate(year) {
+  const a = year % 19, b = Math.floor(year / 100), c = year % 100;
+  const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3), h = (19*a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4;
+  const l = (32 + 2*e + 2*i - h - k) % 7;
+  const m2 = Math.floor((a + 11*h + 22*l) / 451);
+  const month = Math.floor((h + l - 7*m2 + 114) / 31);
+  const day   = ((h + l - 7*m2 + 114) % 31) + 1;
+  return new Date(year, month - 1, day);
+}
+
+// Returns the actual mode to apply (resolves "auto" → real key)
+function resolvedFestive() {
+  if (currentFestive === 'auto') return getAutoFestiveMode();
+  return currentFestive;
+}
 
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', currentTheme);
@@ -2180,43 +2285,111 @@ function setFestiveMode(mode) {
   currentFestive = mode;
   applyFestive();
   save();
+
+  // Update admin info box for auto mode
+  const infoBox = document.getElementById('festive-auto-info');
+  if (infoBox) {
+    if (mode === 'auto') {
+      const detected = getAutoFestiveMode();
+      infoBox.style.display = 'block';
+      infoBox.textContent = detected
+        ? `✨ Aujourd'hui : ${FESTIVE_LABELS[detected]} détecté automatiquement`
+        : `📅 Aucun événement festif détecté aujourd'hui — thème normal affiché`;
+    } else {
+      infoBox.style.display = 'none';
+    }
+  }
+
   const msg = document.getElementById('festive-msg');
   if (msg) {
     msg.style.display = 'block';
     msg.className = 'ok';
-    msg.textContent = mode ? `✓ Mode ${FESTIVE_LABELS[mode] || mode} activé !` : '✓ Mode festif désactivé';
+    if (mode === 'auto') {
+      const detected = getAutoFestiveMode();
+      msg.textContent = detected
+        ? `✓ Auto → ${FESTIVE_LABELS[detected]} activé !`
+        : `✓ Mode automatique activé (thème normal aujourd'hui)`;
+    } else {
+      msg.textContent = mode ? `✓ Mode ${FESTIVE_LABELS[mode] || mode} activé !` : '✓ Mode festif désactivé';
+    }
     setTimeout(() => { msg.style.display = 'none'; }, 3000);
   }
-  toast(mode ? `Mode ${FESTIVE_LABELS[mode] || mode} activé !` : 'Mode festif désactivé', 'success');
+
+  const label = mode === 'auto'
+    ? `Mode automatique activé`
+    : (mode ? `Mode ${FESTIVE_LABELS[mode] || mode} activé !` : 'Mode festif désactivé');
+  toast(label, 'success');
+}
+
+function updateFestiveBanner(active) {
+  const banner = document.getElementById('festive-hero-banner');
+  if (!banner) return;
+  if (active && FESTIVE_BANNERS[active]) {
+    const b = FESTIVE_BANNERS[active];
+    document.getElementById('festive-banner-emoji').textContent  = b.emoji;
+    document.getElementById('festive-banner-text').textContent   = b.text;
+    document.getElementById('festive-banner-emoji2').textContent = b.emoji2;
+    banner.classList.add('visible');
+    // Force re-trigger animation
+    banner.style.animation = 'none';
+    requestAnimationFrame(() => { banner.style.animation = ''; });
+  } else {
+    banner.classList.remove('visible');
+  }
 }
 
 function applyFestive() {
   const deco = document.getElementById('festive-deco');
   if (deco) deco.innerHTML = '';
-  if (currentFestive) {
-    document.documentElement.setAttribute('data-festive', currentFestive);
-    spawnFestiveParticles();
+  const active = resolvedFestive();
+  if (active) {
+    document.documentElement.setAttribute('data-festive', active);
+    spawnFestiveParticles(active);
   } else {
     document.documentElement.removeAttribute('data-festive');
   }
+  updateFestiveBanner(active);
+
+  // Sync select value
+  const sel = document.getElementById('festive-select');
+  if (sel) sel.value = currentFestive;
 }
 
-function spawnFestiveParticles() {
+function spawnFestiveParticles(active) {
   const deco = document.getElementById('festive-deco');
-  if (!deco || !currentFestive) return;
-  const particles = FESTIVE_PARTICLES[currentFestive] || [];
+  if (!deco || !active) return;
+  const particles = FESTIVE_PARTICLES[active] || [];
   if (!particles.length) return;
   deco.innerHTML = '';
-  for (let i = 0; i < 20; i++) {
+
+  const TOTAL    = 30;  // nb de particules simultanées max à l'écran
+  const INTERVAL = 380; // ms entre chaque apparition
+
+  let spawned = 0;
+  function spawnOne() {
+    // Arrêt si le mode festif a changé (deco vidé = plus d'enfants)
+    if (!deco.isConnected) return;
     const p = document.createElement('span');
     p.className = 'festive-particle';
     p.textContent = particles[Math.floor(Math.random() * particles.length)];
-    p.style.left = Math.random() * 100 + '%';
-    p.style.animationDuration = (6 + Math.random() * 8) + 's';
-    p.style.animationDelay = (Math.random() * 10) + 's';
-    p.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+    const duration = 7 + Math.random() * 8;
+    p.style.left              = (Math.random() * 100) + '%';
+    p.style.animationDuration = duration + 's';
+    p.style.animationDelay    = '0s';
+    p.style.fontSize          = (0.9 + Math.random() * 1.3) + 'rem';
     deco.appendChild(p);
+    // Quand la particule sort, en relancer une autre après le délai normal
+    p.addEventListener('animationend', () => {
+      p.remove();
+      if (deco.isConnected && document.documentElement.hasAttribute('data-festive')) {
+        setTimeout(spawnOne, INTERVAL);
+      }
+    }, { once: true });
+    spawned++;
+    // Pendant le remplissage initial, on continue à spawner jusqu'au max
+    if (spawned < TOTAL) setTimeout(spawnOne, INTERVAL);
   }
+  spawnOne();
 }
 
 // ================================================
