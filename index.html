@@ -1024,13 +1024,15 @@ function handleFreeService(serviceName, tierName) {
 
 function cancelFreeOrder(serviceName, tierName, btn) {
   if (!confirm(`Annuler la demande "${serviceName} — ${tierName}" ? Un message sera envoyé au support.`)) return;
-  btn.closest('.purchase-banner').innerHTML = `
+  const banner = btn.closest('.purchase-banner');
+  banner.innerHTML = `
     <div class="purchase-banner-icon">❌</div>
     <div>
       <h4 style="color:var(--red);">Demande annulée — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4>
       <p>Votre demande d'annulation a été transmise au support. Un modérateur vous contactera prochainement.</p>
     </div>
   `;
+  setTimeout(() => { banner.style.transition = 'opacity 0.5s, transform 0.5s'; banner.style.opacity = '0'; banner.style.transform = 'translateY(-10px)'; setTimeout(() => { const zone = banner.closest('#purchase-banner-zone'); if (zone) zone.innerHTML = ''; }, 500); }, 10000);
   if (currentUser) {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
@@ -1113,13 +1115,15 @@ async function confirmAndPay() {
 
 function cancelOrder(serviceName, tierName, price, email, btn) {
   if (!confirm(`Annuler la commande "${serviceName} — ${tierName}" ? Un message sera envoyé au support.`)) return;
-  btn.closest('.purchase-banner').innerHTML = `
+  const banner = btn.closest('.purchase-banner');
+  banner.innerHTML = `
     <div class="purchase-banner-icon">❌</div>
     <div>
       <h4 style="color:var(--red);">Commande annulée — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4>
       <p>Votre demande d'annulation a été transmise au support. Un modérateur vous contactera prochainement.</p>
     </div>
   `;
+  setTimeout(() => { banner.style.transition = 'opacity 0.5s, transform 0.5s'; banner.style.opacity = '0'; banner.style.transform = 'translateY(-10px)'; setTimeout(() => { const zone = banner.closest('#purchase-banner-zone'); if (zone) zone.innerHTML = ''; }, 500); }, 10000);
   if (currentUser) {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
@@ -1984,7 +1988,7 @@ function saveEmailJSConfig() {
   setTimeout(() => { msg.style.display='none'; }, 3000);
 }
 
-async function testEmailJSConfig() {
+function testEmailJSConfig() {
   const pk = document.getElementById('ejs-pubkey').value.trim();
   const sid = document.getElementById('ejs-service').value.trim();
   const tid = document.getElementById('ejs-template').value.trim();
@@ -1993,12 +1997,37 @@ async function testEmailJSConfig() {
     msg.style.display='block'; msg.className='err'; msg.textContent='\u2715 Remplissez les trois champs d\'abord';
     return;
   }
-  msg.style.display='block'; msg.className='ok'; msg.textContent='\u27f3 Test en cours...';
+  // Show mini-interface to enter test email
+  msg.style.display='block'; msg.className='ok';
+  msg.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+      <label style="font-size:0.72rem;font-weight:700;color:var(--text2);letter-spacing:0.5px;text-transform:uppercase;">Envoyer un email test \u00e0 :</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="email" class="input" id="ejs-test-email" placeholder="votre@email.com" style="flex:1;font-family:var(--font-mono);font-size:0.8rem;">
+        <button class="btn-success btn-sm" onclick="sendEmailJSTest()">Envoyer \u27a4</button>
+        <button class="btn-ghost btn-sm" onclick="document.getElementById('ejs-msg').style.display='none';">Annuler</button>
+      </div>
+    </div>
+  `;
+  setTimeout(() => document.getElementById('ejs-test-email')?.focus(), 100);
+}
+
+async function sendEmailJSTest() {
+  const pk = document.getElementById('ejs-pubkey').value.trim();
+  const sid = document.getElementById('ejs-service').value.trim();
+  const tid = document.getElementById('ejs-template').value.trim();
+  const testEmail = document.getElementById('ejs-test-email').value.trim();
+  const msg = document.getElementById('ejs-msg');
+  if (!testEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(testEmail)) {
+    msg.innerHTML = ''; msg.className='err'; msg.textContent='\u2715 Entrez un email valide';
+    return;
+  }
+  msg.innerHTML = ''; msg.className='ok'; msg.textContent='\u27f3 Envoi du test \u00e0 ' + testEmail + '...';
   try {
     emailjs.init(pk);
-    await emailjs.send(sid, tid, { to_email: 'test@test.com', to_name: 'Test', code: '000000' });
-    msg.className='ok'; msg.textContent='\u2713 Email envoy\u00e9 avec succ\u00e8s !';
-    setTimeout(() => { msg.style.display='none'; }, 4000);
+    await emailjs.send(sid, tid, { to_email: testEmail, to_name: 'Test EmailJS', code: '123456' });
+    msg.textContent='\u2713 Email test envoy\u00e9 \u00e0 ' + testEmail + ' avec succ\u00e8s !';
+    setTimeout(() => { msg.style.display='none'; }, 5000);
   } catch(e) {
     msg.className='err'; msg.textContent='\u2715 Erreur : ' + (e.text || e.message || 'V\u00e9rifiez vos identifiants EmailJS');
   }
