@@ -328,6 +328,51 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 .mt4{margin-top:4px;} .mt8{margin-top:8px;} .mt12{margin-top:12px;} .mt16{margin-top:16px;} .mb12{margin-bottom:12px;} .mb16{margin-bottom:16px;} .gap8{gap:8px;}
 .empty-state { text-align: center; color: var(--text3); font-size: 0.82rem; padding: 40px 0; font-family: var(--font-mono); }
 
+/* LIGHT THEME */
+[data-theme="light"] {
+  --bg: #f5f5fa; --bg2: #eeeef4; --surface: #ffffff; --surface2: #f0f0f5; --surface3: #e6e6ee;
+  --border: #d5d5e0; --border2: #c5c5d2; --text: #1a1a2e; --text2: #55556a; --text3: #8888a0;
+}
+[data-theme="light"] body { background: var(--bg); color: var(--text); }
+[data-theme="light"] body::before { background-image: linear-gradient(rgba(108,99,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(108,99,255,0.06) 1px, transparent 1px); }
+[data-theme="light"] body::after { background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.01) 2px, rgba(0,0,0,0.01) 4px); }
+[data-theme="light"] header { background: rgba(245,245,250,0.92); }
+[data-theme="light"] .overlay { background: rgba(0,0,0,0.5); }
+[data-theme="light"] .toast { background: var(--surface); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+[data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg); }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: var(--border); }
+
+/* FESTIVE THEMES */
+[data-festive="christmas"] { --accent: #c0392b; --accent-glow: rgba(192,57,43,0.3); --cyan: #27ae60; --cyan-glow: rgba(39,174,96,0.2); --green: #27ae60; --gold: #f1c40f; }
+[data-festive="christmas"] .hero-glow { background: radial-gradient(ellipse, rgba(192,57,43,0.15) 0%, transparent 70%); }
+[data-festive="christmas"] .hero-glow2 { background: radial-gradient(circle, rgba(39,174,96,0.1) 0%, transparent 70%); }
+
+[data-festive="easter"] { --accent: #e91e9c; --accent-glow: rgba(233,30,156,0.3); --cyan: #8e44ad; --cyan-glow: rgba(142,68,173,0.2); --green: #2ecc71; --gold: #f39c12; }
+[data-festive="easter"] .hero-glow { background: radial-gradient(ellipse, rgba(233,30,156,0.12) 0%, transparent 70%); }
+[data-festive="easter"] .hero-glow2 { background: radial-gradient(circle, rgba(142,68,173,0.08) 0%, transparent 70%); }
+
+[data-festive="halloween"] { --accent: #e67e22; --accent-glow: rgba(230,126,34,0.3); --cyan: #9b59b6; --cyan-glow: rgba(155,89,182,0.2); --green: #2ecc71; --gold: #f39c12; --red: #c0392b; }
+[data-festive="halloween"] .hero-glow { background: radial-gradient(ellipse, rgba(230,126,34,0.15) 0%, transparent 70%); }
+
+[data-festive="aprilfools"] { --accent: #ff6b6b; --accent-glow: rgba(255,107,107,0.3); --cyan: #feca57; --cyan-glow: rgba(254,202,87,0.2); --green: #48dbfb; --gold: #ff9ff3; }
+[data-festive="aprilfools"] .hero-glow { background: radial-gradient(ellipse, rgba(255,107,107,0.12) 0%, transparent 70%); }
+[data-festive="aprilfools"] .hero-glow2 { background: radial-gradient(circle, rgba(254,202,87,0.1) 0%, transparent 70%); }
+
+[data-festive="newyear"] { --accent: #f1c40f; --accent-glow: rgba(241,196,15,0.3); --cyan: #3498db; --cyan-glow: rgba(52,152,219,0.2); --green: #2ecc71; --gold: #f1c40f; }
+[data-festive="newyear"] .hero-glow { background: radial-gradient(ellipse, rgba(241,196,15,0.15) 0%, transparent 70%); }
+
+[data-festive="valentines"] { --accent: #e74c3c; --accent-glow: rgba(231,76,60,0.3); --cyan: #e91e63; --cyan-glow: rgba(233,30,99,0.2); --green: #ff6b81; --gold: #fd79a8; }
+[data-festive="valentines"] .hero-glow { background: radial-gradient(ellipse, rgba(231,76,60,0.15) 0%, transparent 70%); }
+
+/* Festive decorations overlay */
+#festive-deco { position: fixed; inset: 0; pointer-events: none; z-index: 9998; overflow: hidden; }
+.festive-particle { position: absolute; font-size: 1.2rem; opacity: 0.6; animation: festive-fall linear infinite; pointer-events: none; }
+@keyframes festive-fall { 0% { transform: translateY(-5vh) rotate(0deg); opacity: 0.7; } 100% { transform: translateY(105vh) rotate(360deg); opacity: 0; } }
+
+/* Theme toggle button */
+.theme-toggle { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; padding: 0; }
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
 /* Mobile */
 @media (max-width: 768px) {
   header { padding: 0 16px; }
@@ -360,6 +405,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
     <a href="#contact">Contact</a>
   </nav>
   <div class="header-right" id="headerRight">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Mode clair/sombre" id="themeBtn">🌙</button>
     <button class="btn-ghost" onclick="openAdmin()">⚙ Admin</button>
     <button class="btn-accent" onclick="openAuth('login')">Connexion</button>
   </div>
@@ -369,7 +415,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 <section class="hero">
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
-  <div class="hero-tag"><div class="blink"></div> Développement sur demande, Version 2.3.1</div>
+  <div class="hero-tag"><div class="blink"></div> Développement sur demande, Version 2.4</div>
   <h1>Avec la CapWorks Studio,<br><em>vos projets commencent maintenant</em></h1>
   <p>Jeux, logiciels, bots, serveurs — nous développons ce que vous imaginez. Choisissez votre niveau de qualité.</p>
   <div class="tier-legend">
@@ -443,6 +489,9 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
     <a href="https://discord.gg/52AJ2jgHda" target="_blank">Discord CapWorks Studio</a>
   </p>
 </footer>
+
+<!-- FESTIVE DECORATIONS -->
+<div id="festive-deco"></div>
 
 <!-- AUTH MODAL -->
 <div class="overlay" id="authOverlay" onclick="handleOvClick(event,'authOverlay')">
@@ -628,6 +677,23 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
               <div id="webhook-msg" class="ok mt8" style="display:none;"></div>
             </div>
             <div class="admin-service-item">
+              <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">🎄 Mode festif</h4>
+              <p style="color:var(--text2);font-size:0.78rem;margin-bottom:12px;line-height:1.6;">Transformez le site avec un thème festif ! Les décorations et couleurs changeront automatiquement.</p>
+              <div style="display:flex;flex-direction:column;gap:8px;max-width:460px;">
+                <select class="input" id="festive-select" onchange="setFestiveMode(this.value)">
+                  <option value="">Aucun (thème normal)</option>
+                  <option value="christmas">🎄 Noël</option>
+                  <option value="newyear">🎆 Nouvel An</option>
+                  <option value="valentines">💕 Saint-Valentin</option>
+                  <option value="easter">🐣 Pâques</option>
+                  <option value="aprilfools">🤡 Poisson d'avril</option>
+                  <option value="halloween">🎃 Halloween</option>
+                </select>
+                <div id="festive-msg" class="ok" style="display:none;"></div>
+              </div>
+            </div>
+
+            <div class="admin-service-item">
               <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">🗑 Zone dangereuse</h4>
               <p style="color:var(--text2);font-size:0.78rem;margin-bottom:10px;">Réinitialiser tous les services aux valeurs par défaut.</p>
               <button class="btn-danger" onclick="resetToDefault()">Réinitialiser tout</button>
@@ -698,6 +764,10 @@ let jsonbinKey = "";
 let syncInterval = null;
 let lastSyncTime = null;
 
+// Theme & Festive config
+let currentTheme = 'dark';
+let currentFestive = '';
+
 // EmailJS config
 let emailjsPublicKey = "-Y8WjfvgdGTW69eYQ";
 let emailjsServiceId = "service_kee805w";
@@ -719,6 +789,8 @@ function load() {
     emailjsPublicKey = localStorage.getItem('cw_ejs_pubkey') || '-Y8WjfvgdGTW69eYQ';
     emailjsServiceId = localStorage.getItem('cw_ejs_service') || 'service_kee805w';
     emailjsTemplateId = localStorage.getItem('cw_ejs_template') || 'template_ueewv6y';
+    currentTheme = localStorage.getItem('cw_theme') || 'dark';
+    currentFestive = localStorage.getItem('cw_festive') || '';
     const cu = localStorage.getItem('cw_currentuser');
     if (cu) currentUser = JSON.parse(cu);
   } catch(e) {
@@ -739,6 +811,8 @@ function save() {
   localStorage.setItem('cw_ejs_pubkey', emailjsPublicKey);
   localStorage.setItem('cw_ejs_service', emailjsServiceId);
   localStorage.setItem('cw_ejs_template', emailjsTemplateId);
+  localStorage.setItem('cw_theme', currentTheme);
+  localStorage.setItem('cw_festive', currentFestive);
   if (currentUser) localStorage.setItem('cw_currentuser', JSON.stringify(currentUser));
   else localStorage.removeItem('cw_currentuser');
 }
@@ -1024,13 +1098,15 @@ function handleFreeService(serviceName, tierName) {
 
 function cancelFreeOrder(serviceName, tierName, btn) {
   if (!confirm(`Annuler la demande "${serviceName} — ${tierName}" ? Un message sera envoyé au support.`)) return;
-  btn.closest('.purchase-banner').innerHTML = `
+  const banner = btn.closest('.purchase-banner');
+  banner.innerHTML = `
     <div class="purchase-banner-icon">❌</div>
     <div>
       <h4 style="color:var(--red);">Demande annulée — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4>
       <p>Votre demande d'annulation a été transmise au support. Un modérateur vous contactera prochainement.</p>
     </div>
   `;
+  setTimeout(() => { banner.style.transition = 'opacity 0.5s, transform 0.5s'; banner.style.opacity = '0'; banner.style.transform = 'translateY(-10px)'; setTimeout(() => { const zone = banner.closest('#purchase-banner-zone'); if (zone) zone.innerHTML = ''; }, 500); }, 10000);
   if (currentUser) {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
@@ -1113,13 +1189,15 @@ async function confirmAndPay() {
 
 function cancelOrder(serviceName, tierName, price, email, btn) {
   if (!confirm(`Annuler la commande "${serviceName} — ${tierName}" ? Un message sera envoyé au support.`)) return;
-  btn.closest('.purchase-banner').innerHTML = `
+  const banner = btn.closest('.purchase-banner');
+  banner.innerHTML = `
     <div class="purchase-banner-icon">❌</div>
     <div>
       <h4 style="color:var(--red);">Commande annulée — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4>
       <p>Votre demande d'annulation a été transmise au support. Un modérateur vous contactera prochainement.</p>
     </div>
   `;
+  setTimeout(() => { banner.style.transition = 'opacity 0.5s, transform 0.5s'; banner.style.opacity = '0'; banner.style.transform = 'translateY(-10px)'; setTimeout(() => { const zone = banner.closest('#purchase-banner-zone'); if (zone) zone.innerHTML = ''; }, 500); }, 10000);
   if (currentUser) {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
@@ -1345,6 +1423,7 @@ function updateHeaderUser() {
       ? `<span style="font-size:0.65rem;background:rgba(108,99,255,0.2);color:var(--accent);padding:1px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">${currentUser.role === 'mod' ? 'Mod' : currentUser.role === 'owner' ? 'Owner' : currentUser.role}</span>`
       : '';
     hr.innerHTML = `
+      <button class="theme-toggle" onclick="toggleTheme()" title="${currentTheme === 'light' ? 'Mode sombre' : 'Mode clair'}" id="themeBtn">${currentTheme === 'light' ? '☀️' : '🌙'}</button>
       ${isStaff(currentUser.role) ? `<button class="btn-ghost" onclick="openAdmin()">⚙ Admin</button>` : ''}
       <button class="btn-ghost" onclick="openSettings()" title="Paramètres du compte">⚙ Compte</button>
       <div class="user-indicator" title="${isOnline ? 'En ligne' : 'Hors ligne'}">
@@ -1355,6 +1434,7 @@ function updateHeaderUser() {
     `;
   } else {
     hr.innerHTML = `
+      <button class="theme-toggle" onclick="toggleTheme()" title="${currentTheme === 'light' ? 'Mode sombre' : 'Mode clair'}" id="themeBtn">${currentTheme === 'light' ? '☀️' : '🌙'}</button>
       <button class="btn-ghost" onclick="openAdmin()">⚙ Admin</button>
       <button class="btn-accent" onclick="openAuth('login')">Connexion</button>
     `;
@@ -1674,6 +1754,7 @@ function loginAdmin() {
   document.getElementById('ejs-pubkey').value = emailjsPublicKey;
   document.getElementById('ejs-service').value = emailjsServiceId;
   document.getElementById('ejs-template').value = emailjsTemplateId;
+  document.getElementById('festive-select').value = currentFestive;
   renderAdminAll();
   // Start real-time sync when admin logs in
   if (jsonbinId && jsonbinKey) startAutoSync();
@@ -1984,7 +2065,7 @@ function saveEmailJSConfig() {
   setTimeout(() => { msg.style.display='none'; }, 3000);
 }
 
-async function testEmailJSConfig() {
+function testEmailJSConfig() {
   const pk = document.getElementById('ejs-pubkey').value.trim();
   const sid = document.getElementById('ejs-service').value.trim();
   const tid = document.getElementById('ejs-template').value.trim();
@@ -1993,12 +2074,37 @@ async function testEmailJSConfig() {
     msg.style.display='block'; msg.className='err'; msg.textContent='\u2715 Remplissez les trois champs d\'abord';
     return;
   }
-  msg.style.display='block'; msg.className='ok'; msg.textContent='\u27f3 Test en cours...';
+  // Show mini-interface to enter test email
+  msg.style.display='block'; msg.className='ok';
+  msg.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+      <label style="font-size:0.72rem;font-weight:700;color:var(--text2);letter-spacing:0.5px;text-transform:uppercase;">Envoyer un email test \u00e0 :</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="email" class="input" id="ejs-test-email" placeholder="votre@email.com" style="flex:1;font-family:var(--font-mono);font-size:0.8rem;">
+        <button class="btn-success btn-sm" onclick="sendEmailJSTest()">Envoyer \u27a4</button>
+        <button class="btn-ghost btn-sm" onclick="document.getElementById('ejs-msg').style.display='none';">Annuler</button>
+      </div>
+    </div>
+  `;
+  setTimeout(() => document.getElementById('ejs-test-email')?.focus(), 100);
+}
+
+async function sendEmailJSTest() {
+  const pk = document.getElementById('ejs-pubkey').value.trim();
+  const sid = document.getElementById('ejs-service').value.trim();
+  const tid = document.getElementById('ejs-template').value.trim();
+  const testEmail = document.getElementById('ejs-test-email').value.trim();
+  const msg = document.getElementById('ejs-msg');
+  if (!testEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(testEmail)) {
+    msg.innerHTML = ''; msg.className='err'; msg.textContent='\u2715 Entrez un email valide';
+    return;
+  }
+  msg.innerHTML = ''; msg.className='ok'; msg.textContent='\u27f3 Envoi du test \u00e0 ' + testEmail + '...';
   try {
     emailjs.init(pk);
-    await emailjs.send(sid, tid, { to_email: 'test@test.com', to_name: 'Test', code: '000000' });
-    msg.className='ok'; msg.textContent='\u2713 Email envoy\u00e9 avec succ\u00e8s !';
-    setTimeout(() => { msg.style.display='none'; }, 4000);
+    await emailjs.send(sid, tid, { to_email: testEmail, to_name: 'Test EmailJS', code: '123456' });
+    msg.textContent='\u2713 Email test envoy\u00e9 \u00e0 ' + testEmail + ' avec succ\u00e8s !';
+    setTimeout(() => { msg.style.display='none'; }, 5000);
   } catch(e) {
     msg.className='err'; msg.textContent='\u2715 Erreur : ' + (e.text || e.message || 'V\u00e9rifiez vos identifiants EmailJS');
   }
@@ -2040,6 +2146,80 @@ function discardChanges() {
 }
 
 // ================================================
+//  THEME & FESTIVE MODE
+// ================================================
+const FESTIVE_PARTICLES = {
+  christmas: ['❄','🎄','🎅','⭐','🎁','🔔'],
+  newyear: ['🎆','🎇','✨','🥂','🎊','🎉'],
+  valentines: ['❤','💕','💖','🌹','💘','💝'],
+  easter: ['🐣','🐰','🥚','🌷','🦋','🌸'],
+  aprilfools: ['🤡','🎭','😜','🃏','🎪','🐟'],
+  halloween: ['🎃','👻','🦇','🕷','💀','🕸']
+};
+
+const FESTIVE_LABELS = {
+  christmas: '🎄 Noël', newyear: '🎆 Nouvel An', valentines: '💕 Saint-Valentin',
+  easter: '🐣 Pâques', aprilfools: '🤡 Poisson d\'avril', halloween: '🎃 Halloween'
+};
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = currentTheme === 'light' ? '☀️' : '🌙';
+  if (btn) btn.title = currentTheme === 'light' ? 'Passer en mode sombre' : 'Passer en mode clair';
+}
+
+function toggleTheme() {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+  save();
+  toast(currentTheme === 'light' ? 'Mode clair activé' : 'Mode sombre activé', 'success');
+}
+
+function setFestiveMode(mode) {
+  currentFestive = mode;
+  applyFestive();
+  save();
+  const msg = document.getElementById('festive-msg');
+  if (msg) {
+    msg.style.display = 'block';
+    msg.className = 'ok';
+    msg.textContent = mode ? `✓ Mode ${FESTIVE_LABELS[mode] || mode} activé !` : '✓ Mode festif désactivé';
+    setTimeout(() => { msg.style.display = 'none'; }, 3000);
+  }
+  toast(mode ? `Mode ${FESTIVE_LABELS[mode] || mode} activé !` : 'Mode festif désactivé', 'success');
+}
+
+function applyFestive() {
+  const deco = document.getElementById('festive-deco');
+  if (deco) deco.innerHTML = '';
+  if (currentFestive) {
+    document.documentElement.setAttribute('data-festive', currentFestive);
+    spawnFestiveParticles();
+  } else {
+    document.documentElement.removeAttribute('data-festive');
+  }
+}
+
+function spawnFestiveParticles() {
+  const deco = document.getElementById('festive-deco');
+  if (!deco || !currentFestive) return;
+  const particles = FESTIVE_PARTICLES[currentFestive] || [];
+  if (!particles.length) return;
+  deco.innerHTML = '';
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('span');
+    p.className = 'festive-particle';
+    p.textContent = particles[Math.floor(Math.random() * particles.length)];
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (6 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+    deco.appendChild(p);
+  }
+}
+
+// ================================================
 //  OVERLAY HELPERS
 // ================================================
 function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
@@ -2060,6 +2240,8 @@ function toast(msg, type = 'success') {
 //  INIT
 // ================================================
 load();
+applyTheme();
+applyFestive();
 renderServices();
 renderTeam();
 renderSupport();
