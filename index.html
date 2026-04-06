@@ -1287,7 +1287,7 @@ function switchAuth(tab) {
   const randomEmoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
   const form = document.getElementById('auth-form');
   const realCount = Object.keys(users).length;
-  const displayCount = Math.max(20000, 20000 + realCount);
+  const displayCount = Math.max(0, 0 + realCount);
   const jackpotHtml = buildJackpotBanner(displayCount);
 
   if (tab === 'login') {
