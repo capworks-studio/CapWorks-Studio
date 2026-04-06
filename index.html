@@ -998,7 +998,7 @@ function renderServices() {
   grid.innerHTML = '';
   services.forEach((s, i) => {
     const card = document.createElement('div');
-    card.className = `service-card${!s.active ? ' unavailable' : ''}`;
+    card.className = `service-card ${!s.active ? 'unavailable' : ''}`;
     card.style.animationDelay = `${i * 0.07}s`;
     const tiersHtml = s.tiers.map((t, ti) => {
       const isFree = t.free === true;
