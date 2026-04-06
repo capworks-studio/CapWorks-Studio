@@ -1373,7 +1373,7 @@ async function doRegister() {
   const btn = document.getElementById('r-btn');
   btn.disabled = true; btn.textContent = 'Envoi du code...'; err.textContent = '';
   try {
-    await emailjs.send('service_kee805w', 'template_7p1rzxb', { to_email: email, to_name: u, code: _otpCode });
+    await emailjs.send('service_kee805w', 'template_ueewv6y', { to_email: email, to_name: u, code: _otpCode });
     showVerifyStep(email);
   } catch(ex) {
     err.textContent = '✕ Erreur lors de l\'envoi.';
@@ -1456,7 +1456,7 @@ async function resendOTP() {
   const btn = document.getElementById('resend-btn');
   btn.disabled = true; btn.textContent = 'Envoi...';
   try {
-    await emailjs.send('service_kee805w', 'template_7p1rzxb', { to_email: _pendingReg.email, to_name: _pendingReg.u, code: _otpCode });
+    await emailjs.send('service_kee805w', 'template_ueewv6y', { to_email: _pendingReg.email, to_name: _pendingReg.u, code: _otpCode });
     let secs = 60;
     btn.innerHTML = 'Renvoyer (<span id="resend-count">60</span>s)';
     _resendTimer = setInterval(() => {
