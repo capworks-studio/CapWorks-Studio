@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Temps de vie</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      text-align: center;
+      width: 320px;
+    }
+    input {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      width: 100%;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      background: #3b82f6;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>⏳ Temps de vie</h2>
+    <input type="date" id="date">
+    <input type="time" id="time" step="1">
+    <button onclick="startCalc()">Calculer</button>
+    <div class="result" id="result">...</div>
+  </div>
+
+  <script>
+    let interval;
+
+    function startCalc() {
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value || "00:00:00";
+
+      if (!date) {
+        alert("Entre ta date de naissance !");
+        return;
+      }
+
+      const birth = new Date(date + 'T' + time);
+
+      clearInterval(interval);
+
+      interval = setInterval(() => {
+        const now = new Date();
+        const diff = now - birth;
+
+        const seconds = Math.floor(diff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        document.getElementById('result').innerHTML = `
+          ${seconds.toLocaleString()} secondes<br>
+          ${minutes.toLocaleString()} minutes<br>
+          ${hours.toLocaleString()} heures<br>
+          ${days.toLocaleString()} jours
+        `;
+      }, 1000);
+    }
+  </script>
+  <button onclick="goBack()" style="
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: #ef4444;
+  color: white;
+  cursor: pointer;
+  ">
+    ← Retour
+  </button>
+
+  <script>
+  function goBack() {
+    window.location.href = "index.html";
+  }
+  </script>
+</body>
+</html>
