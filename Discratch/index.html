@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discratch — Discord Bot Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0f14;
+  --surface: #16181f;
+  --surface2: #1e2029;
+  --surface3: #252836;
+  --border: #2e3144;
+  --text: #e8eaf0;
+  --muted: #6b7280;
+  --accent: #5865f2;
+  --accent2: #7289da;
+  --green: #57f287;
+  --red: #ed4245;
+  --yellow: #fee75c;
+  --purple: #9b59b6;
+  --twitch: #9146ff;
+  --twitch-dark: #6b2fc7;
+  --orange: #f97316;
+
+  /* Block colors */
+  --block-event: #5865f2;
+  --block-condition: #f59e0b;
+  --block-action: #10b981;
+  --block-message: #3b82f6;
+  --block-role: #8b5cf6;
+  --block-twitch: #9146ff;
+  --block-logic: #ef4444;
+  --block-variable: #06b6d4;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+header {
+  height: 52px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 16px;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.logo svg { width: 28px; height: 28px; }
+
+.logo span { color: var(--accent); }
+
+.header-tabs {
+  display: flex;
+  gap: 2px;
+  margin-left: 8px;
+}
+
+.header-tab {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+}
+
+.header-tab:hover { background: var(--surface2); color: var(--text); }
+.header-tab.active { background: var(--surface3); color: var(--text); }
+
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn {
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  font-family: 'Syne', sans-serif;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+.btn-primary:hover { background: #4752c4; transform: translateY(-1px); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+
+.btn-green {
+  background: var(--green);
+  color: #0a1a0d;
+}
+.btn-green:hover { background: #45d970; transform: translateY(-1px); }
+
+/* ===== MAIN LAYOUT ===== */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 260px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.sidebar-scroll {
+  overflow-y: auto;
+  flex: 1;
+  padding: 10px 10px;
+}
+
+.sidebar-scroll::-webkit-scrollbar { width: 4px; }
+.sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+.sidebar-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.block-category {
+  margin-bottom: 12px;
+}
+
+.category-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  padding: 4px 6px;
+  margin-bottom: 4px;
+}
+
+.block-template {
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: grab;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s;
+  user-select: none;
+  position: relative;
+  border-left: 3px solid transparent;
+}
+
+.block-template:hover {
+  filter: brightness(1.15);
+  transform: translateX(2px);
+}
+
+.block-template:active { cursor: grabbing; transform: scale(0.97); }
+
+.block-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+/* Category color coding */
+.cat-event .block-template { background: rgba(88,101,242,0.15); border-color: var(--block-event); color: #a5acff; }
+.cat-condition .block-template { background: rgba(245,158,11,0.15); border-color: var(--block-condition); color: #fcd34d; }
+.cat-action .block-template { background: rgba(16,185,129,0.15); border-color: var(--block-action); color: #6ee7b7; }
+.cat-message .block-template { background: rgba(59,130,246,0.15); border-color: var(--block-message); color: #93c5fd; }
+.cat-role .block-template { background: rgba(139,92,246,0.15); border-color: var(--block-role); color: #c4b5fd; }
+.cat-logic .block-template { background: rgba(239,68,68,0.15); border-color: var(--block-logic); color: #fca5a5; }
+.cat-variable .block-template { background: rgba(6,182,212,0.15); border-color: var(--block-variable); color: #67e8f9; }
+
+.cat-twitch .block-template {
+  background: rgba(145,70,255,0.15);
+  border-color: var(--block-twitch);
+  color: #c4a0ff;
+}
+
+.twitch-pro-badge {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  background: var(--twitch);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* ===== CANVAS ===== */
+.canvas-wrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(88,101,242,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(145,70,255,0.04) 0%, transparent 60%),
+    var(--bg);
+}
+
+.canvas-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+#canvas {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: 40px;
+}
+
+#canvas::-webkit-scrollbar { width: 6px; height: 6px; }
+#canvas::-webkit-scrollbar-track { background: transparent; }
+#canvas::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.canvas-empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+
+.canvas-empty svg {
+  width: 56px;
+  height: 56px;
+  opacity: 0.15;
+  margin-bottom: 16px;
+}
+
+.canvas-empty p {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.canvas-empty span {
+  font-size: 12px;
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+/* ===== BLOCKS ===== */
+.block-container {
+  display: inline-flex;
+  flex-direction: column;
+  position: absolute;
+  cursor: default;
+  min-width: 260px;
+}
+
+.block {
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  border: 1px solid transparent;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.block:hover {
+  border-color: rgba(255,255,255,0.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.block-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: grab;
+}
+
+.block-header:active { cursor: grabbing; }
+
+.block-icon-big {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.12);
+}
+
+.block-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  flex: 1;
+}
+
+.block-close {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.block-close:hover { background: var(--red); color: white; }
+
+/* Input row */
+.block-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.block-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.block-input {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  min-width: 80px;
+  flex: 1;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.block-input:focus {
+  border-color: rgba(255,255,255,0.3);
+}
+
+.block-select {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  flex: 1;
+}
+
+.block-select option { background: var(--surface2); }
+
+/* Block types */
+.block-event { background: linear-gradient(135deg, #3d44aa 0%, #2d3480 100%); }
+.block-condition { background: linear-gradient(135deg, #b07a0a 0%, #8a5d00 100%); }
+.block-action { background: linear-gradient(135deg, #0a7a50 0%, #086040 100%); }
+.block-message { background: linear-gradient(135deg, #1a5fa8 0%, #124680 100%); }
+.block-role { background: linear-gradient(135deg, #5a2e9e 0%, #42228a 100%); }
+.block-logic { background: linear-gradient(135deg, #9e1a1a 0%, #801212 100%); }
+.block-variable { background: linear-gradient(135deg, #0a6b8a 0%, #085270 100%); }
+.block-twitch { background: linear-gradient(135deg, #6b1fcc 0%, #52189e 100%); }
+
+/* Connector puzzle piece */
+.block-connector-top {
+  width: 40px;
+  height: 10px;
+  background: inherit;
+  position: absolute;
+  top: -9px;
+  left: 20px;
+  border-radius: 4px 4px 0 0;
+}
+
+.block-connector-bottom {
+  width: 40px;
+  height: 10px;
+  position: absolute;
+  bottom: -9px;
+  left: 20px;
+  border-radius: 0 0 4px 4px;
+}
+
+/* Children / nested blocks */
+.block-children {
+  margin-left: 24px;
+  margin-top: 4px;
+  border-left: 2px solid rgba(255,255,255,0.1);
+  padding-left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.block-children-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.5;
+  margin-bottom: 2px;
+}
+
+.drop-zone {
+  min-height: 40px;
+  border: 2px dashed rgba(255,255,255,0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  font-weight: 600;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.5);
+}
+
+.drop-zone.has-blocks {
+  border: none;
+  min-height: unset;
+  padding: 0;
+}
+
+/* ===== RIGHT PANEL ===== */
+.right-panel {
+  width: 280px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.panel-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.code-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+}
+
+.code-output::-webkit-scrollbar { width: 4px; }
+.code-output::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+pre {
+  font-family: 'Space Mono', monospace;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: #cdd6f4;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.code-comment { color: #6c7086; }
+.code-keyword { color: #cba6f7; }
+.code-string { color: #a6e3a1; }
+.code-number { color: #fab387; }
+.code-func { color: #89b4fa; }
+.code-decorator { color: #f38ba8; }
+.code-var { color: #f5c2e7; }
+
+.code-placeholder {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+}
+
+.code-placeholder svg { width: 40px; height: 40px; opacity: 0.3; margin-bottom: 12px; }
+.code-placeholder p { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.code-placeholder span { font-size: 11px; opacity: 0.6; }
+
+/* ===== TWITCH MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.modal-overlay.show { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 420px;
+  padding: 28px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  transform: scale(0.95) translateY(8px);
+  transition: transform 0.2s;
+}
+
+.modal-overlay.show .modal { transform: scale(1) translateY(0); }
+
+.modal-twitch-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--twitch) 0%, var(--twitch-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  margin-bottom: 18px;
+  box-shadow: 0 8px 24px rgba(145,70,255,0.4);
+}
+
+.modal h2 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.modal-price {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--twitch);
+  margin: 16px 0;
+}
+
+.modal-price span { font-size: 16px; color: var(--muted); font-weight: 400; }
+
+.modal-features {
+  list-style: none;
+  margin-bottom: 24px;
+}
+
+.modal-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  color: rgba(255,255,255,0.8);
+}
+
+.modal-features li:last-child { border-bottom: none; }
+
+.feat-icon { font-size: 16px; }
+
+.modal-actions { display: flex; gap: 10px; }
+
+.btn-twitch {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--twitch) 0%, var(--twitch-dark) 100%);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  transition: all 0.15s;
+}
+
+.btn-twitch:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+.btn-cancel {
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  transition: all 0.15s;
+}
+
+.btn-cancel:hover { color: var(--text); border-color: var(--muted); }
+
+/* Twitch lock overlay */
+.twitch-locked {
+  position: absolute;
+  inset: 0;
+  background: rgba(145,70,255,0.08);
+  border: 1px dashed var(--twitch);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--twitch);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  z-index: 5;
+}
+
+.twitch-locked:hover { background: rgba(145,70,255,0.15); }
+
+/* Bot config bar */
+.config-bar {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.config-bar input {
+  flex: 1;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  outline: none;
+}
+
+.config-bar input:focus { border-color: var(--accent); }
+.config-bar label { font-size: 11px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Drag ghost */
+.drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.85;
+  transform: rotate(2deg) scale(1.02);
+  transition: none;
+}
+
+/* Canvas toolbar */
+.canvas-toolbar {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  z-index: 10;
+}
+
+.toolbar-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.15s;
+}
+
+.toolbar-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border); }
+.toolbar-sep { width: 1px; height: 20px; background: var(--border); }
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.block-container { animation: fadeIn 0.2s ease; }
+
+/* Locked twitch cat in sidebar */
+.twitch-lock-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  opacity: 0.6;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <svg viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="8" fill="#5865F2"/>
+      <circle cx="11" cy="13" r="2.5" fill="white" opacity="0.9"/>
+      <circle cx="21" cy="13" r="2.5" fill="white" opacity="0.9"/>
+      <path d="M10 20 Q16 25 22 20" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <rect x="6" y="4" width="3" height="7" rx="1.5" fill="white" opacity="0.6"/>
+      <rect x="23" y="4" width="3" height="7" rx="1.5" fill="white" opacity="0.6"/>
+    </svg>
+    Dis<span>cratch</span>
+  </div>
+  <div class="header-tabs">
+    <button class="header-tab active">Éditeur</button>
+    <button class="header-tab">Mes Bots</button>
+    <button class="header-tab">Docs</button>
+  </div>
+  <div class="header-right">
+    <div class="config-bar" style="border:none; padding:0; flex-direction:row; align-items:center;">
+      <label>Token :</label>
+      <input type="password" id="botToken" placeholder="MTxxxxx..." style="width:160px;">
+    </div>
+    <button class="btn btn-ghost" onclick="clearCanvas()">🗑 Vider</button>
+    <button class="btn btn-green" onclick="generateAndShowCode()">⚡ Générer Python</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">Blocs disponibles</div>
+    <div class="sidebar-scroll">
+
+      <div class="block-category cat-event">
+        <div class="category-label">⚡ Événements</div>
+        <div class="block-template" draggable="true" data-type="on_message">
+          <div class="block-icon">💬</div> Quand un message est envoyé
+        </div>
+        <div class="block-template" draggable="true" data-type="on_ready">
+          <div class="block-icon">🟢</div> Quand le bot démarre
+        </div>
+        <div class="block-template" draggable="true" data-type="on_member_join">
+          <div class="block-icon">👋</div> Quand un membre rejoint
+        </div>
+        <div class="block-template" draggable="true" data-type="on_member_leave">
+          <div class="block-icon">🚪</div> Quand un membre part
+        </div>
+        <div class="block-template" draggable="true" data-type="on_reaction">
+          <div class="block-icon">👍</div> Quand une réaction est ajoutée
+        </div>
+        <div class="block-template" draggable="true" data-type="on_command">
+          <div class="block-icon">🔧</div> Commande slash /...
+        </div>
+      </div>
+
+      <div class="block-category cat-condition">
+        <div class="category-label">🔀 Conditions</div>
+        <div class="block-template" draggable="true" data-type="if_message_contains">
+          <div class="block-icon">🔍</div> Si le message contient...
+        </div>
+        <div class="block-template" draggable="true" data-type="if_role">
+          <div class="block-icon">🎭</div> Si l'utilisateur a le rôle...
+        </div>
+        <div class="block-template" draggable="true" data-type="if_channel">
+          <div class="block-icon">📢</div> Si le canal est...
+        </div>
+        <div class="block-template" draggable="true" data-type="if_user">
+          <div class="block-icon">👤</div> Si l'utilisateur est...
+        </div>
+      </div>
+
+      <div class="block-category cat-action">
+        <div class="category-label">⚙️ Actions</div>
+        <div class="block-template" draggable="true" data-type="send_message">
+          <div class="block-icon">📨</div> Envoyer un message
+        </div>
+        <div class="block-template" draggable="true" data-type="send_embed">
+          <div class="block-icon">🃏</div> Envoyer un embed
+        </div>
+        <div class="block-template" draggable="true" data-type="delete_message">
+          <div class="block-icon">🗑</div> Supprimer le message
+        </div>
+        <div class="block-template" draggable="true" data-type="kick_user">
+          <div class="block-icon">🥾</div> Expulser l'utilisateur
+        </div>
+        <div class="block-template" draggable="true" data-type="ban_user">
+          <div class="block-icon">🔨</div> Bannir l'utilisateur
+        </div>
+        <div class="block-template" draggable="true" data-type="add_role">
+          <div class="block-icon">➕</div> Ajouter un rôle
+        </div>
+        <div class="block-template" draggable="true" data-type="remove_role">
+          <div class="block-icon">➖</div> Retirer un rôle
+        </div>
+        <div class="block-template" draggable="true" data-type="wait">
+          <div class="block-icon">⏱</div> Attendre... secondes
+        </div>
+      </div>
+
+      <div class="block-category cat-logic">
+        <div class="category-label">🔁 Logique</div>
+        <div class="block-template" draggable="true" data-type="repeat">
+          <div class="block-icon">🔄</div> Répéter... fois
+        </div>
+        <div class="block-template" draggable="true" data-type="stop">
+          <div class="block-icon">⛔</div> Arrêter le script
+        </div>
+      </div>
+
+      <div class="block-category cat-variable">
+        <div class="category-label">📦 Variables</div>
+        <div class="block-template" draggable="true" data-type="set_variable">
+          <div class="block-icon">📌</div> Définir une variable
+        </div>
+        <div class="block-template" draggable="true" data-type="log">
+          <div class="block-icon">📋</div> Log console
+        </div>
+      </div>
+
+      <div class="block-category cat-twitch">
+        <div class="category-label">
+          🟣 Twitch
+          <span style="margin-left:6px; font-size:9px; background:var(--twitch); color:white; padding:2px 6px; border-radius:8px; font-weight:700;">5.99€</span>
+        </div>
+        <div class="block-template" draggable="true" data-type="twitch_if_live" data-pro="true" style="position:relative;">
+          <div class="block-icon">📡</div> Si [...] est en live
+          <span class="twitch-lock-icon">🔒</span>
+        </div>
+        <div class="block-template" draggable="true" data-type="twitch_on_live_start" data-pro="true" style="position:relative;">
+          <div class="block-icon">🔴</div> Quand un live démarre
+          <span class="twitch-lock-icon">🔒</span>
+        </div>
+        <div class="block-template" draggable="true" data-type="twitch_on_live_end" data-pro="true" style="position:relative;">
+          <div class="block-icon">⚫</div> Quand un live se termine
+          <span class="twitch-lock-icon">🔒</span>
+        </div>
+        <div class="block-template" draggable="true" data-type="twitch_viewer_count" data-pro="true" style="position:relative;">
+          <div class="block-icon">👁</div> Nombre de viewers
+          <span class="twitch-lock-icon">🔒</span>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- CANVAS -->
+  <div class="canvas-wrapper">
+    <div class="canvas-grid"></div>
+    <div id="canvas">
+      <div class="canvas-empty" id="canvasEmpty">
+        <svg viewBox="0 0 48 48" fill="none">
+          <rect x="4" y="12" width="40" height="28" rx="6" stroke="currentColor" stroke-width="2.5" fill="none"/>
+          <path d="M4 20h40" stroke="currentColor" stroke-width="2.5"/>
+          <circle cx="12" cy="16" r="2" fill="currentColor"/>
+          <circle cx="19" cy="16" r="2" fill="currentColor"/>
+          <circle cx="26" cy="16" r="2" fill="currentColor"/>
+        </svg>
+        <p>Glissez des blocs ici</p>
+        <span>Faites glisser un bloc depuis le panneau gauche</span>
+      </div>
+    </div>
+    <div class="canvas-toolbar">
+      <button class="toolbar-btn" title="Zoom +" onclick="showToast('Zoom +')">➕</button>
+      <button class="toolbar-btn" title="Zoom -" onclick="showToast('Zoom -')">➖</button>
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn" title="Centrer" onclick="showToast('Vue réinitialisée')">🎯</button>
+      <button class="toolbar-btn" title="Supprimer tout" onclick="clearCanvas()">🗑</button>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <aside class="right-panel">
+    <div class="panel-header">
+      Code Python généré
+      <button class="btn btn-ghost" style="padding:4px 10px; font-size:11px;" onclick="copyCode()">Copier</button>
+    </div>
+    <div class="code-output" id="codeOutput">
+      <div class="code-placeholder">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M14 14L6 20L14 26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M26 14L34 20L26 26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 10L18 30" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <p>Aucun code généré</p>
+        <span>Ajoutez des blocs puis cliquez sur<br>⚡ Générer Python</span>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- TWITCH MODAL -->
+<div class="modal-overlay" id="twitchModal">
+  <div class="modal">
+    <div class="modal-twitch-badge">🟣</div>
+    <h2>Bibliothèque Twitch</h2>
+    <p style="font-size:13px; color:var(--muted); margin-bottom:4px;">Connectez vos bots Discord à Twitch en temps réel</p>
+    <div class="modal-price">5.99€ <span>/ achat unique</span></div>
+    <ul class="modal-features">
+      <li><span class="feat-icon">📡</span> Détection de live en temps réel via API Twitch</li>
+      <li><span class="feat-icon">🔔</span> Notifications automatiques dans Discord</li>
+      <li><span class="feat-icon">👁</span> Nombre de viewers accessible en bloc</li>
+      <li><span class="feat-icon">🎮</span> Condition "Si [streamer] est en live"</li>
+      <li><span class="feat-icon">🔁</span> Événements: début/fin de live</li>
+      <li><span class="feat-icon">♾</span> Mises à jour gratuites à vie</li>
+    </ul>
+    <div class="modal-actions">
+      <button class="btn-twitch" onclick="purchaseTwitch()">Acheter — 5.99€</button>
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toastIcon">✅</span>
+  <span id="toastText">Action effectuée</span>
+</div>
+
+<script>
+// ============================
+//   STATE
+// ============================
+let blocks = [];
+let blockIdCounter = 0;
+let twitchUnlocked = false;
+let dragType = null;
+let dragBlockEl = null;
+let dragOffX = 0, dragOffY = 0;
+let ghostEl = null;
+
+// ============================
+//   BLOCK DEFINITIONS
+// ============================
+const BLOCK_DEFS = {
+  on_message: {
+    title: 'Quand un message est envoyé', icon: '💬', type: 'event', color: 'block-event',
+    fields: [],
+    hasChildren: true, childrenLabel: 'Faire :'
+  },
+  on_ready: {
+    title: 'Quand le bot démarre', icon: '🟢', type: 'event', color: 'block-event',
+    fields: [],
+    hasChildren: true, childrenLabel: 'Faire :'
+  },
+  on_member_join: {
+    title: 'Quand un membre rejoint', icon: '👋', type: 'event', color: 'block-event',
+    fields: [],
+    hasChildren: true, childrenLabel: 'Faire :'
+  },
+  on_member_leave: {
+    title: 'Quand un membre part', icon: '🚪', type: 'event', color: 'block-event',
+    fields: [],
+    hasChildren: true, childrenLabel: 'Faire :'
+  },
+  on_reaction: {
+    title: 'Quand une réaction est ajoutée', icon: '👍', type: 'event', color: 'block-event',
+    fields: [{ key: 'emoji', label: 'Emoji :', placeholder: '👍' }],
+    hasChildren: true, childrenLabel: 'Faire :'
+  },
+  on_command: {
+    title: 'Commande slash', icon: '🔧', type: 'event', color: 'block-event',
+    fields: [{ key: 'name', label: 'Commande :', placeholder: 'ping' }],
+    hasChildren: true, childrenLabel: 'Faire :'
+  },
+
+  if_message_contains: {
+    title: 'Si le message contient', icon: '🔍', type: 'condition', color: 'block-condition',
+    fields: [{ key: 'text', label: 'Texte :', placeholder: 'bonjour' }],
+    hasChildren: true, childrenLabel: 'Alors :',
+    hasElse: true, elseLabel: 'Sinon :'
+  },
+  if_role: {
+    title: "Si l'utilisateur a le rôle", icon: '🎭', type: 'condition', color: 'block-condition',
+    fields: [{ key: 'role', label: 'Rôle :', placeholder: 'Modérateur' }],
+    hasChildren: true, childrenLabel: 'Alors :',
+    hasElse: true, elseLabel: 'Sinon :'
+  },
+  if_channel: {
+    title: 'Si le canal est', icon: '📢', type: 'condition', color: 'block-condition',
+    fields: [{ key: 'channel', label: 'Canal :', placeholder: 'général' }],
+    hasChildren: true, childrenLabel: 'Alors :',
+    hasElse: true, elseLabel: 'Sinon :'
+  },
+  if_user: {
+    title: "Si l'utilisateur est", icon: '👤', type: 'condition', color: 'block-condition',
+    fields: [{ key: 'user', label: 'Utilisateur :', placeholder: 'MonPseudo#1234' }],
+    hasChildren: true, childrenLabel: 'Alors :',
+    hasElse: true, elseLabel: 'Sinon :'
+  },
+
+  send_message: {
+    title: 'Envoyer un message', icon: '📨', type: 'action', color: 'block-action',
+    fields: [
+      { key: 'channel', label: 'Canal :', placeholder: 'même canal' },
+      { key: 'content', label: 'Message :', placeholder: 'Bonjour !' }
+    ],
+    hasChildren: false
+  },
+  send_embed: {
+    title: 'Envoyer un embed', icon: '🃏', type: 'action', color: 'block-action',
+    fields: [
+      { key: 'title', label: 'Titre :', placeholder: 'Mon embed' },
+      { key: 'desc', label: 'Description :', placeholder: 'Contenu...' },
+      { key: 'color', label: 'Couleur :', placeholder: '#5865F2' }
+    ],
+    hasChildren: false
+  },
+  delete_message: {
+    title: 'Supprimer le message', icon: '🗑', type: 'action', color: 'block-action',
+    fields: [],
+    hasChildren: false
+  },
+  kick_user: {
+    title: "Expulser l'utilisateur", icon: '🥾', type: 'action', color: 'block-action',
+    fields: [{ key: 'reason', label: 'Raison :', placeholder: 'Non précisée' }],
+    hasChildren: false
+  },
+  ban_user: {
+    title: "Bannir l'utilisateur", icon: '🔨', type: 'action', color: 'block-action',
+    fields: [{ key: 'reason', label: 'Raison :', placeholder: 'Non précisée' }],
+    hasChildren: false
+  },
+  add_role: {
+    title: 'Ajouter un rôle', icon: '➕', type: 'action', color: 'block-role',
+    fields: [{ key: 'role', label: 'Rôle :', placeholder: 'Membre' }],
+    hasChildren: false
+  },
+  remove_role: {
+    title: 'Retirer un rôle', icon: '➖', type: 'action', color: 'block-role',
+    fields: [{ key: 'role', label: 'Rôle :', placeholder: 'Membre' }],
+    hasChildren: false
+  },
+  wait: {
+    title: 'Attendre', icon: '⏱', type: 'action', color: 'block-action',
+    fields: [{ key: 'seconds', label: 'Secondes :', placeholder: '5' }],
+    hasChildren: false
+  },
+
+  repeat: {
+    title: 'Répéter', icon: '🔄', type: 'logic', color: 'block-logic',
+    fields: [{ key: 'times', label: 'Fois :', placeholder: '3' }],
+    hasChildren: true, childrenLabel: 'Bloc à répéter :'
+  },
+  stop: {
+    title: 'Arrêter le script', icon: '⛔', type: 'logic', color: 'block-logic',
+    fields: [],
+    hasChildren: false
+  },
+
+  set_variable: {
+    title: 'Définir une variable', icon: '📌', type: 'variable', color: 'block-variable',
+    fields: [
+      { key: 'name', label: 'Nom :', placeholder: 'ma_var' },
+      { key: 'value', label: 'Valeur :', placeholder: '"bonjour"' }
+    ],
+    hasChildren: false
+  },
+  log: {
+    title: 'Log console', icon: '📋', type: 'variable', color: 'block-variable',
+    fields: [{ key: 'message', label: 'Message :', placeholder: 'Debug...' }],
+    hasChildren: false
+  },
+
+  twitch_if_live: {
+    title: 'Si [...] est en live sur Twitch', icon: '📡', type: 'twitch', color: 'block-twitch', pro: true,
+    fields: [{ key: 'streamer', label: 'Streamer :', placeholder: 'NomDuStreamer' }],
+    hasChildren: true, childrenLabel: 'Alors :',
+    hasElse: true, elseLabel: 'Sinon :'
+  },
+  twitch_on_live_start: {
+    title: 'Quand un live Twitch démarre', icon: '🔴', type: 'twitch', color: 'block-twitch', pro: true,
+    fields: [{ key: 'streamer', label: 'Streamer :', placeholder: 'NomDuStreamer' }],
+    hasChildren: true, childrenLabel: 'Faire :'
+  },
+  twitch_on_live_end: {
+    title: 'Quand un live Twitch se termine', icon: '⚫', type: 'twitch', color: 'block-twitch', pro: true,
+    fields: [{ key: 'streamer', label: 'Streamer :', placeholder: 'NomDuStreamer' }],
+    hasChildren: true, childrenLabel: 'Faire :'
+  },
+  twitch_viewer_count: {
+    title: 'Nombre de viewers Twitch', icon: '👁', type: 'twitch', color: 'block-twitch', pro: true,
+    fields: [
+      { key: 'streamer', label: 'Streamer :', placeholder: 'NomDuStreamer' },
+      { key: 'variable', label: 'Stocker dans :', placeholder: 'nb_viewers' }
+    ],
+    hasChildren: false
+  }
+};
+
+// ============================
+//   DRAG FROM SIDEBAR
+// ============================
+document.querySelectorAll('.block-template').forEach(el => {
+  el.addEventListener('dragstart', e => {
+    const type = el.dataset.type;
+    const isPro = el.dataset.pro === 'true';
+    if (isPro && !twitchUnlocked) {
+      e.preventDefault();
+      openModal();
+      return;
+    }
+    dragType = type;
+    e.dataTransfer.setData('text/plain', type);
+    e.dataTransfer.effectAllowed = 'copy';
+  });
+});
+
+const canvas = document.getElementById('canvas');
+
+canvas.addEventListener('dragover', e => {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'copy';
+});
+
+canvas.addEventListener('drop', e => {
+  e.preventDefault();
+  if (!dragType) return;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left + canvas.scrollLeft - 10;
+  const y = e.clientY - rect.top + canvas.scrollTop - 10;
+  addBlock(dragType, x, y);
+  dragType = null;
+  hideEmpty();
+});
+
+function hideEmpty() {
+  document.getElementById('canvasEmpty').style.display = 'none';
+}
+
+// ============================
+//   CREATE BLOCK
+// ============================
+function addBlock(type, x, y, parentId = null, zone = 'then') {
+  const id = ++blockIdCounter;
+  const def = BLOCK_DEFS[type];
+  if (!def) return;
+
+  const blockData = {
+    id, type, x, y,
+    fields: {},
+    children: [],
+    elseChildren: [],
+    parentId, zone
+  };
+  def.fields.forEach(f => { blockData.fields[f.key] = ''; });
+
+  blocks.push(blockData);
+  renderBlock(blockData);
+  return blockData;
+}
+
+function renderBlock(data, container = null) {
+  const def = BLOCK_DEFS[data.type];
+  const el = document.createElement('div');
+  el.className = 'block-container';
+  el.id = `block-${data.id}`;
+
+  if (!container) {
+    el.style.left = data.x + 'px';
+    el.style.top = data.y + 'px';
+  }
+
+  el.innerHTML = buildBlockHTML(data, def);
+
+  if (container) {
+    container.appendChild(el);
+  } else {
+    canvas.appendChild(el);
+    makeDraggable(el, data);
+  }
+
+  setupBlockEvents(el, data, def);
+  return el;
+}
+
+function buildBlockHTML(data, def) {
+  let html = `<div class="block ${def.color}">`;
+
+  // Connector top
+  html += `<div class="block-connector-top" style="background:inherit;"></div>`;
+
+  // Header
+  html += `
+    <div class="block-header">
+      <div class="block-icon-big">${def.icon}</div>
+      <div class="block-title">${def.title}</div>
+      <button class="block-close" onclick="removeBlock(${data.id})">✕</button>
+    </div>
+  `;
+
+  // Fields
+  def.fields.forEach(f => {
+    const val = data.fields[f.key] || '';
+    html += `
+      <div class="block-row">
+        <span class="block-label">${f.label}</span>
+        <input class="block-input" data-field="${f.key}" data-id="${data.id}" value="${val}" placeholder="${f.placeholder}">
+      </div>
+    `;
+  });
+
+  html += `</div>`; // end .block
+
+  // Children (then zone)
+  if (def.hasChildren) {
+    html += `
+      <div class="block-children">
+        <div class="block-children-label">${def.childrenLabel}</div>
+        <div class="drop-zone" id="zone-then-${data.id}" data-parent="${data.id}" data-zone="then">
+          + Glisser un bloc ici
+        </div>
+      </div>
+    `;
+  }
+
+  // Else zone
+  if (def.hasElse) {
+    html += `
+      <div class="block-children" style="border-color: rgba(239,68,68,0.2);">
+        <div class="block-children-label" style="color:var(--red);">${def.elseLabel}</div>
+        <div class="drop-zone" id="zone-else-${data.id}" data-parent="${data.id}" data-zone="else">
+          + Glisser un bloc ici
+        </div>
+      </div>
+    `;
+  }
+
+  return html;
+}
+
+function setupBlockEvents(el, data, def) {
+  // Input changes
+  el.querySelectorAll('.block-input').forEach(input => {
+    input.addEventListener('input', () => {
+      const b = blocks.find(b => b.id === data.id);
+      if (b) b.fields[input.dataset.field] = input.value;
+    });
+  });
+
+  // Drop zones
+  el.querySelectorAll('.drop-zone').forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      zone.classList.add('drag-over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      zone.classList.remove('drag-over');
+      if (!dragType) return;
+      const isPro = BLOCK_DEFS[dragType]?.pro;
+      if (isPro && !twitchUnlocked) { openModal(); return; }
+      const parentId = parseInt(zone.dataset.parent);
+      const zoneType = zone.dataset.zone;
+      addNestedBlock(dragType, parentId, zoneType, zone);
+      dragType = null;
+    });
+  });
+}
+
+function addNestedBlock(type, parentId, zone, dropZoneEl) {
+  const id = ++blockIdCounter;
+  const def = BLOCK_DEFS[type];
+
+  const blockData = {
+    id, type, x: 0, y: 0,
+    fields: {},
+    children: [],
+    elseChildren: [],
+    parentId, zone
+  };
+  def.fields.forEach(f => { blockData.fields[f.key] = ''; });
+  blocks.push(blockData);
+
+  // Make the drop zone into a block container
+  dropZoneEl.classList.add('has-blocks');
+  dropZoneEl.textContent = '';
+
+  // Render inside the zone
+  renderBlock(blockData, dropZoneEl);
+
+  // Update parent
+  const parent = blocks.find(b => b.id === parentId);
+  if (parent) {
+    if (zone === 'then') parent.children.push(id);
+    else parent.elseChildren.push(id);
+  }
+}
+
+// ============================
+//   DRAGGABLE BLOCKS (on canvas)
+// ============================
+function makeDraggable(el, data) {
+  const header = el.querySelector('.block-header');
+  let startX, startY, startLeft, startTop;
+  let isDragging = false;
+
+  header.addEventListener('mousedown', e => {
+    if (e.target.classList.contains('block-close')) return;
+    isDragging = false;
+    startX = e.clientX;
+    startY = e.clientY;
+    startLeft = data.x;
+    startTop = data.y;
+
+    const onMove = (mv) => {
+      const dx = mv.clientX - startX;
+      const dy = mv.clientY - startY;
+      if (!isDragging && Math.abs(dx) + Math.abs(dy) > 4) isDragging = true;
+      if (isDragging) {
+        data.x = startLeft + dx;
+        data.y = startTop + dy;
+        el.style.left = data.x + 'px';
+        el.style.top = data.y + 'px';
+      }
+    };
+
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+}
+
+// ============================
+//   REMOVE BLOCK
+// ============================
+function removeBlock(id) {
+  const el = document.getElementById(`block-${id}`);
+  if (el) el.remove();
+
+  // Also remove from parent's children list
+  blocks.forEach(b => {
+    b.children = b.children.filter(c => c !== id);
+    b.elseChildren = b.elseChildren.filter(c => c !== id);
+  });
+
+  // Remove nested blocks recursively
+  const block = blocks.find(b => b.id === id);
+  if (block) {
+    [...block.children, ...block.elseChildren].forEach(childId => removeBlock(childId));
+  }
+
+  blocks = blocks.filter(b => b.id !== id);
+
+  if (blocks.filter(b => !b.parentId).length === 0) {
+    document.getElementById('canvasEmpty').style.display = 'block';
+  }
+}
+
+function clearCanvas() {
+  const rootBlocks = [...blocks.filter(b => !b.parentId)];
+  rootBlocks.forEach(b => removeBlock(b.id));
+  document.getElementById('canvasEmpty').style.display = 'block';
+  document.getElementById('codeOutput').innerHTML = `
+    <div class="code-placeholder">
+      <svg viewBox="0 0 40 40" fill="none">
+        <path d="M14 14L6 20L14 26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M26 14L34 20L26 26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M22 10L18 30" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <p>Aucun code généré</p>
+      <span>Ajoutez des blocs puis cliquez sur<br>⚡ Générer Python</span>
+    </div>
+  `;
+  showToast('🗑 Canvas vidé');
+}
+
+// ============================
+//   CODE GENERATION
+// ============================
+function getFieldValue(block, key, fallback = '') {
+  return block.fields[key] || fallback;
+}
+
+function generateBlockCode(blockId, indent = 0) {
+  const block = blocks.find(b => b.id === blockId);
+  if (!block) return '';
+  const def = BLOCK_DEFS[block.type];
+  const pad = '    '.repeat(indent);
+  let code = '';
+
+  switch (block.type) {
+    case 'on_message':
+      code += `${pad}@bot.event\n${pad}async def on_message(message):\n${pad}    if message.author == bot.user:\n${pad}        return\n`;
+      code += generateChildrenCode(block.children, indent + 1);
+      break;
+    case 'on_ready':
+      code += `${pad}@bot.event\n${pad}async def on_ready():\n${pad}    print(f"Connecté en tant que {bot.user}")\n`;
+      code += generateChildrenCode(block.children, indent + 1);
+      break;
+    case 'on_member_join':
+      code += `${pad}@bot.event\n${pad}async def on_member_join(member):\n`;
+      code += generateChildrenCode(block.children, indent + 1);
+      break;
+    case 'on_member_leave':
+      code += `${pad}@bot.event\n${pad}async def on_member_remove(member):\n`;
+      code += generateChildrenCode(block.children, indent + 1);
+      break;
+    case 'on_reaction':
+      const emoji = getFieldValue(block, 'emoji', '👍');
+      code += `${pad}@bot.event\n${pad}async def on_reaction_add(reaction, user):\n${pad}    if str(reaction.emoji) == "${emoji}":\n`;
+      code += generateChildrenCode(block.children, indent + 2);
+      break;
+    case 'on_command': {
+      const name = getFieldValue(block, 'name', 'ping');
+      code += `${pad}@bot.command(name="${name}")\n${pad}async def ${name}(ctx):\n`;
+      code += generateChildrenCode(block.children, indent + 1);
+      break;
+    }
+
+    case 'if_message_contains': {
+      const text = getFieldValue(block, 'text', '');
+      code += `${pad}if "${text}" in message.content.lower():\n`;
+      const thenCode = generateChildrenCode(block.children, indent + 1);
+      code += thenCode || `${'    '.repeat(indent+1)}pass\n`;
+      if (block.elseChildren.length > 0) {
+        code += `${pad}else:\n`;
+        code += generateChildrenCode(block.elseChildren, indent + 1);
+      }
+      break;
+    }
+    case 'if_role': {
+      const role = getFieldValue(block, 'role', 'Modérateur');
+      code += `${pad}if discord.utils.get(message.author.roles, name="${role}"):\n`;
+      const thenCode = generateChildrenCode(block.children, indent + 1);
+      code += thenCode || `${'    '.repeat(indent+1)}pass\n`;
+      if (block.elseChildren.length > 0) {
+        code += `${pad}else:\n`;
+        code += generateChildrenCode(block.elseChildren, indent + 1);
+      }
+      break;
+    }
+    case 'if_channel': {
+      const channel = getFieldValue(block, 'channel', 'général');
+      code += `${pad}if message.channel.name == "${channel}":\n`;
+      const thenCode = generateChildrenCode(block.children, indent + 1);
+      code += thenCode || `${'    '.repeat(indent+1)}pass\n`;
+      if (block.elseChildren.length > 0) {
+        code += `${pad}else:\n`;
+        code += generateChildrenCode(block.elseChildren, indent + 1);
+      }
+      break;
+    }
+    case 'if_user': {
+      const user = getFieldValue(block, 'user', '');
+      code += `${pad}if str(message.author) == "${user}":\n`;
+      const thenCode = generateChildrenCode(block.children, indent + 1);
+      code += thenCode || `${'    '.repeat(indent+1)}pass\n`;
+      if (block.elseChildren.length > 0) {
+        code += `${pad}else:\n`;
+        code += generateChildrenCode(block.elseChildren, indent + 1);
+      }
+      break;
+    }
+
+    case 'send_message': {
+      const ch = getFieldValue(block, 'channel', '');
+      const msg = getFieldValue(block, 'content', 'Bonjour !');
+      if (ch) {
+        code += `${pad}channel = discord.utils.get(message.guild.channels, name="${ch}")\n`;
+        code += `${pad}await channel.send("${msg}")\n`;
+      } else {
+        code += `${pad}await message.channel.send("${msg}")\n`;
+      }
+      break;
+    }
+    case 'send_embed': {
+      const title = getFieldValue(block, 'title', 'Mon embed');
+      const desc = getFieldValue(block, 'desc', '');
+      const color = getFieldValue(block, 'color', '#5865F2').replace('#', '0x');
+      code += `${pad}embed = discord.Embed(\n${pad}    title="${title}",\n${pad}    description="${desc}",\n${pad}    color=${color}\n${pad})\n`;
+      code += `${pad}await message.channel.send(embed=embed)\n`;
+      break;
+    }
+    case 'delete_message':
+      code += `${pad}await message.delete()\n`;
+      break;
+    case 'kick_user': {
+      const reason = getFieldValue(block, 'reason', 'Non précisée');
+      code += `${pad}await message.author.kick(reason="${reason}")\n`;
+      break;
+    }
+    case 'ban_user': {
+      const reason = getFieldValue(block, 'reason', 'Non précisée');
+      code += `${pad}await message.author.ban(reason="${reason}")\n`;
+      break;
+    }
+    case 'add_role': {
+      const role = getFieldValue(block, 'role', 'Membre');
+      code += `${pad}role = discord.utils.get(message.guild.roles, name="${role}")\n`;
+      code += `${pad}await message.author.add_roles(role)\n`;
+      break;
+    }
+    case 'remove_role': {
+      const role = getFieldValue(block, 'role', 'Membre');
+      code += `${pad}role = discord.utils.get(message.guild.roles, name="${role}")\n`;
+      code += `${pad}await message.author.remove_roles(role)\n`;
+      break;
+    }
+    case 'wait': {
+      const secs = getFieldValue(block, 'seconds', '5');
+      code += `${pad}await asyncio.sleep(${secs})\n`;
+      break;
+    }
+
+    case 'repeat': {
+      const times = getFieldValue(block, 'times', '3');
+      code += `${pad}for _ in range(${times}):\n`;
+      code += generateChildrenCode(block.children, indent + 1);
+      break;
+    }
+    case 'stop':
+      code += `${pad}return\n`;
+      break;
+
+    case 'set_variable': {
+      const name = getFieldValue(block, 'name', 'ma_var');
+      const value = getFieldValue(block, 'value', '"valeur"');
+      code += `${pad}${name} = ${value}\n`;
+      break;
+    }
+    case 'log': {
+      const msg = getFieldValue(block, 'message', 'Debug...');
+      code += `${pad}print("${msg}")\n`;
+      break;
+    }
+
+    // TWITCH BLOCKS
+    case 'twitch_if_live': {
+      const streamer = getFieldValue(block, 'streamer', 'NomDuStreamer');
+      code += `${pad}# Vérifie si ${streamer} est en live sur Twitch\n`;
+      code += `${pad}twitch_live = await twitch_checker.is_live("${streamer}")\n`;
+      code += `${pad}if twitch_live:\n`;
+      const thenCode = generateChildrenCode(block.children, indent + 1);
+      code += thenCode || `${'    '.repeat(indent+1)}pass\n`;
+      if (block.elseChildren.length > 0) {
+        code += `${pad}else:\n`;
+        code += generateChildrenCode(block.elseChildren, indent + 1);
+      }
+      break;
+    }
+    case 'twitch_on_live_start': {
+      const streamer = getFieldValue(block, 'streamer', 'NomDuStreamer');
+      code += `${pad}@twitch_checker.on_live_start("${streamer}")\n`;
+      code += `${pad}async def on_${streamer}_live_start():\n`;
+      code += generateChildrenCode(block.children, indent + 1);
+      break;
+    }
+    case 'twitch_on_live_end': {
+      const streamer = getFieldValue(block, 'streamer', 'NomDuStreamer');
+      code += `${pad}@twitch_checker.on_live_end("${streamer}")\n`;
+      code += `${pad}async def on_${streamer}_live_end():\n`;
+      code += generateChildrenCode(block.children, indent + 1);
+      break;
+    }
+    case 'twitch_viewer_count': {
+      const streamer = getFieldValue(block, 'streamer', 'NomDuStreamer');
+      const variable = getFieldValue(block, 'variable', 'nb_viewers');
+      code += `${pad}${variable} = await twitch_checker.get_viewer_count("${streamer}")\n`;
+      break;
+    }
+  }
+
+  return code;
+}
+
+function generateChildrenCode(childIds, indent) {
+  return childIds.map(id => generateBlockCode(id, indent)).join('');
+}
+
+function generateFullCode() {
+  const rootBlocks = blocks.filter(b => !b.parentId);
+  if (rootBlocks.length === 0) return null;
+
+  const hasTwitch = blocks.some(b => BLOCK_DEFS[b.type]?.type === 'twitch');
+  const token = document.getElementById('botToken').value || 'VOTRE_TOKEN_ICI';
+
+  let code = `# ================================================\n`;
+  code += `# Bot Discord généré par Discratch\n`;
+  code += `# ================================================\n\n`;
+  code += `import discord\nimport asyncio\nfrom discord.ext import commands\n`;
+
+  if (hasTwitch) {
+    code += `from discratch_twitch import TwitchChecker  # Bibliothèque Twitch (5.99€)\n`;
+  }
+
+  code += `\n`;
+  code += `# Configuration du bot\n`;
+  code += `intents = discord.Intents.default()\n`;
+  code += `intents.message_content = True\n`;
+  code += `intents.members = True\n`;
+  code += `bot = commands.Bot(command_prefix="!", intents=intents)\n`;
+
+  if (hasTwitch) {
+    code += `\n# Initialisation du checker Twitch\n`;
+    code += `twitch_checker = TwitchChecker(\n`;
+    code += `    client_id="VOTRE_TWITCH_CLIENT_ID",\n`;
+    code += `    client_secret="VOTRE_TWITCH_SECRET"\n`;
+    code += `)\n`;
+  }
+
+  code += `\n`;
+
+  rootBlocks.forEach((block, i) => {
+    code += generateBlockCode(block.id, 0);
+    if (i < rootBlocks.length - 1) code += `\n`;
+  });
+
+  code += `\n# Lancement du bot\n`;
+  code += `bot.run("${token}")\n`;
+
+  return code;
+}
+
+function generateAndShowCode() {
+  const code = generateFullCode();
+  if (!code) {
+    showToast('⚠️ Ajoutez des blocs d\'abord !', '⚠️');
+    return;
+  }
+
+  const highlighted = syntaxHighlight(code);
+  document.getElementById('codeOutput').innerHTML = `<pre>${highlighted}</pre>`;
+  showToast('✅ Code Python généré !');
+}
+
+function syntaxHighlight(code) {
+  return code
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/(#[^\n]*)/g, '<span class="code-comment">$1</span>')
+    .replace(/\b(import|from|async|def|await|if|else|elif|for|in|return|pass|not|and|or|True|False|None)\b/g, '<span class="code-keyword">$1</span>')
+    .replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, '<span class="code-string">$1</span>')
+    .replace(/\b(\d+)\b/g, '<span class="code-number">$1</span>')
+    .replace(/@(\w+)/g, '<span class="code-decorator">@$1</span>');
+}
+
+function copyCode() {
+  const code = generateFullCode();
+  if (!code) { showToast('⚠️ Rien à copier !', '⚠️'); return; }
+  navigator.clipboard.writeText(code).then(() => showToast('📋 Code copié !'));
+}
+
+// ============================
+//   MODAL
+// ============================
+function openModal() {
+  document.getElementById('twitchModal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('twitchModal').classList.remove('show');
+}
+
+function purchaseTwitch() {
+  twitchUnlocked = true;
+  closeModal();
+  showToast('🟣 Bibliothèque Twitch débloquée !');
+
+  // Update sidebar appearance
+  document.querySelectorAll('.twitch-lock-icon').forEach(el => el.remove());
+  document.querySelectorAll('[data-pro="true"]').forEach(el => {
+    el.removeAttribute('data-pro');
+  });
+}
+
+document.getElementById('twitchModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ============================
+//   TOAST
+// ============================
+function showToast(text, icon = '') {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastText').textContent = text;
+  document.getElementById('toastIcon').textContent = icon;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ============================
+//   DEMO BLOCKS ON LOAD
+// ============================
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    // Add a demo event block at position
+    const demo = addBlock('on_message', 40, 30);
+    hideEmpty();
+  }, 300);
+});
+</script>
+</body>
+</html>
