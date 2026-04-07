@@ -6,27 +6,50 @@
 <title>CapWorks Studio — Services sur mesure</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('-Y8WjfvgdGTW69eYQ');</script>
 <style>
 :root {
-  --bg: #060609; --bg2: #0c0c12; --surface: #0f0f18; --surface2: #16161f; --surface3: #1c1c28;
-  --border: #22222f; --border2: #2e2e3f; --accent: #6c63ff; --accent-glow: rgba(108,99,255,0.3);
-  --cyan: #00d4ff; --cyan-glow: rgba(0,212,255,0.2); --green: #00f593; --green-glow: rgba(0,245,147,0.2);
-  --red: #ff4d6d; --red-glow: rgba(255,77,109,0.2); --gold: #ffc947; --gold-glow: rgba(255,201,71,0.15);
-  --text: #e4e4f0; --text2: #9898b0; --text3: #5a5a70;
-  --tier1: #7a7a9a; --tier2: #6c63ff; --tier3: #ffc947;
-  --font-head: 'Outfit', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+  --bg: #060609;
+  --bg2: #0c0c12;
+  --surface: #0f0f18;
+  --surface2: #16161f;
+  --surface3: #1c1c28;
+  --border: #22222f;
+  --border2: #2e2e3f;
+  --accent: #6c63ff;
+  --accent-glow: rgba(108,99,255,0.3);
+  --cyan: #00d4ff;
+  --cyan-glow: rgba(0,212,255,0.2);
+  --green: #00f593;
+  --green-glow: rgba(0,245,147,0.2);
+  --red: #ff4d6d;
+  --red-glow: rgba(255,77,109,0.2);
+  --gold: #ffc947;
+  --gold-glow: rgba(255,201,71,0.15);
+  --text: #e4e4f0;
+  --text2: #9898b0;
+  --text3: #5a5a70;
+  --tier1: #7a7a9a;
+  --tier2: #6c63ff;
+  --tier3: #ffc947;
+  --font-head: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { font-family: var(--font-head); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body { font-family: var(--font-head); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; cursor: default; }
 body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
 body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; z-index: 0; }
-::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; } ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
 /* HEADER */
 header { position: sticky; top: 0; z-index: 100; height: 64px; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; background: rgba(6,6,9,0.85); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
-.logo { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
-.logo-img { width: 32px; height: 32px; object-fit: contain; }
+.logo { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+.logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--cyan)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; box-shadow: 0 0 20px var(--accent-glow); overflow: hidden; }
+.logo-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
 .logo span { color: var(--cyan); }
 nav { display: flex; align-items: center; gap: 4px; }
 nav a { color: var(--text2); text-decoration: none; font-size: 0.85rem; font-weight: 500; padding: 7px 14px; border-radius: 8px; transition: all 0.2s; }
@@ -35,7 +58,7 @@ nav a:hover { color: var(--text); background: var(--surface2); }
 .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text2); padding: 7px 14px; border-radius: 8px; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; }
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
 .btn-accent { background: var(--accent); border: none; color: white; padding: 7px 16px; border-radius: 8px; font-family: var(--font-head); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 20px var(--accent-glow); }
-.btn-accent:hover { background: #7b73ff; transform: translateY(-1px); }
+.btn-accent:hover { background: #7b73ff; transform: translateY(-1px); box-shadow: 0 4px 24px var(--accent-glow); }
 .user-indicator { display: flex; align-items: center; gap: 8px; padding: 5px 12px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
 .user-indicator:hover { border-color: var(--accent); }
 .user-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
@@ -45,15 +68,15 @@ nav a:hover { color: var(--text); background: var(--surface2); }
 .hero { position: relative; z-index: 1; text-align: center; padding: 100px 40px 80px; overflow: hidden; }
 .hero-glow { position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 600px; height: 500px; background: radial-gradient(ellipse, rgba(108,99,255,0.12) 0%, transparent 70%); pointer-events: none; }
 .hero-glow2 { position: absolute; top: 0; left: 30%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%); pointer-events: none; }
-.hero-tag { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--cyan); letter-spacing: 2px; text-transform: uppercase; border: 1px solid rgba(0,212,255,0.25); background: rgba(0,212,255,0.05); padding: 6px 16px; border-radius: 100px; margin-bottom: 36px; }
+.hero-tag { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 400; color: var(--cyan); letter-spacing: 2px; text-transform: uppercase; border: 1px solid rgba(0,212,255,0.25); background: rgba(0,212,255,0.05); padding: 6px 16px; border-radius: 100px; margin-bottom: 36px; }
 .hero-tag .blink { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); animation: blink 1.4s infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 .hero h1 { font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 900; line-height: 1.05; letter-spacing: -3px; margin-bottom: 20px; }
 .hero h1 em { font-style: normal; background: linear-gradient(120deg, var(--accent) 0%, var(--cyan) 50%, var(--accent) 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmer 4s linear infinite; }
 @keyframes shimmer { to { background-position: 200% center; } }
-.hero p { color: var(--text2); font-size: 1rem; max-width: 480px; margin: 0 auto 48px; line-height: 1.8; }
-.tier-legend { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-.tier-pill { display: flex; align-items: center; gap: 7px; padding: 8px 18px; border-radius: 100px; font-size: 0.78rem; font-weight: 600; }
+.hero p { color: var(--text2); font-size: 1rem; font-weight: 400; max-width: 480px; margin: 0 auto 48px; line-height: 1.8; }
+.tier-legend { display: flex; justify-content: center; gap: 10px; margin-bottom: 0; flex-wrap: wrap; }
+.tier-pill { display: flex; align-items: center; gap: 7px; padding: 8px 18px; border-radius: 100px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.3px; }
 .tier-pill .dot { width: 7px; height: 7px; border-radius: 50%; }
 .tier-pill.t1 { background: rgba(122,122,154,0.1); border: 1px solid rgba(122,122,154,0.25); color: var(--tier1); }
 .tier-pill.t1 .dot { background: var(--tier1); }
@@ -71,34 +94,36 @@ nav a:hover { color: var(--text); background: var(--surface2); }
 /* SERVICES */
 #services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
 .service-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: transform 0.3s cubic-bezier(.2,.8,.3,1), border-color 0.3s, box-shadow 0.3s; animation: fadeUp 0.5s ease both; }
-.service-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 20px 60px rgba(108,99,255,0.12); }
+.service-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 20px 60px rgba(108,99,255,0.12), 0 0 0 1px rgba(108,99,255,0.1); }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 .service-card.unavailable { opacity: 0.45; pointer-events: none; }
 .card-top { padding: 24px 24px 18px; display: flex; align-items: flex-start; gap: 14px; border-bottom: 1px solid var(--border); }
 .card-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
-.icon-bg-1{background:rgba(0,212,255,0.1);} .icon-bg-2{background:rgba(0,245,147,0.1);} .icon-bg-3{background:rgba(108,99,255,0.1);} .icon-bg-4{background:rgba(255,77,109,0.1);} .icon-bg-5{background:rgba(255,201,71,0.1);}
-.card-info h3 { font-size: 1rem; font-weight: 700; margin-bottom: 3px; }
-.card-info p { color: var(--text2); font-size: 0.8rem; line-height: 1.5; }
+.icon-bg-1 { background: rgba(0,212,255,0.1); } .icon-bg-2 { background: rgba(0,245,147,0.1); } .icon-bg-3 { background: rgba(108,99,255,0.1); } .icon-bg-4 { background: rgba(255,77,109,0.1); } .icon-bg-5 { background: rgba(255,201,71,0.1); }
+.card-info h3 { font-size: 1rem; font-weight: 700; margin-bottom: 3px; letter-spacing: -0.3px; }
+.card-info p { color: var(--text2); font-size: 0.8rem; font-weight: 400; line-height: 1.5; }
 .badge-na { display: inline-block; font-family: var(--font-mono); font-size: 0.6rem; background: rgba(255,77,109,0.12); color: var(--red); border: 1px solid rgba(255,77,109,0.25); padding: 2px 7px; border-radius: 4px; margin-left: 6px; vertical-align: middle; text-transform: uppercase; letter-spacing: 1px; }
 .card-tiers { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 8px; }
-.tier-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border-radius: 10px; transition: all 0.2s; }
+.tier-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border-radius: 10px; transition: all 0.2s; cursor: default; }
 .tier-row.t1 { background: rgba(122,122,154,0.07); border: 1px solid rgba(122,122,154,0.15); }
+.tier-row.t1:hover { background: rgba(122,122,154,0.12); }
 .tier-row.t2 { background: rgba(108,99,255,0.07); border: 1px solid rgba(108,99,255,0.2); }
+.tier-row.t2:hover { background: rgba(108,99,255,0.12); }
 .tier-row.t3 { background: rgba(255,201,71,0.05); border: 1px solid rgba(255,201,71,0.2); }
+.tier-row.t3:hover { background: rgba(255,201,71,0.1); }
 .tier-left { display: flex; align-items: center; gap: 9px; }
 .tier-ico { font-size: 0.85rem; }
 .tier-name { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
-.tier-row.t1 .tier-name{color:var(--tier1);} .tier-row.t2 .tier-name{color:var(--tier2);} .tier-row.t3 .tier-name{color:var(--tier3);}
+.tier-row.t1 .tier-name { color: var(--tier1); } .tier-row.t2 .tier-name { color: var(--tier2); } .tier-row.t3 .tier-name { color: var(--tier3); }
 .tier-subdesc { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text3); margin-top: 1px; }
 .tier-right { display: flex; align-items: center; gap: 10px; }
 .tier-price { font-family: var(--font-mono); font-size: 0.95rem; font-weight: 700; }
-.tier-row.t1 .tier-price{color:var(--tier1);} .tier-row.t2 .tier-price{color:var(--tier2);} .tier-row.t3 .tier-price{color:var(--tier3);}
+.tier-row.t1 .tier-price { color: var(--tier1); } .tier-row.t2 .tier-price { color: var(--tier2); } .tier-row.t3 .tier-price { color: var(--tier3); }
 .paypal-btn { background: #0070ba; color: white; border: none; padding: 6px 12px; border-radius: 7px; font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
 .paypal-btn:hover { background: #005ea6; transform: scale(1.05); }
 .paypal-btn:disabled { background: var(--border2); color: var(--text3); cursor: not-allowed; transform: none; }
 .paypal-btn.free { background: linear-gradient(135deg, #00c853, #00e676); color: #000; }
-.paypal-btn.free:hover { background: linear-gradient(135deg, #00b34a, #00d45f); }
-.free-badge { display: inline-block; font-family: var(--font-mono); font-size: 0.6rem; background: rgba(0,245,147,0.12); color: var(--green); border: 1px solid rgba(0,245,147,0.3); padding: 2px 7px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.paypal-btn.free:hover { background: linear-gradient(135deg, #00b34a, #00d45f); transform: scale(1.05); }
 
 /* TEAM */
 .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
@@ -108,7 +133,7 @@ nav a:hover { color: var(--text); background: var(--surface2); }
 .team-avatar.online::after { content: ''; position: absolute; bottom: 3px; right: 3px; width: 12px; height: 12px; background: var(--green); border-radius: 50%; border: 2px solid var(--surface); box-shadow: 0 0 8px var(--green); }
 .team-name { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
 .team-role { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
-.role-owner{color:var(--gold);} .role-dev{color:var(--accent);} .role-mod{color:var(--cyan);} .role-support{color:var(--green);}
+.role-owner { color: var(--gold); } .role-dev { color: var(--accent); } .role-mod { color: var(--cyan); } .role-support { color: var(--green); }
 .team-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
 .team-tag { font-size: 0.65rem; padding: 3px 9px; border-radius: 100px; background: var(--surface3); color: var(--text3); border: 1px solid var(--border2); }
 
@@ -124,11 +149,13 @@ nav a:hover { color: var(--text); background: var(--surface2); }
 .ticket-user { font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .ticket-preview { font-size: 0.72rem; color: var(--text3); margin-top: 2px; font-family: var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ticket-meta { font-size: 0.65rem; color: var(--text3); margin-top: 4px; display: flex; justify-content: space-between; }
+
 .support-main { display: flex; flex-direction: column; }
 .support-header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface2); }
 .support-header h3 { font-size: 0.95rem; font-weight: 700; }
 .support-header p { font-size: 0.75rem; color: var(--text2); margin-top: 2px; }
 .support-status { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--green); }
+
 .chat-area { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; min-height: 300px; }
 .chat-msg { display: flex; gap: 12px; animation: fadeUp 0.3s ease; }
 .chat-msg.own { flex-direction: row-reverse; }
@@ -137,7 +164,7 @@ nav a:hover { color: var(--text); background: var(--surface2); }
 .msg-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-size: 0.72rem; }
 .chat-msg.own .msg-meta { flex-direction: row-reverse; }
 .msg-name { font-weight: 700; }
-.msg-name.is-mod{color:var(--cyan);} .msg-name.is-owner{color:var(--gold);}
+.msg-name.is-mod { color: var(--cyan); } .msg-name.is-owner { color: var(--gold); }
 .msg-time { color: var(--text3); font-family: var(--font-mono); }
 .msg-badge { font-size: 0.58rem; padding: 1px 5px; border-radius: 3px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
 .msg-badge.mod { background: rgba(0,212,255,0.15); color: var(--cyan); border: 1px solid rgba(0,212,255,0.3); }
@@ -147,12 +174,14 @@ nav a:hover { color: var(--text); background: var(--surface2); }
 .msg-del { position: absolute; top: 4px; right: 6px; background: none; border: none; color: var(--text3); font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; padding: 2px 4px; border-radius: 4px; }
 .msg-del:hover { color: var(--red); background: rgba(255,77,109,0.1); }
 .msg-bubble:hover .msg-del { opacity: 1; }
+
 .chat-input-bar { padding: 14px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: var(--surface2); }
 .chat-input { flex: 1; background: var(--surface3); border: 1px solid var(--border2); color: var(--text); padding: 10px 16px; border-radius: 10px; font-family: var(--font-head); font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
 .chat-input:focus { border-color: var(--accent); }
 .chat-input::placeholder { color: var(--text3); }
 .chat-send-btn { background: var(--accent); border: none; color: white; width: 38px; height: 38px; border-radius: 10px; cursor: pointer; font-size: 1rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
 .chat-send-btn:hover { background: #7b73ff; transform: scale(1.05); }
+
 .support-login-wall { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; }
 .support-login-wall h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
 .support-login-wall p { color: var(--text2); font-size: 0.85rem; margin-bottom: 24px; line-height: 1.6; }
@@ -191,6 +220,7 @@ footer a:hover { text-decoration: underline; }
 .email-masked { font-family: var(--font-mono); color: var(--cyan); font-weight: 700; }
 .resend-link { background: none; border: none; color: var(--text3); font-size: 0.75rem; cursor: pointer; font-family: var(--font-mono); text-decoration: underline; padding: 0; transition: color 0.2s; }
 .resend-link:hover { color: var(--accent); }
+.resend-link:disabled { cursor: not-allowed; text-decoration: none; }
 
 /* FORMS */
 .form-group { margin-bottom: 14px; }
@@ -214,7 +244,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 .tiers-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 12px; }
 .tier-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
 .tier-box label { font-size: 0.67rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px; display: block; }
-.tier-box.t1 label{color:var(--tier1);} .tier-box.t2 label{color:var(--tier2);} .tier-box.t3 label{color:var(--tier3);}
+.tier-box.t1 label { color: var(--tier1); } .tier-box.t2 label { color: var(--tier2); } .tier-box.t3 label { color: var(--tier3); }
 .flex-row { display: flex; gap: 8px; align-items: center; }
 .flex-row-sb { display: flex; justify-content: space-between; align-items: center; }
 .save-bar { padding: 14px 24px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface2); }
@@ -256,16 +286,20 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 .purchase-banner p { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
 .purchase-banner a { color: var(--accent); text-decoration: none; font-weight: 600; }
 
-/* Settings modal */
+/* SETTINGS MODAL */
 .settings-modal { max-width: 520px; }
 .settings-section { margin-bottom: 24px; }
 .settings-section h4 { font-size: 0.82rem; font-weight: 700; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
 
-/* Ticket admin */
-.ticket-admin-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 10px; }
+/* Admin ticket viewer */
+.ticket-admin-list { display: flex; flex-direction: column; gap: 10px; }
+.ticket-admin-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
 .ticket-admin-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 
-/* Jackpot */
+/* Supporter badge */
+.badge-supporter { display: inline-block; font-family: var(--font-mono); font-size: 0.58rem; background: rgba(255,201,71,0.12); color: var(--gold); border: 1px solid rgba(255,201,71,0.3); padding: 1px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* JACKPOT COUNTER */
 .jackpot-banner { background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(0,212,255,0.06)); border: 1px solid rgba(108,99,255,0.25); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; text-align: center; position: relative; overflow: hidden; }
 .jackpot-banner::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, rgba(108,99,255,0.05) 50%, transparent 100%); animation: jackpot-sweep 3s ease-in-out infinite; }
 @keyframes jackpot-sweep { 0%,100%{transform:translateX(-100%)} 50%{transform:translateX(100%)} }
@@ -273,12 +307,12 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 .jackpot-digits { display: flex; align-items: center; justify-content: center; gap: 2px; margin-bottom: 8px; }
 .jackpot-digit-wrap { overflow: hidden; height: 2.2rem; border-radius: 6px; background: var(--surface3); border: 1px solid var(--border2); width: 1.5rem; position: relative; }
 .jackpot-digit-col { display: flex; flex-direction: column; transition: transform 0.5s cubic-bezier(.2,1,.3,1); }
-.jackpot-digit-col span { height: 2.2rem; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 1.15rem; font-weight: 700; color: var(--accent); }
+.jackpot-digit-col span { height: 2.2rem; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 1.15rem; font-weight: 700; color: var(--accent); line-height: 1; }
 .jackpot-sep { font-family: var(--font-mono); font-size: 1.15rem; font-weight: 700; color: var(--border2); padding: 0 1px; line-height: 2.2rem; }
 .jackpot-sub { font-size: 0.78rem; color: var(--text2); font-weight: 500; line-height: 1.4; }
 .jackpot-sub strong { color: var(--cyan); font-weight: 700; }
 
-/* GitHub sync */
+/* JSONBin sync indicator */
 .sync-indicator { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.68rem; padding: 4px 10px; border-radius: 100px; }
 .sync-indicator.synced { color: var(--green); background: rgba(0,245,147,0.08); border: 1px solid rgba(0,245,147,0.2); }
 .sync-indicator.syncing { color: var(--gold); background: rgba(255,201,71,0.08); border: 1px solid rgba(255,201,71,0.2); }
@@ -287,51 +321,86 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 @keyframes spin { to { transform: rotate(360deg); } }
 .spin { display: inline-block; animation: spin 1s linear infinite; }
 
-/* Festive */
-.festive-particle { position: fixed; top: -10%; pointer-events: none; z-index: 9998; user-select: none; animation: festive-fall linear forwards; }
-@keyframes festive-fall { 0%{transform:translateY(0) rotate(0deg);opacity:0;} 5%{opacity:0.75;} 90%{opacity:0.55;} 100%{transform:translateY(110vh) rotate(360deg);opacity:0;} }
-#festive-hero-banner { display: none; align-items: center; justify-content: center; gap: 12px; margin: 0 auto 36px; padding: 12px 28px; border-radius: 100px; font-size: 1rem; font-weight: 700; animation: festive-banner-in 0.6s cubic-bezier(.2,.8,.3,1) both; max-width: fit-content; }
-#festive-hero-banner.visible { display: flex; }
-@keyframes festive-banner-in { from{opacity:0;transform:translateY(-14px) scale(0.95);} to{opacity:1;transform:translateY(0) scale(1);} }
-[data-festive="christmas"] #festive-hero-banner { background:rgba(192,57,43,0.12); border:1px solid rgba(192,57,43,0.35); color:#e74c3c; }
-[data-festive="newyear"] #festive-hero-banner { background:rgba(241,196,15,0.1); border:1px solid rgba(241,196,15,0.35); color:#f1c40f; }
-[data-festive="halloween"] #festive-hero-banner { background:rgba(230,126,34,0.1); border:1px solid rgba(230,126,34,0.35); color:#e67e22; }
-.festive-banner-pulse { animation: festive-pulse 2s ease-in-out infinite; display: inline-block; }
-@keyframes festive-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
-[data-festive="christmas"] { --accent:#c0392b; --accent-glow:rgba(192,57,43,0.3); --cyan:#27ae60; }
-[data-festive="halloween"] { --accent:#e67e22; --accent-glow:rgba(230,126,34,0.3); --cyan:#9b59b6; }
-[data-festive="newyear"] { --accent:#f1c40f; --accent-glow:rgba(241,196,15,0.3); --cyan:#00d4ff; }
+/* Free tier badge */
+.free-badge { display: inline-block; font-family: var(--font-mono); font-size: 0.6rem; background: rgba(0,245,147,0.12); color: var(--green); border: 1px solid rgba(0,245,147,0.3); padding: 2px 7px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
-/* Theme toggle */
-.theme-toggle { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; padding: 0; }
-.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+/* Misc */
+.text-accent { color: var(--accent); } .text-cyan { color: var(--cyan); } .text-green { color: var(--green); } .text-gold { color: var(--gold); } .text-muted { color: var(--text2); }
+.mt4{margin-top:4px;} .mt8{margin-top:8px;} .mt12{margin-top:12px;} .mt16{margin-top:16px;} .mb12{margin-bottom:12px;} .mb16{margin-bottom:16px;} .gap8{gap:8px;}
+.empty-state { text-align: center; color: var(--text3); font-size: 0.82rem; padding: 40px 0; font-family: var(--font-mono); }
 
-/* Light theme */
-[data-theme="light"] { --bg:#f5f5fa; --bg2:#eeeef4; --surface:#ffffff; --surface2:#f0f0f5; --surface3:#e6e6ee; --border:#d5d5e0; --border2:#c5c5d2; --text:#1a1a2e; --text2:#55556a; --text3:#8888a0; }
+/* Discord message ID badge */
+.discord-msg-badge { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 0.6rem; background: rgba(88,101,242,0.15); color: #7289da; border: 1px solid rgba(88,101,242,0.3); padding: 2px 7px; border-radius: 4px; font-weight: 700; }
+
+/* LIGHT THEME */
+[data-theme="light"] {
+  --bg: #f5f5fa; --bg2: #eeeef4; --surface: #ffffff; --surface2: #f0f0f5; --surface3: #e6e6ee;
+  --border: #d5d5e0; --border2: #c5c5d2; --text: #1a1a2e; --text2: #55556a; --text3: #8888a0;
+}
+[data-theme="light"] body { background: var(--bg); color: var(--text); }
+[data-theme="light"] body::before { background-image: linear-gradient(rgba(108,99,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(108,99,255,0.06) 1px, transparent 1px); }
+[data-theme="light"] body::after { background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.01) 2px, rgba(0,0,0,0.01) 4px); }
 [data-theme="light"] header { background: rgba(245,245,250,0.92); }
 [data-theme="light"] .overlay { background: rgba(0,0,0,0.5); }
 [data-theme="light"] .toast { background: var(--surface); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+[data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg); }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: var(--border); }
 
-/* Misc */
-.text-accent{color:var(--accent);} .text-cyan{color:var(--cyan);} .text-green{color:var(--green);} .text-gold{color:var(--gold);} .text-muted{color:var(--text2);}
-.mt4{margin-top:4px;} .mt8{margin-top:8px;} .mt12{margin-top:12px;} .mt16{margin-top:16px;} .mb12{margin-bottom:12px;} .mb16{margin-bottom:16px;} .gap8{gap:8px;}
-.empty-state { text-align: center; color: var(--text3); font-size: 0.82rem; padding: 40px 0; font-family: var(--font-mono); }
-.badge-supporter { display: inline-block; font-family: var(--font-mono); font-size: 0.58rem; background: rgba(255,201,71,0.12); color: var(--gold); border: 1px solid rgba(255,201,71,0.3); padding: 1px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+/* FESTIVE THEMES */
+[data-festive="christmas"] { --accent: #c0392b; --accent-glow: rgba(192,57,43,0.3); --cyan: #27ae60; --cyan-glow: rgba(39,174,96,0.2); --green: #27ae60; --gold: #f1c40f; }
+[data-festive="christmas"] .hero-glow { background: radial-gradient(ellipse, rgba(192,57,43,0.15) 0%, transparent 70%); }
+[data-festive="christmas"] .hero-glow2 { background: radial-gradient(circle, rgba(39,174,96,0.1) 0%, transparent 70%); }
+
+[data-festive="easter"] { --accent: #e91e9c; --accent-glow: rgba(233,30,156,0.3); --cyan: #8e44ad; --cyan-glow: rgba(142,68,173,0.2); --green: #2ecc71; --gold: #f39c12; }
+[data-festive="halloween"] { --accent: #e67e22; --accent-glow: rgba(230,126,34,0.3); --cyan: #9b59b6; --cyan-glow: rgba(155,89,182,0.2); --green: #2ecc71; --gold: #f39c12; --red: #c0392b; }
+[data-festive="aprilfools"] { --accent: #ff6b6b; --accent-glow: rgba(255,107,107,0.3); --cyan: #feca57; --cyan-glow: rgba(254,202,87,0.2); --green: #48dbfb; --gold: #ff9ff3; }
+[data-festive="newyear"] { --accent: #f1c40f; --accent-glow: rgba(241,196,15,0.3); --cyan: #3498db; --cyan-glow: rgba(52,152,219,0.2); --green: #2ecc71; --gold: #f1c40f; }
+[data-festive="valentines"] { --accent: #e74c3c; --accent-glow: rgba(231,76,60,0.3); --cyan: #e91e63; --cyan-glow: rgba(233,30,99,0.2); --green: #ff6b81; --gold: #fd79a8; }
+
+/* Festive decorations overlay */
+#festive-deco { position: fixed; inset: 0; pointer-events: none; z-index: 9998; overflow: hidden; }
+.festive-particle { position: absolute; top: -60px; font-size: 1.2rem; opacity: 0; animation: festive-fall linear forwards; pointer-events: none; }
+@keyframes festive-fall { 0%{transform:translateY(0) rotate(0deg);opacity:0;} 5%{opacity:0.75;} 90%{opacity:0.55;} 100%{transform:translateY(110vh) rotate(360deg);opacity:0;} }
+
+#festive-hero-banner { display: none; align-items: center; justify-content: center; gap: 12px; margin: 0 auto 36px; padding: 12px 28px; border-radius: 100px; font-size: 1rem; font-weight: 700; letter-spacing: -0.2px; animation: festive-banner-in 0.6s cubic-bezier(.2,.8,.3,1) both; max-width: fit-content; }
+#festive-hero-banner.visible { display: flex; }
+@keyframes festive-banner-in { from{opacity:0;transform:translateY(-14px) scale(0.95);} to{opacity:1;transform:translateY(0) scale(1);} }
+[data-festive="christmas"] #festive-hero-banner { background: rgba(192,57,43,0.12); border: 1px solid rgba(192,57,43,0.35); color: #e74c3c; }
+[data-festive="newyear"] #festive-hero-banner { background: rgba(241,196,15,0.1); border: 1px solid rgba(241,196,15,0.35); color: #f1c40f; }
+[data-festive="valentines"] #festive-hero-banner { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.35); color: #e74c3c; }
+[data-festive="easter"] #festive-hero-banner { background: rgba(233,30,156,0.1); border: 1px solid rgba(233,30,156,0.35); color: #e91e9c; }
+[data-festive="aprilfools"] #festive-hero-banner { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.35); color: #ff6b6b; }
+[data-festive="halloween"] #festive-hero-banner { background: rgba(230,126,34,0.1); border: 1px solid rgba(230,126,34,0.35); color: #e67e22; }
+.festive-banner-pulse { animation: festive-pulse 2s ease-in-out infinite; display: inline-block; }
+@keyframes festive-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
+
+.theme-toggle { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; padding: 0; }
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
 @media (max-width: 768px) {
-  header { padding: 0 16px; } nav { display: none; } .hero { padding: 60px 20px 50px; } .section { padding: 60px 20px; }
-  #services-grid { grid-template-columns: 1fr; } .team-grid { grid-template-columns: 1fr 1fr; }
-  .tiers-grid { grid-template-columns: 1fr; } .form-grid2 { grid-template-columns: 1fr; }
-  .section-divider { margin: 0 16px; } .tier-right { flex-direction: column; gap: 5px; align-items: flex-end; }
-  .support-layout { grid-template-columns: 1fr; } .support-sidebar { display: none; }
+  header { padding: 0 16px; }
+  nav { display: none; }
+  .hero { padding: 60px 20px 50px; }
+  .section { padding: 60px 20px; }
+  #services-grid { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr 1fr; }
+  .tiers-grid { grid-template-columns: 1fr; }
+  .form-grid2 { grid-template-columns: 1fr; }
+  .section-divider { margin: 0 16px; }
+  .tier-right { flex-direction: column; gap: 5px; align-items: flex-end; }
+  .support-layout { grid-template-columns: 1fr; }
+  .support-sidebar { display: none; }
 }
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
-  <div class="logo" onclick="window.location.href='life.html'" style="cursor:pointer;">
-    <img src="CWS_Logo.png" alt="Logo" class="logo-img">
+  <div class="logo">
+    <div class="logo-icon">
+      <img src="https://raw.githubusercontent.com/Capky/CapWorks-Studio/main/CWS_Logo.png" alt="CWS Logo" onerror="this.parentElement.textContent='⚡'">
+    </div>
     CapWorks<span> Studio</span>
   </div>
   <nav>
@@ -341,12 +410,13 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
     <a href="#contact">Contact</a>
   </nav>
   <div class="header-right" id="headerRight">
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Mode clair/sombre" id="themeBtn">🌙</button>
     <button class="btn-ghost" onclick="openAdmin()">⚙ Admin</button>
     <button class="btn-accent" onclick="openAuth('login')">Connexion</button>
   </div>
 </header>
 
+<!-- HERO -->
 <section class="hero">
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
@@ -365,6 +435,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
   </div>
 </section>
 
+<!-- SERVICES -->
 <section class="section" id="services">
   <div class="section-head">
     <span class="section-label">// nos services</span>
@@ -375,6 +446,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 
 <div class="section-divider"></div>
 
+<!-- TEAM -->
 <section class="section" id="team">
   <div class="section-head">
     <span class="section-label">// notre équipe</span>
@@ -385,6 +457,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 
 <div class="section-divider"></div>
 
+<!-- SUPPORT -->
 <section class="section" id="support">
   <div class="section-head">
     <span class="section-label">// assistance</span>
@@ -417,6 +490,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
   </div>
 </div>
 
+<!-- FOOTER -->
 <footer id="contact">
   <div class="footer-logo">CapWorks <span>Studio</span></div>
   <p>
@@ -426,6 +500,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
   </p>
 </footer>
 
+<!-- FESTIVE DECORATIONS -->
 <div id="festive-deco"></div>
 
 <!-- AUTH MODAL -->
@@ -512,10 +587,10 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
         <!-- USERS -->
         <div class="a-tab-content" id="atab-users">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
-            <div class="info-box" style="margin:0;flex:1;">👑 Gérez les comptes utilisateurs. La synchronisation se fait via GitHub.</div>
+            <div class="info-box" style="margin:0;flex:1;">👑 Gérez les comptes utilisateurs.</div>
             <div style="display:flex;align-items:center;gap:8px;">
               <span id="sync-status-badge" class="sync-indicator offline">⚫ Local</span>
-              <button class="btn-ghost btn-sm" onclick="syncGitHubNow()" title="Forcer la synchronisation">↻ Sync</button>
+              <button class="btn-ghost btn-sm" onclick="syncUsersNow()">↻ Sync</button>
             </div>
           </div>
           <div id="admin-user-list"></div>
@@ -523,7 +598,7 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 
         <!-- SUPPORT ADMIN -->
         <div class="a-tab-content" id="atab-support-admin">
-          <p style="color:var(--text2);font-size:0.82rem;margin-bottom:16px;">Tous les salons de support. Cliquez sur un salon pour voir les messages.</p>
+          <p style="color:var(--text2);font-size:0.82rem;margin-bottom:16px;">Tous les salons de support.</p>
           <div id="admin-ticket-list"></div>
         </div>
 
@@ -568,65 +643,89 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
               </div>
             </div>
 
-            <!-- GITHUB STORAGE -->
+            <!-- Discord Webhook + Role -->
             <div class="admin-service-item">
-              <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:4px;">🐙 Stockage GitHub (base de données)</h4>
+              <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">🔔 Discord Webhook</h4>
+              <p style="color:var(--text2);font-size:0.78rem;margin-bottom:12px;line-height:1.6;">Les paiements seront annoncés via ce webhook. Le bot Discord utilisera ce même webhook pour modifier les messages.</p>
+              <div style="display:flex;flex-direction:column;gap:8px;max-width:460px;">
+                <input type="url" class="input" id="discord-webhook" placeholder="https://discord.com/api/webhooks/...">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>ID du rôle à mentionner (optionnel)</label>
+                  <input type="text" class="input" id="discord-role-id" placeholder="Ex: 1234567890123456789" style="font-family:var(--font-mono);font-size:0.8rem;">
+                  <p style="color:var(--text3);font-size:0.7rem;font-family:var(--font-mono);margin-top:4px;">Clic droit sur le rôle dans Discord → Copier l'identifiant (mode développeur requis)</p>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn-success btn-sm" onclick="saveWebhook()">💾 Sauvegarder</button>
+                  <button class="btn-ghost btn-sm" onclick="testWebhook()">🔌 Tester</button>
+                </div>
+                <div id="webhook-msg" class="ok mt8" style="display:none;"></div>
+              </div>
+            </div>
+
+            <!-- Bot Discord Config -->
+            <div class="admin-service-item">
+              <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">🤖 URL du site (pour les boutons bot)</h4>
+              <p style="color:var(--text2);font-size:0.78rem;margin-bottom:12px;line-height:1.6;">Le bot Discord utilise cette URL pour générer le lien "Prendre en charge". Entrez l'URL où votre site est hébergé.</p>
+              <div style="display:flex;flex-direction:column;gap:8px;max-width:460px;">
+                <input type="url" class="input" id="site-url" placeholder="https://capito06.github.io/CapWorks-Studio" style="font-family:var(--font-mono);font-size:0.8rem;">
+                <button class="btn-success btn-sm" onclick="saveSiteUrl()">💾 Sauvegarder</button>
+                <div id="siteurl-msg" class="ok" style="display:none;"></div>
+              </div>
+            </div>
+
+            <!-- JSONBin External Storage -->
+            <div class="admin-service-item">
+              <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:4px;">🌐 Stockage externe des utilisateurs</h4>
               <p style="color:var(--text2);font-size:0.78rem;margin-bottom:12px;line-height:1.6;">
-                Les données (utilisateurs, tickets, services, équipe) sont stockées dans un dépôt GitHub privé via l'API.<br>
-                <span style="color:var(--text3);">1. Créez un repo GitHub privé → 2. Créez un token (Settings → Developer → Personal Access Token, scope : <code style="color:var(--cyan);">repo</code>) → 3. Renseignez ci-dessous.</span>
+                Utilisez <a href="https://jsonbin.io" target="_blank" style="color:var(--accent);">jsonbin.io</a> pour stocker les utilisateurs dans le cloud.<br>
+                <span style="color:var(--text3);">1. Créez un compte → 2. Créez un "bin" → 3. Copiez le Bin ID et votre API Key.</span>
               </p>
               <div style="display:flex;flex-direction:column;gap:8px;max-width:460px;">
-                <input type="text" class="input" id="gh-owner" placeholder="Nom d'utilisateur GitHub (ex: capito)" style="font-family:var(--font-mono);font-size:0.8rem;">
-                <input type="text" class="input" id="gh-repo" placeholder="Nom du repo (ex: capworks-data)" style="font-family:var(--font-mono);font-size:0.8rem;">
-                <input type="password" class="input" id="gh-token" placeholder="Personal Access Token (ghp_...)" style="font-family:var(--font-mono);font-size:0.8rem;">
+                <input type="text" class="input" id="jsonbin-id" placeholder="Bin ID" style="font-family:var(--font-mono);font-size:0.8rem;">
+                <input type="text" class="input" id="jsonbin-key" placeholder="API Key" style="font-family:var(--font-mono);font-size:0.8rem;">
                 <div style="display:flex;gap:8px;">
-                  <button class="btn-success btn-sm" onclick="saveGitHubConfig()">💾 Sauvegarder</button>
-                  <button class="btn-ghost btn-sm" onclick="testGitHubConnection()">🔌 Tester</button>
-                  <button class="btn-danger btn-sm" onclick="clearGitHubConfig()">✕ Effacer</button>
+                  <button class="btn-success btn-sm" onclick="saveJsonBinConfig()">💾 Sauvegarder</button>
+                  <button class="btn-ghost btn-sm" onclick="testJsonBinConnection()">🔌 Tester</button>
+                  <button class="btn-danger btn-sm" onclick="clearJsonBinConfig()">✕ Effacer</button>
                 </div>
-                <div id="gh-msg" class="ok" style="display:none;"></div>
+                <div id="jsonbin-msg" class="ok" style="display:none;"></div>
               </div>
             </div>
 
             <div class="admin-service-item">
               <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">📧 Configuration EmailJS</h4>
-              <p style="color:var(--text2);font-size:0.78rem;margin-bottom:12px;line-height:1.6;">
-                Pour l'envoi des codes OTP à l'inscription.
-              </p>
               <div style="display:flex;flex-direction:column;gap:8px;max-width:460px;">
                 <input type="text" class="input" id="ejs-pubkey" placeholder="Public Key" style="font-family:var(--font-mono);font-size:0.8rem;">
                 <input type="text" class="input" id="ejs-service" placeholder="Service ID" style="font-family:var(--font-mono);font-size:0.8rem;">
                 <input type="text" class="input" id="ejs-template" placeholder="Template ID" style="font-family:var(--font-mono);font-size:0.8rem;">
                 <div style="display:flex;gap:8px;">
                   <button class="btn-success btn-sm" onclick="saveEmailJSConfig()">💾 Sauvegarder</button>
+                  <button class="btn-ghost btn-sm" onclick="testEmailJSConfig()">📧 Tester</button>
                 </div>
                 <div id="ejs-msg" class="ok" style="display:none;"></div>
               </div>
             </div>
 
             <div class="admin-service-item">
-              <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">🔔 Webhook Discord</h4>
-              <p style="color:var(--text2);font-size:0.78rem;margin-bottom:10px;">Les paiements seront annoncés via ce webhook. Le bot enverra les embeds avec boutons.</p>
-              <input type="url" class="input mb12" id="discord-webhook" placeholder="https://discord.com/api/webhooks/...">
-              <button class="btn-success btn-sm" onclick="saveWebhook()">Sauvegarder</button>
-              <div id="webhook-msg" class="ok mt8" style="display:none;"></div>
-            </div>
-
-            <div class="admin-service-item">
               <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">🎄 Mode festif</h4>
-              <select class="input" id="festive-select" onchange="setFestiveMode(this.value)" style="max-width:300px;">
-                <option value="">Aucun (thème normal)</option>
-                <option value="auto">✨ Automatique</option>
-                <option value="christmas">🎄 Noël</option>
-                <option value="newyear">🎆 Nouvel An</option>
-                <option value="halloween">🎃 Halloween</option>
-              </select>
-              <div id="festive-msg" class="ok" style="display:none;margin-top:8px;"></div>
+              <div style="display:flex;flex-direction:column;gap:8px;max-width:460px;">
+                <select class="input" id="festive-select" onchange="setFestiveMode(this.value)">
+                  <option value="">Aucun (thème normal)</option>
+                  <option value="auto">✨ Automatique (selon le jour)</option>
+                  <option value="christmas">🎄 Noël</option>
+                  <option value="newyear">🎆 Nouvel An</option>
+                  <option value="valentines">💕 Saint-Valentin</option>
+                  <option value="easter">🐣 Pâques</option>
+                  <option value="aprilfools">🤡 Poisson d'avril</option>
+                  <option value="halloween">🎃 Halloween</option>
+                </select>
+                <div id="festive-auto-info" style="display:none;margin-top:8px;padding:10px 12px;background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.25);border-radius:8px;font-size:0.76rem;color:var(--text2);font-family:var(--font-mono);line-height:1.6;"></div>
+                <div id="festive-msg" class="ok" style="display:none;"></div>
+              </div>
             </div>
 
             <div class="admin-service-item">
               <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:8px;">🗑 Zone dangereuse</h4>
-              <p style="color:var(--text2);font-size:0.78rem;margin-bottom:10px;">Réinitialiser tous les services aux valeurs par défaut.</p>
               <button class="btn-danger" onclick="resetToDefault()">Réinitialiser tout</button>
             </div>
           </div>
@@ -645,150 +744,364 @@ select.input { cursor: pointer; } select.input option { background: var(--surfac
 
 <script>
 // ================================================
-//  GITHUB STORAGE CONFIG
-//  Remplace localStorage par des fichiers JSON dans GitHub
-//  Structure du repo:
-//    data/users.json
-//    data/tickets.json
-//    data/services.json
-//    data/team.json
-//    data/config.json
+//  CONSTANTS & DATA
+// ================================================
+const CWS_LOGO = 'https://raw.githubusercontent.com/Capky/CapWorks-Studio/main/CWS_Logo.png';
+const SITE_BASE_URL_DEFAULT = 'https://capky.github.io/CapWorks-Studio';
+
+const DEFAULT_SERVICES = [
+  { id:1, name:"Jeu vidéo PC", icon:"🖥️", iconBg:"icon-bg-1", desc:"Développement de jeux complets pour Windows/Linux/Mac", active:true,
+    tiers:[{name:"Utilisable",price:80,desc:"Gameplay basique, fonctionnel",paypal:"",free:false},{name:"De bonne qualité",price:200,desc:"Graphismes soignés, polish",paypal:"",free:false},{name:"Fabuleux",price:500,desc:"Production complète, effets premium",paypal:"",free:false}]},
+  { id:2, name:"Jeu vidéo Android", icon:"📱", iconBg:"icon-bg-2", desc:"Jeux mobiles optimisés pour Android", active:true,
+    tiers:[{name:"Utilisable",price:60,desc:"Gameplay simple, publié sur Play Store",paypal:"",free:false},{name:"De bonne qualité",price:180,desc:"UI/UX mobile pensé, animations",paypal:"",free:false},{name:"Fabuleux",price:450,desc:"Expérience AAA mobile, effets visuels",paypal:"",free:false}]},
+  { id:3, name:"Logiciel", icon:"⚙️", iconBg:"icon-bg-3", desc:"Applications desktop ou utilitaires sur mesure", active:true,
+    tiers:[{name:"Utilisable",price:50,desc:"Fonctionnel, interface simple",paypal:"",free:false},{name:"De bonne qualité",price:150,desc:"Interface intuitive, bien documenté",paypal:"",free:false},{name:"Fabuleux",price:400,desc:"UX premium, fonctionnalités avancées",paypal:"",free:false}]},
+  { id:4, name:"Plugin Minecraft Bedrock", icon:"🧱", iconBg:"icon-bg-4", desc:"Add-ons et comportements pour serveurs Bedrock", active:true,
+    tiers:[{name:"Utilisable",price:30,desc:"Plugin simple, bien fonctionnel",paypal:"",free:false},{name:"De bonne qualité",price:80,desc:"Optimisé, configurable",paypal:"",free:false},{name:"Fabuleux",price:200,desc:"Complexe, multi-fonctions, textures custom",paypal:"",free:false}]},
+  { id:5, name:"Plugin Minecraft Java", icon:"☕", iconBg:"icon-bg-5", desc:"Plugins Bukkit/Spigot/Paper pour serveurs Java", active:true,
+    tiers:[{name:"Utilisable",price:35,desc:"Fonctionnel, commandes de base",paypal:"",free:false},{name:"De bonne qualité",price:90,desc:"API avancée, performances optimisées",paypal:"",free:false},{name:"Fabuleux",price:220,desc:"Architecture solide, features premium",paypal:"",free:false}]},
+  { id:6, name:"Bot Discord", icon:"🤖", iconBg:"icon-bg-1", desc:"Bots Discord personnalisés avec commandes et automatisations", active:true,
+    tiers:[{name:"Utilisable",price:25,desc:"Commandes de base, modération simple",paypal:"",free:false},{name:"De bonne qualité",price:70,desc:"Dashboard, slash commands, logs",paypal:"",free:false},{name:"Fabuleux",price:180,desc:"Système complet, base de données, API",paypal:"",free:false}]},
+  { id:7, name:"Serveur Minecraft Bedrock", icon:"🌐", iconBg:"icon-bg-2", desc:"Configuration et setup complet de serveur Bedrock", active:true,
+    tiers:[{name:"Utilisable",price:20,desc:"Serveur de base configuré",paypal:"",free:false},{name:"De bonne qualité",price:60,desc:"Plugins, anti-cheat, sécurité",paypal:"",free:false},{name:"Fabuleux",price:160,desc:"Réseau complet, hub, mini-jeux",paypal:"",free:false}]},
+  { id:8, name:"Serveur Minecraft Java", icon:"🏰", iconBg:"icon-bg-3", desc:"Setup complet de serveur Minecraft Java Edition", active:true,
+    tiers:[{name:"Utilisable",price:25,desc:"Spigot/Paper configuré",paypal:"",free:false},{name:"De bonne qualité",price:70,desc:"Plugins essentiels, optimisé",paypal:"",free:false},{name:"Fabuleux",price:180,desc:"Réseau BungeeCord, architecture pro",paypal:"",free:false}]},
+  { id:9, name:"Site Web", icon:"🌍", iconBg:"icon-bg-4", desc:"Sites vitrines, portfolios, landing pages ou applications web", active:true,
+    tiers:[{name:"Utilisable",price:60,desc:"Site statique, responsive, déployé",paypal:"",free:false},{name:"De bonne qualité",price:180,desc:"Design soigné, animations, formulaires",paypal:"",free:false},{name:"Fabuleux",price:480,desc:"Full-stack, base de données, auth, CMS",paypal:"",free:false}]},
+  { id:10, name:"Script Python", icon:"🐍", iconBg:"icon-bg-5", desc:"Automatisations, scrapers, outils CLI, scripts sur mesure", active:true,
+    tiers:[{name:"Utilisable",price:20,desc:"Script fonctionnel, commenté",paypal:"",free:false},{name:"De bonne qualité",price:55,desc:"Modulaire, gestion d'erreurs, logs",paypal:"",free:false},{name:"Fabuleux",price:140,desc:"Architecture propre, tests, packaging",paypal:"",free:false}]},
+  { id:11, name:"API / Backend", icon:"⚡", iconBg:"icon-bg-1", desc:"APIs REST, microservices, backends Node.js / FastAPI", active:true,
+    tiers:[{name:"Utilisable",price:70,desc:"Endpoints de base, documentation",paypal:"",free:false},{name:"De bonne qualité",price:200,desc:"Auth JWT, rate-limit, base de données",paypal:"",free:false},{name:"Fabuleux",price:520,desc:"Architecture microservices, déploiement cloud",paypal:"",free:false}]},
+  { id:12, name:"Application Mobile", icon:"📲", iconBg:"icon-bg-2", desc:"Apps iOS & Android en React Native ou Flutter", active:true,
+    tiers:[{name:"Utilisable",price:120,desc:"App fonctionnelle, design basique",paypal:"",free:false},{name:"De bonne qualité",price:320,desc:"UX soignée, notifications push, auth",paypal:"",free:false},{name:"Fabuleux",price:800,desc:"Multi-plateforme, back-end intégré, publié",paypal:"",free:false}]},
+  { id:13, name:"Dashboard / Panel Admin", icon:"📊", iconBg:"icon-bg-3", desc:"Tableaux de bord, panneaux d'administration sur mesure", active:true,
+    tiers:[{name:"Utilisable",price:50,desc:"Affichage des données, graphiques simples",paypal:"",free:false},{name:"De bonne qualité",price:150,desc:"Filtres, exports, graphiques avancés",paypal:"",free:false},{name:"Fabuleux",price:380,desc:"Temps réel, permissions, multi-utilisateurs",paypal:"",free:false}]},
+  { id:14, name:"Mod Minecraft", icon:"🗡️", iconBg:"icon-bg-4", desc:"Mods Forge / Fabric pour Minecraft Java Edition", active:true,
+    tiers:[{name:"Utilisable",price:40,desc:"Item / bloc personnalisé, fonctionnel",paypal:"",free:false},{name:"De bonne qualité",price:110,desc:"Dimension, mobs, système de craft",paypal:"",free:false},{name:"Fabuleux",price:280,desc:"Mod complet, config, textures custom",paypal:"",free:false}]},
+  { id:15, name:"Bot Telegram", icon:"✈️", iconBg:"icon-bg-5", desc:"Bots Telegram automatisés, notifications, commandes", active:true,
+    tiers:[{name:"Utilisable",price:20,desc:"Commandes basiques, réponses auto",paypal:"",free:false},{name:"De bonne qualité",price:55,desc:"Menu inline, base de données, webhooks",paypal:"",free:false},{name:"Fabuleux",price:140,desc:"Multi-bot, paiements intégrés, admin panel",paypal:"",free:false}]}
+];
+
+const DEFAULT_TEAM = [
+  { id:1, name:"Capito", avatar:"👑", role:"owner", tags:["Fondateur","Full-stack","Game Dev"], online:true },
+  { id:2, name:"Élix", avatar:"⚡", role:"dev", tags:["Python","Discord.py","Backend"], online:true },
+  { id:3, name:"Nova", avatar:"🛡️", role:"mod", tags:["Support","Modération","Community"], online:false }
+];
+
+const TIER_CLASSES = ['t1','t2','t3'];
+const TIER_ICONS = ['⚡','✦','👑'];
+const TIER_COLORS_DISCORD = [0x7a7a9a, 0x6c63ff, 0xffc947];
+const ROLE_LABELS = { owner:'Fondateur', dev:'Développeur', mod:'Modérateur', support:'Support' };
+const ROLE_CSS = { owner:'role-owner', dev:'role-dev', mod:'role-mod', support:'role-support' };
+const EMOJIS = ['😎','🧑‍💻','👾','🦊','🐺','🐉','🦋','🌟','⚡','🎯','🦁','🐸'];
+
+let services = [];
+let team = [];
+let users = {};
+let tickets = {};
+let adminPassword = "admin123";
+let currentUser = null;
+let discordWebhook = "";
+let discordRoleId = "";
+let siteBaseUrl = SITE_BASE_URL_DEFAULT;
+let unsaved = false;
+let adminLoggedIn = false;
+let activeTicket = null;
+
+let jsonbinId = "";
+let jsonbinKey = "";
+let syncInterval = null;
+let lastSyncTime = null;
+
+let currentTheme = 'dark';
+let currentFestive = '';
+
+let emailjsPublicKey = "-Y8WjfvgdGTW69eYQ";
+let emailjsServiceId = "service_kee805w";
+let emailjsTemplateId = "template_ueewv6y";
+
+// ================================================
+//  STORAGE
+// ================================================
+function load() {
+  try {
+    services = JSON.parse(localStorage.getItem('cw_services') || 'null') || JSON.parse(JSON.stringify(DEFAULT_SERVICES));
+    team = JSON.parse(localStorage.getItem('cw_team') || 'null') || JSON.parse(JSON.stringify(DEFAULT_TEAM));
+    users = JSON.parse(localStorage.getItem('cw_users') || '{}');
+    tickets = JSON.parse(localStorage.getItem('cw_tickets') || '{}');
+    adminPassword = localStorage.getItem('cw_adminpw') || 'admin123';
+    discordWebhook = localStorage.getItem('cw_webhook') || '';
+    discordRoleId = localStorage.getItem('cw_role_id') || '';
+    siteBaseUrl = localStorage.getItem('cw_site_url') || SITE_BASE_URL_DEFAULT;
+    jsonbinId = localStorage.getItem('cw_jsonbin_id') || '';
+    jsonbinKey = localStorage.getItem('cw_jsonbin_key') || '';
+    emailjsPublicKey = localStorage.getItem('cw_ejs_pubkey') || '-Y8WjfvgdGTW69eYQ';
+    emailjsServiceId = localStorage.getItem('cw_ejs_service') || 'service_kee805w';
+    emailjsTemplateId = localStorage.getItem('cw_ejs_template') || 'template_ueewv6y';
+    currentTheme = localStorage.getItem('cw_theme') || 'dark';
+    currentFestive = localStorage.getItem('cw_festive') || '';
+    const cu = localStorage.getItem('cw_currentuser');
+    if (cu) currentUser = JSON.parse(cu);
+  } catch(e) {
+    services = JSON.parse(JSON.stringify(DEFAULT_SERVICES));
+    team = JSON.parse(JSON.stringify(DEFAULT_TEAM));
+  }
+}
+
+function save() {
+  localStorage.setItem('cw_services', JSON.stringify(services));
+  localStorage.setItem('cw_team', JSON.stringify(team));
+  localStorage.setItem('cw_users', JSON.stringify(users));
+  localStorage.setItem('cw_tickets', JSON.stringify(tickets));
+  localStorage.setItem('cw_adminpw', adminPassword);
+  localStorage.setItem('cw_webhook', discordWebhook);
+  localStorage.setItem('cw_role_id', discordRoleId);
+  localStorage.setItem('cw_site_url', siteBaseUrl);
+  localStorage.setItem('cw_jsonbin_id', jsonbinId);
+  localStorage.setItem('cw_jsonbin_key', jsonbinKey);
+  localStorage.setItem('cw_ejs_pubkey', emailjsPublicKey);
+  localStorage.setItem('cw_ejs_service', emailjsServiceId);
+  localStorage.setItem('cw_ejs_template', emailjsTemplateId);
+  localStorage.setItem('cw_theme', currentTheme);
+  localStorage.setItem('cw_festive', currentFestive);
+  if (currentUser) localStorage.setItem('cw_currentuser', JSON.stringify(currentUser));
+  else localStorage.removeItem('cw_currentuser');
+}
+
+function hashPass(p) {
+  let h = 0;
+  for (let i = 0; i < p.length; i++) h = (Math.imul(31, h) + p.charCodeAt(i)) | 0;
+  return h.toString(36);
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ================================================
+//  DISCORD — ENRICHED EMBEDS + MESSAGE ID STORAGE
 // ================================================
 
-// Les configs GitHub sont stockées dans sessionStorage (pour la session admin uniquement)
-// Aucune donnée sensible (token) n'est persistée côté client entre sessions
-let ghOwner = '', ghRepo = '', ghToken = '';
-let ghShas = {}; // SHA des fichiers pour les PUTs
+/**
+ * Build a rich Discord embed for an order/free request.
+ * Returns the full payload object (not serialized).
+ */
+function buildOrderEmbed({ type, serviceName, tierName, price, isFree, buyerName, buyerEmoji, email, orderId, siteUrl, roleId }) {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
+  const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
 
-// Config légère persistée (pas le token)
-function loadGitHubConfig() {
-  try {
-    ghOwner = sessionStorage.getItem('cw_gh_owner') || '';
-    ghRepo  = sessionStorage.getItem('cw_gh_repo')  || '';
-    ghToken = sessionStorage.getItem('cw_gh_token') || '';
-  } catch(e) {}
+  const color = isFree ? 0x00f593 : 0x6c63ff;
+  const titleIcon = isFree ? '🎁' : '💸';
+  const priceDisplay = isFree ? 'GRATUIT' : `${price}€`;
+
+  const embed = {
+    title: `${titleIcon} Nouvelle commande — CapWorks Studio`,
+    color,
+    thumbnail: { url: CWS_LOGO },
+    fields: [
+      { name: '👤 Client', value: `**${buyerEmoji} ${buyerName}**`, inline: true },
+      { name: '📦 Service', value: `**${serviceName}**`, inline: true },
+      { name: '🏷️ Niveau', value: `**${tierName}**`, inline: true },
+      { name: '💰 Montant', value: `**${priceDisplay}**`, inline: true },
+      { name: '📅 Date', value: `${dateStr} à ${timeStr}`, inline: true },
+      { name: '🆔 Référence', value: `\`${orderId}\``, inline: true },
+    ],
+    footer: {
+      text: 'CapWorks Studio · Système de commandes',
+      icon_url: CWS_LOGO
+    },
+    timestamp: now.toISOString()
+  };
+
+  if (email) {
+    embed.fields.push({ name: '📬 Email', value: `\`${email}\``, inline: false });
+  }
+
+  embed.fields.push({
+    name: '📋 Statut',
+    value: '🟡 **En attente de prise en charge**',
+    inline: false
+  });
+
+  // Build components (link buttons — no bot needed for these)
+  const supportUrl = `${siteUrl}#support`;
+  const components = [{
+    type: 1,
+    components: [
+      {
+        type: 2,
+        style: 5, // LINK
+        label: '✅ Prendre en charge',
+        url: supportUrl,
+        emoji: { name: '🎯' }
+      }
+    ]
+  }];
+
+  let content = '';
+  if (roleId) content = `<@&${roleId}>`;
+
+  return { content, embeds: [embed], components };
 }
 
-function saveGitHubConfigSession() {
-  try {
-    sessionStorage.setItem('cw_gh_owner', ghOwner);
-    sessionStorage.setItem('cw_gh_repo',  ghRepo);
-    sessionStorage.setItem('cw_gh_token', ghToken);
-  } catch(e) {}
-}
+/**
+ * Build the "taken" embed (commande prise en charge).
+ */
+function buildTakenEmbed({ serviceName, tierName, price, isFree, buyerName, buyerEmoji, email, orderId, takenBy, siteUrl }) {
+  const now = new Date();
+  const priceDisplay = isFree ? 'GRATUIT' : `${price}€`;
+  const supportUrl = `${siteUrl}#support`;
 
-// ------------------------------------------------
-//  GitHub API helpers
-// ------------------------------------------------
-function ghHeaders() {
   return {
-    'Authorization': `token ${ghToken}`,
-    'Content-Type': 'application/json',
-    'Accept': 'application/vnd.github.v3+json'
+    content: '',
+    embeds: [{
+      title: '🎯 Commande prise en charge — CapWorks Studio',
+      color: 0x00d4ff,
+      thumbnail: { url: CWS_LOGO },
+      fields: [
+        { name: '👤 Client', value: `**${buyerEmoji} ${buyerName}**`, inline: true },
+        { name: '📦 Service', value: `**${serviceName}**`, inline: true },
+        { name: '🏷️ Niveau', value: `**${tierName}**`, inline: true },
+        { name: '💰 Montant', value: `**${priceDisplay}**`, inline: true },
+        { name: '🆔 Référence', value: `\`${orderId}\``, inline: true },
+        { name: '🛠️ Pris en charge par', value: `**${takenBy}**`, inline: true },
+        ...(email ? [{ name: '📬 Email', value: `\`${email}\``, inline: false }] : []),
+        { name: '📋 Statut', value: '🔵 **En cours de traitement**', inline: false }
+      ],
+      footer: { text: 'CapWorks Studio · Commande en cours', icon_url: CWS_LOGO },
+      timestamp: now.toISOString()
+    }],
+    components: [{
+      type: 1,
+      components: [{
+        type: 2,
+        style: 5, // LINK
+        label: '✅ Marquer comme terminé',
+        url: supportUrl,
+        emoji: { name: '🏁' }
+      }]
+    }]
   };
 }
 
-function ghApiUrl(path) {
-  return `https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${path}`;
+/**
+ * Build the "done" embed (commande terminée).
+ */
+function buildDoneEmbed({ serviceName, tierName, price, isFree, buyerName, buyerEmoji, email, orderId, doneBy }) {
+  const now = new Date();
+  const priceDisplay = isFree ? 'GRATUIT' : `${price}€`;
+
+  return {
+    content: '',
+    embeds: [{
+      title: '✅ Commande terminée — CapWorks Studio',
+      color: 0x00f593,
+      thumbnail: { url: CWS_LOGO },
+      fields: [
+        { name: '👤 Client', value: `**${buyerEmoji} ${buyerName}**`, inline: true },
+        { name: '📦 Service', value: `**${serviceName}**`, inline: true },
+        { name: '🏷️ Niveau', value: `**${tierName}**`, inline: true },
+        { name: '💰 Montant', value: `**${priceDisplay}**`, inline: true },
+        { name: '🆔 Référence', value: `\`${orderId}\``, inline: true },
+        { name: '🏁 Terminé par', value: `**${doneBy}**`, inline: true },
+        ...(email ? [{ name: '📬 Email', value: `\`${email}\``, inline: false }] : []),
+        { name: '📋 Statut', value: '🟢 **Livré avec succès !**', inline: false }
+      ],
+      footer: { text: 'CapWorks Studio · Commande livrée', icon_url: CWS_LOGO },
+      timestamp: now.toISOString()
+    }],
+    components: []
+  };
 }
 
-async function ghGet(path) {
-  const res = await fetch(ghApiUrl(path), { headers: ghHeaders() });
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`GitHub GET ${path}: HTTP ${res.status}`);
-  const data = await res.json();
-  ghShas[path] = data.sha;
-  return JSON.parse(atob(data.content.replace(/\n/g, '')));
+/**
+ * Build the "cancelled" embed.
+ */
+function buildCancelEmbed({ serviceName, tierName, price, isFree, buyerName, buyerEmoji, email, orderId }) {
+  const now = new Date();
+  const priceDisplay = isFree ? 'GRATUIT' : `${price}€`;
+
+  return {
+    content: '',
+    embeds: [{
+      title: '❌ Commande annulée — CapWorks Studio',
+      color: 0xff4d6d,
+      thumbnail: { url: CWS_LOGO },
+      fields: [
+        { name: '👤 Client', value: `**${buyerEmoji} ${buyerName}**`, inline: true },
+        { name: '📦 Service', value: `**${serviceName}**`, inline: true },
+        { name: '🏷️ Niveau', value: `**${tierName}**`, inline: true },
+        { name: '💰 Montant', value: `**${priceDisplay}**`, inline: true },
+        { name: '🆔 Référence', value: `\`${orderId}\``, inline: true },
+        ...(email ? [{ name: '📬 Email', value: `\`${email}\``, inline: false }] : []),
+        { name: '📋 Statut', value: '🔴 **Annulée par le client**', inline: false }
+      ],
+      footer: { text: 'CapWorks Studio · Annulation', icon_url: CWS_LOGO },
+      timestamp: now.toISOString()
+    }],
+    components: []
+  };
 }
 
-async function ghPut(path, obj) {
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
-  const body = { message: `update ${path}`, content };
-  if (ghShas[path]) body.sha = ghShas[path];
-  const res = await fetch(ghApiUrl(path), {
-    method: 'PUT',
-    headers: ghHeaders(),
-    body: JSON.stringify(body)
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(`GitHub PUT ${path}: ${err.message || res.status}`);
-  }
-  const data = await res.json();
-  ghShas[path] = data.content?.sha || ghShas[path];
-  return true;
-}
-
-// ------------------------------------------------
-//  Pull depuis GitHub (au login admin + auto-sync)
-// ------------------------------------------------
-async function pullFromGitHub() {
-  if (!ghOwner || !ghRepo || !ghToken) return false;
-  setSyncBadge('syncing', '⟳ Récupération...');
+/**
+ * Post a message to Discord webhook and return the message ID.
+ * Returns the message ID string or null on failure.
+ */
+async function sendDiscordEmbed(payload) {
+  if (!discordWebhook) return null;
   try {
-    const [remoteUsers, remoteTickets, remoteServices, remoteTeam, remoteConfig] = await Promise.all([
-      ghGet('data/users.json'),
-      ghGet('data/tickets.json'),
-      ghGet('data/services.json'),
-      ghGet('data/team.json'),
-      ghGet('data/config.json')
-    ]);
-    if (remoteUsers)    users    = remoteUsers;
-    if (remoteTickets)  tickets  = remoteTickets;
-    if (remoteServices) services = remoteServices;
-    if (remoteTeam)     team     = remoteTeam;
-    if (remoteConfig) {
-      adminPassword     = remoteConfig.adminPassword    || adminPassword;
-      discordWebhook    = remoteConfig.discordWebhook   || '';
-      emailjsPublicKey  = remoteConfig.emailjsPublicKey || emailjsPublicKey;
-      emailjsServiceId  = remoteConfig.emailjsServiceId || emailjsServiceId;
-      emailjsTemplateId = remoteConfig.emailjsTemplateId|| emailjsTemplateId;
-      currentTheme      = remoteConfig.currentTheme     || 'dark';
-      currentFestive    = remoteConfig.currentFestive   || '';
-    }
-    setSyncBadge('synced', `✓ GitHub ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`);
+    // Add ?wait=true to get the message back with its ID
+    const url = discordWebhook.includes('?') ? discordWebhook + '&wait=true' : discordWebhook + '?wait=true';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) { console.warn('Discord webhook error:', res.status); return null; }
+    const data = await res.json();
+    return data.id || null;
+  } catch(e) {
+    console.warn('Discord webhook fetch error:', e);
+    return null;
+  }
+}
+
+/**
+ * Edit an existing Discord webhook message (PATCH).
+ * messageId: the ID returned when the message was created.
+ */
+async function editDiscordEmbed(messageId, payload) {
+  if (!discordWebhook || !messageId) return false;
+  try {
+    // Extract webhook base URL (without query params)
+    const baseUrl = discordWebhook.split('?')[0];
+    const url = `${baseUrl}/messages/${messageId}`;
+    const res = await fetch(url, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) { console.warn('Discord PATCH error:', res.status, await res.text()); return false; }
     return true;
   } catch(e) {
-    setSyncBadge('error', '✕ Erreur GitHub');
-    console.warn('GitHub pull error:', e);
+    console.warn('Discord PATCH fetch error:', e);
     return false;
   }
 }
 
-// ------------------------------------------------
-//  Push vers GitHub
-// ------------------------------------------------
-async function pushAllToGitHub() {
-  if (!ghOwner || !ghRepo || !ghToken) return false;
-  setSyncBadge('syncing', '⟳ Envoi...');
-  try {
-    await Promise.all([
-      ghPut('data/users.json',    users),
-      ghPut('data/tickets.json',  tickets),
-      ghPut('data/services.json', services),
-      ghPut('data/team.json',     team),
-      ghPut('data/config.json', {
-        adminPassword, discordWebhook,
-        emailjsPublicKey, emailjsServiceId, emailjsTemplateId,
-        currentTheme, currentFestive
-      })
-    ]);
-    setSyncBadge('synced', `✓ Saved ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`);
-    return true;
-  } catch(e) {
-    setSyncBadge('error', '✕ Erreur push');
-    console.warn('GitHub push error:', e);
-    return false;
-  }
+/**
+ * Generate a short unique order ID.
+ */
+function generateOrderId() {
+  return 'CWS-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,5).toUpperCase();
 }
 
-async function pushUsersToGitHub() {
-  if (!ghOwner || !ghRepo || !ghToken) return false;
-  try {
-    await ghPut('data/users.json', users);
-    await ghPut('data/tickets.json', tickets);
-    return true;
-  } catch(e) { console.warn('GitHub push users error:', e); return false; }
+// ================================================
+//  JSONBIN
+// ================================================
+function jsonbinHeaders() {
+  return { 'Content-Type': 'application/json', 'X-Master-Key': jsonbinKey, 'X-Bin-Versioning': 'false' };
 }
 
 function setSyncBadge(state, label) {
@@ -798,238 +1111,85 @@ function setSyncBadge(state, label) {
   badge.textContent = label;
 }
 
-async function syncGitHubNow() {
-  if (!ghOwner || !ghRepo || !ghToken) { toast('Configurez GitHub dans ⚙ Paramètres d\'abord', 'error'); return; }
-  const ok = await pullFromGitHub();
-  if (ok) { renderAdminAll(); renderServices(); renderTeam(); renderSupport(); toast('Synchronisé depuis GitHub !', 'success'); }
-  else toast('Erreur de synchronisation', 'error');
-}
-
-// ------------------------------------------------
-//  Config admin UI
-// ------------------------------------------------
-function saveGitHubConfig() {
-  ghOwner = document.getElementById('gh-owner').value.trim();
-  ghRepo  = document.getElementById('gh-repo').value.trim();
-  ghToken = document.getElementById('gh-token').value.trim();
-  const msg = document.getElementById('gh-msg');
-  if (!ghOwner || !ghRepo || !ghToken) {
-    msg.style.display='block'; msg.className='err'; msg.textContent='✕ Remplissez les trois champs'; return;
-  }
-  saveGitHubConfigSession();
-  msg.style.display='block'; msg.className='ok'; msg.textContent='✓ Config sauvegardée ! Test en cours...';
-  testGitHubConnection();
-}
-
-async function testGitHubConnection() {
-  const owner = document.getElementById('gh-owner')?.value.trim() || ghOwner;
-  const repo  = document.getElementById('gh-repo')?.value.trim()  || ghRepo;
-  const token = document.getElementById('gh-token')?.value.trim() || ghToken;
-  const msg = document.getElementById('gh-msg');
-  if (!owner || !repo || !token) { if(msg){msg.style.display='block';msg.className='err';msg.textContent='✕ Remplissez les champs';} return; }
-  if(msg){msg.style.display='block';msg.className='ok';msg.textContent='⟳ Test...';}
+async function pushUsersToJsonBin() {
+  if (!jsonbinId || !jsonbinKey) return false;
+  setSyncBadge('syncing', '⟳ Envoi...');
   try {
-    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${jsonbinId}`, {
+      method: 'PUT', headers: jsonbinHeaders(),
+      body: JSON.stringify({ users, lastUpdated: new Date().toISOString() })
     });
-    if (res.ok) {
-      if(msg){msg.textContent='✓ Connexion réussie au repo GitHub !'; setTimeout(()=>{if(msg)msg.style.display='none';},3000);}
-      toast('GitHub connecté !', 'success');
-    } else {
-      if(msg){msg.className='err'; msg.textContent=`✕ Erreur ${res.status} — Vérifiez le repo et le token`;}
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    lastSyncTime = new Date();
+    setSyncBadge('synced', `✓ ${lastSyncTime.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`);
+    return true;
+  } catch(e) { setSyncBadge('error', '✕ Erreur sync'); return false; }
+}
+
+async function pullUsersFromJsonBin() {
+  if (!jsonbinId || !jsonbinKey) return false;
+  try {
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${jsonbinId}/latest`, { headers: { 'X-Master-Key': jsonbinKey } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.record && data.record.users) {
+      users = data.record.users;
+      localStorage.setItem('cw_users', JSON.stringify(users));
+      lastSyncTime = new Date();
+      setSyncBadge('synced', `✓ ${lastSyncTime.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`);
+      if (adminLoggedIn) renderAdminUsers();
+      return true;
     }
-  } catch(e) {
-    if(msg){msg.className='err'; msg.textContent='✕ Impossible de joindre GitHub';}
-  }
+  } catch(e) { setSyncBadge('error', '✕ Erreur'); }
+  return false;
 }
 
-function clearGitHubConfig() {
-  if (!confirm('Supprimer la configuration GitHub ?')) return;
-  ghOwner = ghRepo = ghToken = '';
-  try { sessionStorage.removeItem('cw_gh_owner'); sessionStorage.removeItem('cw_gh_repo'); sessionStorage.removeItem('cw_gh_token'); } catch(e) {}
-  document.getElementById('gh-owner').value = '';
-  document.getElementById('gh-repo').value = '';
-  document.getElementById('gh-token').value = '';
-  setSyncBadge('offline', '⚫ Local');
-  toast('Configuration GitHub effacée', 'success');
+async function syncUsersNow() {
+  if (!jsonbinId || !jsonbinKey) { toast('Configurez JSONBin dans ⚙ Paramètres d\'abord', 'error'); return; }
+  const ok = await pullUsersFromJsonBin();
+  if (ok) toast('Synchronisé !', 'success'); else toast('Erreur de synchronisation', 'error');
 }
 
-// ================================================
-//  DATA DEFAULTS
-// ================================================
-const DEFAULT_SERVICES = [
-  { id:1, name:"Jeu vidéo PC", icon:"🖥️", iconBg:"icon-bg-1", desc:"Développement de jeux complets pour Windows/Linux/Mac", active:true, tiers:[{name:"Utilisable",price:80,desc:"Gameplay basique, fonctionnel",paypal:"",free:false},{name:"De bonne qualité",price:200,desc:"Graphismes soignés, polish",paypal:"",free:false},{name:"Fabuleux",price:500,desc:"Production complète, effets premium",paypal:"",free:false}]},
-  { id:2, name:"Jeu vidéo Android", icon:"📱", iconBg:"icon-bg-2", desc:"Jeux mobiles optimisés pour Android", active:true, tiers:[{name:"Utilisable",price:60,desc:"Gameplay simple, publié sur Play Store",paypal:"",free:false},{name:"De bonne qualité",price:180,desc:"UI/UX mobile pensé, animations",paypal:"",free:false},{name:"Fabuleux",price:450,desc:"Expérience AAA mobile, effets visuels",paypal:"",free:false}]},
-  { id:3, name:"Logiciel", icon:"⚙️", iconBg:"icon-bg-3", desc:"Applications desktop ou utilitaires sur mesure", active:true, tiers:[{name:"Utilisable",price:50,desc:"Fonctionnel, interface simple",paypal:"",free:false},{name:"De bonne qualité",price:150,desc:"Interface intuitive, bien documenté",paypal:"",free:false},{name:"Fabuleux",price:400,desc:"UX premium, fonctionnalités avancées",paypal:"",free:false}]},
-  { id:4, name:"Plugin Minecraft Bedrock", icon:"🧱", iconBg:"icon-bg-4", desc:"Add-ons et comportements pour serveurs Bedrock", active:true, tiers:[{name:"Utilisable",price:30,desc:"Plugin simple, bien fonctionnel",paypal:"",free:false},{name:"De bonne qualité",price:80,desc:"Optimisé, configurable",paypal:"",free:false},{name:"Fabuleux",price:200,desc:"Complexe, multi-fonctions, textures custom",paypal:"",free:false}]},
-  { id:5, name:"Plugin Minecraft Java", icon:"☕", iconBg:"icon-bg-5", desc:"Plugins Bukkit/Spigot/Paper pour serveurs Java", active:true, tiers:[{name:"Utilisable",price:35,desc:"Fonctionnel, commandes de base",paypal:"",free:false},{name:"De bonne qualité",price:90,desc:"API avancée, performances optimisées",paypal:"",free:false},{name:"Fabuleux",price:220,desc:"Architecture solide, features premium",paypal:"",free:false}]},
-  { id:6, name:"Bot Discord", icon:"🤖", iconBg:"icon-bg-1", desc:"Bots Discord personnalisés avec commandes et automatisations", active:true, tiers:[{name:"Utilisable",price:25,desc:"Commandes de base, modération simple",paypal:"",free:false},{name:"De bonne qualité",price:70,desc:"Dashboard, slash commands, logs",paypal:"",free:false},{name:"Fabuleux",price:180,desc:"Système complet, base de données, API",paypal:"",free:false}]},
-  { id:7, name:"Serveur Minecraft Bedrock", icon:"🌐", iconBg:"icon-bg-2", desc:"Configuration et setup complet de serveur Bedrock", active:true, tiers:[{name:"Utilisable",price:20,desc:"Serveur de base configuré",paypal:"",free:false},{name:"De bonne qualité",price:60,desc:"Plugins, anti-cheat, sécurité",paypal:"",free:false},{name:"Fabuleux",price:160,desc:"Réseau complet, hub, mini-jeux",paypal:"",free:false}]},
-  { id:8, name:"Serveur Minecraft Java", icon:"🏰", iconBg:"icon-bg-3", desc:"Setup complet de serveur Minecraft Java Edition", active:true, tiers:[{name:"Utilisable",price:25,desc:"Spigot/Paper configuré",paypal:"",free:false},{name:"De bonne qualité",price:70,desc:"Plugins essentiels, optimisé",paypal:"",free:false},{name:"Fabuleux",price:180,desc:"Réseau BungeeCord, architecture pro",paypal:"",free:false}]}
-];
-const DEFAULT_TEAM = [
-  { id:1, name:"Capito", avatar:"👑", role:"owner", tags:["Fondateur","Full-stack","Game Dev"], online:true },
-  { id:2, name:"Élix",   avatar:"⚡", role:"dev",   tags:["Python","Discord.py","Backend"],    online:true },
-  { id:3, name:"Nova",   avatar:"🛡️", role:"mod",   tags:["Support","Modération","Community"], online:false }
-];
-const TIER_CLASSES = ['t1','t2','t3'];
-const TIER_ICONS = ['⚡','✦','👑'];
-const ROLE_LABELS = { owner:'Fondateur', dev:'Développeur', mod:'Modérateur', support:'Support' };
-const ROLE_CSS = { owner:'role-owner', dev:'role-dev', mod:'role-mod', support:'role-support' };
-const EMOJIS = ['😎','🧑‍💻','👾','🦊','🐺','🐉','🦋','🌟','⚡','🎯','🦁','🐸'];
+function startAutoSync() {
+  if (syncInterval) clearInterval(syncInterval);
+  if (!jsonbinId || !jsonbinKey) return;
+  syncInterval = setInterval(() => { if (adminLoggedIn) pullUsersFromJsonBin(); }, 10000);
+  pullUsersFromJsonBin();
+}
 
-let services = JSON.parse(JSON.stringify(DEFAULT_SERVICES));
-let team     = JSON.parse(JSON.stringify(DEFAULT_TEAM));
-let users    = {};
-let tickets  = {};
-let adminPassword = 'admin123';
-let currentUser = null;
-let discordWebhook = '';
-let unsaved = false;
-let adminLoggedIn = false;
-let activeTicket = null;
-let currentTheme = 'dark';
-let currentFestive = '';
-let emailjsPublicKey = '-Y8WjfvgdGTW69eYQ';
-let emailjsServiceId = 'service_kee805w';
-let emailjsTemplateId = 'template_ueewv6y';
-let syncInterval = null;
+function stopAutoSync() { if (syncInterval) { clearInterval(syncInterval); syncInterval = null; } }
 
-// ================================================
-//  INIT : charge la session courante + thème
-// ================================================
-function load() {
-  loadGitHubConfig();
-  // Thème (sessionStorage léger)
+function saveJsonBinConfig() {
+  jsonbinId = document.getElementById('jsonbin-id').value.trim();
+  jsonbinKey = document.getElementById('jsonbin-key').value.trim();
+  save();
+  const msg = document.getElementById('jsonbin-msg');
+  if (!jsonbinId || !jsonbinKey) { msg.style.display='block'; msg.className='err'; msg.textContent='✕ Remplissez les deux champs'; return; }
+  msg.style.display='block'; msg.className='ok'; msg.textContent='✓ Configuration sauvegardée !';
+  startAutoSync();
+  setTimeout(() => { msg.style.display='none'; }, 4000);
+}
+
+async function testJsonBinConnection() {
+  const id = document.getElementById('jsonbin-id').value.trim();
+  const key = document.getElementById('jsonbin-key').value.trim();
+  const msg = document.getElementById('jsonbin-msg');
+  if (!id || !key) { msg.style.display='block'; msg.className='err'; msg.textContent='✕ Remplissez d\'abord les champs'; return; }
+  msg.style.display='block'; msg.className='ok'; msg.textContent='⟳ Test...';
   try {
-    const ses = JSON.parse(sessionStorage.getItem('cw_session') || '{}');
-    currentTheme   = ses.theme   || 'dark';
-    currentFestive = ses.festive || '';
-    if (ses.user) currentUser = ses.user;
-    emailjsPublicKey  = ses.ejsPk  || emailjsPublicKey;
-    emailjsServiceId  = ses.ejsSvc  || emailjsServiceId;
-    emailjsTemplateId = ses.ejsTpl  || emailjsTemplateId;
-    discordWebhook    = ses.webhook || '';
-    adminPassword     = ses.adminpw || 'admin123';
-  } catch(e) {}
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`, { headers: { 'X-Master-Key': key } });
+    if (res.ok) { msg.textContent='✓ Connexion réussie !'; setTimeout(() => { msg.style.display='none'; }, 3000); }
+    else { msg.className='err'; msg.textContent=`✕ Erreur ${res.status}`; }
+  } catch(e) { msg.className='err'; msg.textContent='✕ Impossible de joindre JSONBin'; }
 }
 
-function saveSession() {
-  try {
-    const ses = {
-      theme: currentTheme, festive: currentFestive,
-      user: currentUser,
-      ejsPk: emailjsPublicKey, ejsSvc: emailjsServiceId, ejsTpl: emailjsTemplateId,
-      webhook: discordWebhook, adminpw: adminPassword
-    };
-    sessionStorage.setItem('cw_session', JSON.stringify(ses));
-  } catch(e) {}
-}
-
-// Alias simple pour la compatibilité des appels existants
-function save() {
-  saveSession();
-  // Push async vers GitHub si configuré
-  if (ghOwner && ghRepo && ghToken) {
-    pushUsersToGitHub().catch(() => {});
-  }
-}
-
-function hashPass(p) {
-  let h = 0;
-  for (let i = 0; i < p.length; i++) h = (Math.imul(31, h) + p.charCodeAt(i)) | 0;
-  return h.toString(36);
-}
-function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ================================================
-//  THEME
-// ================================================
-function applyTheme() {
-  document.documentElement.setAttribute('data-theme', currentTheme);
-  const btn = document.getElementById('themeBtn');
-  if (btn) btn.textContent = currentTheme === 'light' ? '☀️' : '🌙';
-}
-function toggleTheme() {
-  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  applyTheme(); saveSession();
-}
-
-// ================================================
-//  FESTIVE
-// ================================================
-const FESTIVE_PARTICLES = {
-  christmas: ['❄️','🎄','🎅','⭐','🎁'],
-  newyear:   ['🎆','🎇','✨','🥂','🎉'],
-  halloween: ['🎃','👻','🦇','🕸️','🕷️']
-};
-const FESTIVE_BANNERS = {
-  christmas: { emoji:'🎄', text:'Joyeux Noël de la part de CapWorks Studio !', emoji2:'🎅' },
-  newyear:   { emoji:'🎆', text:'Bonne Année ! Merci pour votre confiance.', emoji2:'🥂' },
-  halloween: { emoji:'🎃', text:'Joyeux Halloween — Bonnes frayeurs !', emoji2:'👻' }
-};
-function getAutoFestiveMode() {
-  const now = new Date(); const m = now.getMonth()+1, d = now.getDate();
-  if (m===12 && d>=20) return 'christmas';
-  if ((m===12 && d===31)||(m===1 && d<=3)) return 'newyear';
-  if (m===10 && d===31) return 'halloween';
-  return '';
-}
-function resolvedFestive() { return currentFestive === 'auto' ? getAutoFestiveMode() : currentFestive; }
-function setFestiveMode(mode) {
-  currentFestive = mode; saveSession(); applyFestive();
-}
-function updateFestiveBanner(active) {
-  const banner = document.getElementById('festive-hero-banner');
-  if (!banner) return;
-  if (active && FESTIVE_BANNERS[active]) {
-    const b = FESTIVE_BANNERS[active];
-    document.getElementById('festive-banner-emoji').textContent  = b.emoji;
-    document.getElementById('festive-banner-text').textContent   = b.text;
-    document.getElementById('festive-banner-emoji2').textContent = b.emoji2;
-    banner.classList.add('visible');
-  } else { banner.classList.remove('visible'); }
-}
-function applyFestive() {
-  const deco = document.getElementById('festive-deco');
-  if (deco) deco.innerHTML = '';
-  const active = resolvedFestive();
-  if (active) { document.documentElement.setAttribute('data-festive', active); spawnFestiveParticles(active); }
-  else document.documentElement.removeAttribute('data-festive');
-  updateFestiveBanner(active);
-  const sel = document.getElementById('festive-select');
-  if (sel) sel.value = currentFestive;
-}
-function spawnFestiveParticles(active) {
-  const deco = document.getElementById('festive-deco');
-  if (!deco || !active) return;
-  const particles = FESTIVE_PARTICLES[active] || [];
-  if (!particles.length) return;
-  deco.innerHTML = '';
-  const TOTAL = 30, INTERVAL = 380;
-  let spawned = 0;
-  function spawnOne() {
-    if (!deco.isConnected) return;
-    const p = document.createElement('span');
-    p.className = 'festive-particle';
-    p.textContent = particles[Math.floor(Math.random() * particles.length)];
-    const duration = 7 + Math.random() * 8;
-    p.style.left = (Math.random() * 100) + '%';
-    p.style.animationDuration = duration + 's';
-    p.style.animationDelay = '0s';
-    p.style.fontSize = (0.9 + Math.random() * 1.3) + 'rem';
-    deco.appendChild(p);
-    p.addEventListener('animationend', () => {
-      p.remove();
-      if (deco.isConnected && document.documentElement.hasAttribute('data-festive'))
-        setTimeout(spawnOne, INTERVAL);
-    }, { once: true });
-    spawned++;
-    if (spawned < TOTAL) setTimeout(spawnOne, INTERVAL);
-  }
-  spawnOne();
+function clearJsonBinConfig() {
+  if (!confirm('Supprimer la configuration JSONBin ?')) return;
+  jsonbinId = ''; jsonbinKey = '';
+  document.getElementById('jsonbin-id').value = '';
+  document.getElementById('jsonbin-key').value = '';
+  save(); stopAutoSync(); setSyncBadge('offline', '⚫ Local');
+  toast('Configuration effacée', 'success');
 }
 
 // ================================================
@@ -1037,11 +1197,9 @@ function spawnFestiveParticles(active) {
 // ================================================
 function setOnlineStatus(online) {
   if (!currentUser) return;
-  if (users[currentUser.username]) {
-    users[currentUser.username].online = online;
-    save();
-  }
+  if (users[currentUser.username]) { users[currentUser.username].online = online; save(); }
 }
+
 document.addEventListener('visibilitychange', () => { setOnlineStatus(!document.hidden); });
 window.addEventListener('beforeunload', () => { setOnlineStatus(false); });
 setInterval(() => { if (!document.hidden && currentUser) setOnlineStatus(true); }, 30000);
@@ -1059,17 +1217,36 @@ function renderServices() {
     const tiersHtml = s.tiers.map((t, ti) => {
       const isFree = t.free === true;
       let btnHtml;
-      if (isFree) btnHtml = `<button class="paypal-btn free" onclick="handleFreeService('${escHtml(s.name)}','${escHtml(t.name)}')">✓ Gratuit</button>`;
-      else if (t.paypal) btnHtml = `<button class="paypal-btn" onclick="handlePayment('${escHtml(s.name)}','${escHtml(t.name)}',${t.price},'${escHtml(t.paypal)}')">PayPal →</button>`;
-      else btnHtml = `<button class="paypal-btn" disabled>Bientôt</button>`;
+      if (isFree) {
+        btnHtml = `<button class="paypal-btn free" onclick="handleFreeService('${escHtml(s.name)}','${escHtml(t.name)}')">✓ Gratuit</button>`;
+      } else if (t.paypal) {
+        btnHtml = `<button class="paypal-btn" onclick="handlePayment('${escHtml(s.name)}','${escHtml(t.name)}',${t.price},'${escHtml(t.paypal)}')">PayPal →</button>`;
+      } else {
+        btnHtml = `<button class="paypal-btn" disabled>Bientôt</button>`;
+      }
       const priceDisplay = isFree ? `<span class="free-badge">GRATUIT</span>` : `<div class="tier-price">${t.price}€</div>`;
-      return `<div class="tier-row ${TIER_CLASSES[ti]}">
-        <div class="tier-left"><span class="tier-ico">${TIER_ICONS[ti]}</span><div><div class="tier-name">${t.name}</div><div class="tier-subdesc">${t.desc||'—'}</div></div></div>
-        <div class="tier-right">${priceDisplay}${btnHtml}</div></div>`;
+      return `
+        <div class="tier-row ${TIER_CLASSES[ti]}">
+          <div class="tier-left">
+            <span class="tier-ico">${TIER_ICONS[ti]}</span>
+            <div>
+              <div class="tier-name">${t.name}</div>
+              <div class="tier-subdesc">${t.desc || '—'}</div>
+            </div>
+          </div>
+          <div class="tier-right">${priceDisplay}${btnHtml}</div>
+        </div>`;
     }).join('');
     card.innerHTML = `
-      <div class="card-top"><div class="card-icon ${s.iconBg}">${s.icon}</div><div class="card-info"><h3>${escHtml(s.name)}${!s.active?'<span class="badge-na">Indisponible</span>':''}</h3><p>${escHtml(s.desc)}</p></div></div>
-      <div class="card-tiers">${tiersHtml}</div>`;
+      <div class="card-top">
+        <div class="card-icon ${s.iconBg}">${s.icon}</div>
+        <div class="card-info">
+          <h3>${escHtml(s.name)}${!s.active ? '<span class="badge-na">Indisponible</span>' : ''}</h3>
+          <p>${escHtml(s.desc)}</p>
+        </div>
+      </div>
+      <div class="card-tiers">${tiersHtml}</div>
+    `;
     grid.appendChild(card);
   });
 }
@@ -1088,31 +1265,93 @@ function handlePayment(serviceName, tierName, price, paypalUrl) {
   document.getElementById('pay-confirm-summary').innerHTML = `
     <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="color:var(--text2);">Service</span><span style="font-weight:700;">${escHtml(serviceName)}</span></div>
     <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="color:var(--text2);">Niveau</span><span style="font-weight:700;">${escHtml(tierName)}</span></div>
-    <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Total</span><span style="font-weight:800;color:var(--green);">${price}€</span></div>`;
+    <div style="display:flex;justify-content:space-between;"><span style="color:var(--text2);">Total</span><span style="font-weight:800;color:var(--green);">${price}€</span></div>
+  `;
   document.getElementById('payConfirmOverlay').classList.add('open');
   setTimeout(() => emailInput.focus(), 200);
 }
 
-function handleFreeService(serviceName, tierName) {
+async function handleFreeService(serviceName, tierName) {
   if (!currentUser) { toast('Connectez-vous pour accéder à ce service', 'error'); openAuth('login'); return; }
   const buyerName = currentUser.username;
+  const buyerEmoji = currentUser.emoji || '👤';
+  const orderId = generateOrderId();
+
+  // Store order metadata on ticket for later edit
+  const orderMeta = { orderId, serviceName, tierName, price: 0, isFree: true, buyerName, buyerEmoji, email: users[buyerName]?.email || '' };
+
   const bannerZone = document.getElementById('purchase-banner-zone');
-  bannerZone.innerHTML = `<div class="purchase-banner"><div class="purchase-banner-icon">🎉</div><div style="flex:1;"><h4>Service gratuit sélectionné — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4><p>Rejoignez-nous sur Discord pour démarrer votre demande : <a href="https://discord.gg/52AJ2jgHda" target="_blank">discord.gg/52AJ2jgHda</a></p><div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,77,109,0.2);"><button class="btn-danger btn-sm" onclick="cancelFreeOrder('${escHtml(serviceName)}','${escHtml(tierName)}',this)">🗑 Annuler la demande</button></div></div></div>`;
+  bannerZone.innerHTML = `
+    <div class="purchase-banner">
+      <div class="purchase-banner-icon">🎉</div>
+      <div style="flex:1;">
+        <h4>Service gratuit sélectionné — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4>
+        <p>Rejoignez-nous sur Discord : <a href="https://discord.gg/52AJ2jgHda" target="_blank">discord.gg/52AJ2jgHda</a>
+          <br><span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text3);">Référence : ${orderId}</span>
+        </p>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,77,109,0.2);">
+          <button class="btn-danger btn-sm" onclick="cancelFreeOrder('${escHtml(serviceName)}','${escHtml(tierName)}','${orderId}',this)">🗑 Annuler la demande</button>
+        </div>
+      </div>
+    </div>
+  `;
   setTimeout(() => bannerZone.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200);
-  sendWebhookEmbed({
-    title: '🎁 Demande Gratuite — CapWorks Studio', color: 0x00f593,
-    description: `**${buyerName}** a demandé **${serviceName}** — niveau **${tierName}** — **GRATUIT**\n📅 ${new Date().toLocaleDateString('fr-FR')}`,
-    buyer: buyerName, service: serviceName, tier: tierName, price: 'GRATUIT', type: 'free'
+
+  // Send enriched Discord embed and store message ID
+  const payload = buildOrderEmbed({ ...orderMeta, siteUrl: siteBaseUrl, roleId: discordRoleId });
+  const msgId = await sendDiscordEmbed(payload);
+
+  // Auto-message in support
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  if (!tickets[currentUser.username]) tickets[currentUser.username] = [];
+  tickets[currentUser.username].push({
+    user: currentUser.username, emoji: buyerEmoji, role: currentUser.role,
+    text: `Je suis intéressé par votre service "${serviceName}" pour le niveau "${tierName}" (Gratuit). Référence : ${orderId}`,
+    time: timeStr, type: 'order',
+    discordMsgId: msgId,
+    orderMeta
   });
-  autoMessageSupport(`Je suis intéressé par votre service "${serviceName}" pour le niveau "${tierName}" (Gratuit). Merci de confirmer la prise en charge de ma demande.`, 'order');
-  toast('Demande envoyée !', 'success');
+  save();
+  renderSupport();
+  document.getElementById('support').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(() => toast('Demande envoyée !', 'success'), 400);
 }
 
-function cancelFreeOrder(serviceName, tierName, btn) {
+function cancelFreeOrder(serviceName, tierName, orderId, btn) {
   if (!confirm(`Annuler la demande "${serviceName} — ${tierName}" ?`)) return;
   const banner = btn.closest('.purchase-banner');
-  banner.innerHTML = `<div class="purchase-banner-icon">❌</div><div><h4 style="color:var(--red);">Demande annulée — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4><p>Votre demande d'annulation a été transmise au support.</p></div>`;
-  autoMessageSupport(`⚠️ ANNULATION ⚠️\nJe souhaite annuler ma demande pour "${serviceName}" — niveau "${tierName}" (Gratuit).`, 'cancel');
+
+  // Find ticket with this orderId and update Discord embed
+  if (currentUser && tickets[currentUser.username]) {
+    const ticketMsg = tickets[currentUser.username].find(m => m.orderMeta && m.orderMeta.orderId === orderId);
+    if (ticketMsg && ticketMsg.discordMsgId) {
+      const cancelPayload = buildCancelEmbed({ ...ticketMsg.orderMeta });
+      editDiscordEmbed(ticketMsg.discordMsgId, cancelPayload);
+    }
+    // Add cancellation message in support
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    tickets[currentUser.username].push({
+      user: currentUser.username, emoji: currentUser.emoji || '👤', role: currentUser.role,
+      text: `⚠️ ANNULATION : "${serviceName}" — "${tierName}" (Gratuit). Réf : ${orderId}`,
+      time: timeStr, type: 'cancel'
+    });
+    save(); renderSupport();
+  }
+
+  banner.innerHTML = `
+    <div class="purchase-banner-icon">❌</div>
+    <div>
+      <h4 style="color:var(--red);">Demande annulée — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4>
+      <p>Votre demande d'annulation a été transmise au support et le message Discord a été mis à jour.</p>
+    </div>
+  `;
+  setTimeout(() => {
+    banner.style.transition = 'opacity 0.5s, transform 0.5s';
+    banner.style.opacity = '0'; banner.style.transform = 'translateY(-10px)';
+    setTimeout(() => { const zone = banner.closest('#purchase-banner-zone'); if (zone) zone.innerHTML = ''; }, 500);
+  }, 8000);
   toast('Annulation envoyée', 'success');
 }
 
@@ -1122,65 +1361,92 @@ async function confirmAndPay() {
   const email = emailInput.value.trim();
   const err = document.getElementById('pay-email-err');
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = '✕ Veuillez entrer un email valide'; emailInput.focus(); return; }
+
   const { serviceName, tierName, price, paypalUrl } = _pendingPayment;
   const buyerName = currentUser ? currentUser.username : 'Visiteur';
+  const buyerEmoji = currentUser ? (currentUser.emoji || '👤') : '👤';
+  const orderId = generateOrderId();
+  const orderMeta = { orderId, serviceName, tierName, price, isFree: false, buyerName, buyerEmoji, email };
+
   closeOverlay('payConfirmOverlay');
   window.open(paypalUrl, '_blank');
+
   const bannerZone = document.getElementById('purchase-banner-zone');
-  bannerZone.innerHTML = `<div class="purchase-banner"><div class="purchase-banner-icon">✅</div><div style="flex:1;"><h4>Commande confirmée — ${escHtml(serviceName)} · ${escHtml(tierName)} · ${price}€</h4><p>Un membre de l'équipe vous contactera prochainement à <strong style="color:var(--cyan);">${escHtml(email)}</strong>.<br>Rejoignez-nous sur Discord : <a href="https://discord.gg/52AJ2jgHda" target="_blank">discord.gg/52AJ2jgHda</a></p><div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,77,109,0.2);"><button class="btn-danger btn-sm" onclick="cancelOrder('${escHtml(serviceName)}','${escHtml(tierName)}',${price},'${escHtml(email)}',this)">🗑 Annuler la commande</button></div></div></div>`;
+  bannerZone.innerHTML = `
+    <div class="purchase-banner">
+      <div class="purchase-banner-icon">✅</div>
+      <div style="flex:1;">
+        <h4>Commande confirmée — ${escHtml(serviceName)} · ${escHtml(tierName)} · ${price}€</h4>
+        <p>Un membre de l'équipe vous contactera à <strong style="color:var(--cyan);">${escHtml(email)}</strong>.<br>
+          Discord : <a href="https://discord.gg/52AJ2jgHda" target="_blank">discord.gg/52AJ2jgHda</a>
+          <br><span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text3);">Référence : ${orderId}</span>
+        </p>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,77,109,0.2);">
+          <button class="btn-danger btn-sm" onclick="cancelOrder('${escHtml(serviceName)}','${escHtml(tierName)}',${price},'${escHtml(email)}','${orderId}',this)">🗑 Annuler la commande</button>
+        </div>
+      </div>
+    </div>
+  `;
   setTimeout(() => bannerZone.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200);
-  sendWebhookEmbed({
-    title: '💸 Paiement Reçu — CapWorks Studio', color: 0x6c63ff,
-    description: `**${buyerName}** a acheté **${serviceName}** — niveau **${tierName}** — **${price}€**\n📬 \`${email}\``,
-    buyer: buyerName, service: serviceName, tier: tierName, price: `${price}€`, email, type: 'paid'
-  });
-  autoMessageSupport(`Je suis intéressé par votre service "${serviceName}" pour le niveau "${tierName}" (${price}€). Je viens de procéder au paiement via PayPal avec l'adresse : ${email}. Merci de confirmer la prise en charge de ma commande.`, 'order');
+
+  // Send enriched Discord embed and store message ID
+  const payload = buildOrderEmbed({ ...orderMeta, siteUrl: siteBaseUrl, roleId: discordRoleId });
+  const msgId = await sendDiscordEmbed(payload);
+
   toast('Commande confirmée !', 'success');
   _pendingPayment = null;
+
+  // Auto-message in support
+  if (currentUser) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    if (!tickets[currentUser.username]) tickets[currentUser.username] = [];
+    tickets[currentUser.username].push({
+      user: currentUser.username, emoji: buyerEmoji, role: currentUser.role,
+      text: `Commande "${serviceName}" — "${tierName}" — ${price}€. Email : ${email}. Réf : ${orderId}`,
+      time: timeStr, type: 'order',
+      discordMsgId: msgId,
+      orderMeta
+    });
+    save(); renderSupport();
+    document.getElementById('support').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => toast('Message envoyé dans le support !', 'success'), 800);
+  }
 }
 
-function cancelOrder(serviceName, tierName, price, email, btn) {
+function cancelOrder(serviceName, tierName, price, email, orderId, btn) {
   if (!confirm(`Annuler la commande "${serviceName} — ${tierName}" ?`)) return;
   const banner = btn.closest('.purchase-banner');
-  banner.innerHTML = `<div class="purchase-banner-icon">❌</div><div><h4 style="color:var(--red);">Commande annulée — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4><p>Votre demande d'annulation a été transmise au support.</p></div>`;
-  autoMessageSupport(`⚠️ ANNULATION ⚠️\nJe souhaite annuler ma commande pour "${serviceName}" — niveau "${tierName}" — ${price}€ (email : ${email}).`, 'cancel');
-  toast('Annulation envoyée au support', 'success');
-}
 
-function autoMessageSupport(text, type) {
-  if (!currentUser) return;
-  const now = new Date();
-  const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
-  if (!tickets[currentUser.username]) tickets[currentUser.username] = [];
-  tickets[currentUser.username].push({ user:currentUser.username, emoji:currentUser.emoji||'👤', role:currentUser.role, text, time:timeStr, type });
-  save(); renderSupport();
-  document.getElementById('support').scrollIntoView({ behavior:'smooth', block:'start' });
-  setTimeout(() => toast('Message automatique envoyé dans le support !', 'success'), 800);
-}
+  if (currentUser && tickets[currentUser.username]) {
+    const ticketMsg = tickets[currentUser.username].find(m => m.orderMeta && m.orderMeta.orderId === orderId);
+    if (ticketMsg && ticketMsg.discordMsgId) {
+      const cancelPayload = buildCancelEmbed({ ...ticketMsg.orderMeta });
+      editDiscordEmbed(ticketMsg.discordMsgId, cancelPayload);
+    }
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    tickets[currentUser.username].push({
+      user: currentUser.username, emoji: currentUser.emoji || '👤', role: currentUser.role,
+      text: `⚠️ ANNULATION : "${serviceName}" — "${tierName}" — ${price}€ (email : ${email}). Réf : ${orderId}`,
+      time: timeStr, type: 'cancel'
+    });
+    save(); renderSupport();
+  }
 
-// Envoie l'embed au webhook Discord (le bot ajoutera les boutons interactifs séparément)
-function sendWebhookEmbed({ title, color, description, buyer, service, tier, price, email, type }) {
-  if (!discordWebhook) return;
-  const now = new Date();
-  const embed = {
-    title, color,
-    description: description + `\n📅 ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`,
-    footer: { text: 'CapWorks Studio · Bot intégré' },
-    timestamp: now.toISOString(),
-    fields: [
-      { name: 'Client', value: buyer, inline: true },
-      { name: 'Service', value: service, inline: true },
-      { name: 'Niveau', value: tier, inline: true },
-      { name: 'Prix', value: String(price), inline: true },
-      ...(email ? [{ name: 'Email', value: email, inline: true }] : []),
-      { name: 'Type', value: type, inline: true }
-    ]
-  };
-  fetch(discordWebhook, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ embeds: [embed] })
-  }).catch(() => {});
+  banner.innerHTML = `
+    <div class="purchase-banner-icon">❌</div>
+    <div>
+      <h4 style="color:var(--red);">Commande annulée — ${escHtml(serviceName)} · ${escHtml(tierName)}</h4>
+      <p>Votre demande d'annulation a été transmise. Le message Discord a été mis à jour.</p>
+    </div>
+  `;
+  setTimeout(() => {
+    banner.style.transition = 'opacity 0.5s, transform 0.5s';
+    banner.style.opacity = '0'; banner.style.transform = 'translateY(-10px)';
+    setTimeout(() => { const zone = banner.closest('#purchase-banner-zone'); if (zone) zone.innerHTML = ''; }, 500);
+  }, 8000);
+  toast('Annulation envoyée', 'success');
 }
 
 // ================================================
@@ -1194,10 +1460,11 @@ function renderTeam() {
     div.className = 'team-card';
     div.style.animationDelay = `${i * 0.08}s`;
     div.innerHTML = `
-      <div class="team-avatar${m.online?' online':''}">${m.avatar}</div>
+      <div class="team-avatar${m.online ? ' online' : ''}">${m.avatar}</div>
       <div class="team-name">${escHtml(m.name)}</div>
-      <div class="team-role ${ROLE_CSS[m.role]||''}">${ROLE_LABELS[m.role]||m.role}</div>
-      <div class="team-tags">${m.tags.map(t=>`<span class="team-tag">${escHtml(t)}</span>`).join('')}</div>`;
+      <div class="team-role ${ROLE_CSS[m.role] || ''}">${ROLE_LABELS[m.role] || m.role}</div>
+      <div class="team-tags">${m.tags.map(t => `<span class="team-tag">${escHtml(t)}</span>`).join('')}</div>
+    `;
     grid.appendChild(div);
   });
 }
@@ -1210,7 +1477,15 @@ function isStaff(role) { return role === 'mod' || role === 'owner'; }
 function renderSupport() {
   const root = document.getElementById('support-root');
   if (!currentUser) {
-    root.innerHTML = `<div style="min-height:260px;display:flex;align-items:center;justify-content:center;"><div class="support-login-wall"><div style="font-size:2rem;margin-bottom:12px;">🔐</div><h4>Connexion requise</h4><p>Connectez-vous pour accéder au support gratuit.</p><button class="btn-accent" onclick="openAuth('login')">Se connecter</button></div></div>`;
+    root.innerHTML = `
+      <div style="min-height:260px;display:flex;align-items:center;justify-content:center;">
+        <div class="support-login-wall">
+          <div style="font-size:2rem;margin-bottom:12px;">🔐</div>
+          <h4>Connexion requise</h4>
+          <p>Connectez-vous pour accéder au support gratuit.</p>
+          <button class="btn-accent" onclick="openAuth('login')">Se connecter</button>
+        </div>
+      </div>`;
     return;
   }
   if (isStaff(currentUser.role)) renderStaffSupport(root);
@@ -1222,50 +1497,180 @@ function renderUserSupport(root) {
   const msgsHtml = msgs.length === 0
     ? `<div class="empty-state">— Aucun message —<br>Commencez votre demande de support ci-dessous</div>`
     : msgs.map((m, idx) => renderMsgHtml(m, idx, currentUser.username)).join('');
-  root.innerHTML = `<div class="support-layout" style="grid-template-columns:1fr;"><div class="support-main"><div class="support-header"><div><h3>💬 Votre salon de support</h3><p>Un modérateur vous répondra dès que possible</p></div><div class="support-status"><div class="blink" style="width:7px;height:7px;border-radius:50%;background:var(--green);"></div>En ligne</div></div><div class="chat-area" id="chat-area">${msgsHtml}</div><div class="chat-input-bar"><input type="text" class="chat-input" id="chat-input" placeholder="Écrivez votre message..." onkeypress="if(event.key==='Enter')sendMsg()"><button class="chat-send-btn" onclick="sendMsg()">➤</button></div></div></div>`;
+  root.innerHTML = `
+    <div class="support-layout" style="grid-template-columns:1fr;">
+      <div class="support-main">
+        <div class="support-header">
+          <div><h3>💬 Votre salon de support</h3><p>Un modérateur vous répondra dès que possible</p></div>
+          <div class="support-status"><div class="blink" style="width:7px;height:7px;border-radius:50%;background:var(--green);"></div>En ligne</div>
+        </div>
+        <div class="chat-area" id="chat-area">${msgsHtml}</div>
+        <div class="chat-input-bar">
+          <input type="text" class="chat-input" id="chat-input" placeholder="Écrivez votre message..." onkeypress="if(event.key==='Enter')sendMsg()">
+          <button class="chat-send-btn" onclick="sendMsg()">➤</button>
+        </div>
+      </div>
+    </div>`;
   scrollChat();
 }
 
 function renderStaffSupport(root) {
   const usernames = Object.keys(tickets);
   const sidebarItems = usernames.map(u => {
-    const msgs = tickets[u] || []; const last = msgs[msgs.length-1]; const ud = users[u];
-    return `<div class="ticket-item${activeTicket===u?' active':''}" onclick="openTicket('${escHtml(u)}')"><div class="ticket-user">${ud?ud.emoji||'👤':'👤'} ${escHtml(u)}</div><div class="ticket-preview">${last?escHtml(last.text):'Pas encore de messages'}</div><div class="ticket-meta"><span>${last?last.time:'—'}</span><span>${msgs.length} msg</span></div></div>`;
+    const msgs = tickets[u] || [];
+    const last = msgs[msgs.length - 1];
+    const ud = users[u];
+    return `
+      <div class="ticket-item${activeTicket === u ? ' active' : ''}" onclick="openTicket('${escHtml(u)}')">
+        <div class="ticket-user">${ud ? ud.emoji || '👤' : '👤'} ${escHtml(u)}</div>
+        <div class="ticket-preview">${last ? escHtml(last.text) : 'Pas encore de messages'}</div>
+        <div class="ticket-meta"><span>${last ? last.time : '—'}</span><span>${msgs.length} msg</span></div>
+      </div>`;
   }).join('') || `<div class="empty-state" style="padding:20px 0;">Aucun salon</div>`;
+
   let mainHtml = '';
   if (activeTicket && tickets[activeTicket]) {
     const msgs = tickets[activeTicket];
-    const msgsHtml = msgs.length===0 ? `<div class="empty-state">— Aucun message —</div>` : msgs.map((m,idx)=>renderMsgHtml(m,idx,activeTicket)).join('');
-    mainHtml = `<div class="support-main"><div class="support-header"><div><h3>💬 Salon de ${escHtml(activeTicket)}</h3><p>Répondez au client directement ici</p></div><button class="btn-danger btn-sm" onclick="deleteTicket('${escHtml(activeTicket)}')">🗑 Supprimer le salon</button></div><div class="chat-area" id="chat-area">${msgsHtml}</div><div class="chat-input-bar"><input type="text" class="chat-input" id="chat-input" placeholder="Répondre à ${escHtml(activeTicket)}..." onkeypress="if(event.key==='Enter')sendMsg()"><button class="chat-send-btn" onclick="sendMsg()">➤</button></div></div>`;
+    const msgsHtml = msgs.length === 0
+      ? `<div class="empty-state">— Aucun message —</div>`
+      : msgs.map((m, idx) => renderMsgHtml(m, idx, activeTicket)).join('');
+
+    // Check if there's an active order message for this ticket (for "Prendre en charge" / "Terminé")
+    const orderMsgs = msgs.filter(m => m.type === 'order' && m.discordMsgId && m.orderMeta);
+    const latestOrder = orderMsgs[orderMsgs.length - 1];
+
+    const orderActionsHtml = latestOrder ? `
+      <div style="padding:10px 24px;border-bottom:1px solid var(--border);background:rgba(108,99,255,0.05);display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text3);">📋 ${escHtml(latestOrder.orderMeta.orderId)}</span>
+        <button class="btn-success btn-sm" onclick="markOrderTaken('${escHtml(activeTicket)}','${escHtml(latestOrder.orderMeta.orderId)}')">🎯 Prendre en charge</button>
+        <button class="btn-primary btn-sm" style="background:var(--green);border:none;" onclick="markOrderDone('${escHtml(activeTicket)}','${escHtml(latestOrder.orderMeta.orderId)}')">🏁 Terminé</button>
+      </div>
+    ` : '';
+
+    mainHtml = `
+      <div class="support-main">
+        <div class="support-header">
+          <div><h3>💬 Salon de ${escHtml(activeTicket)}</h3><p>Répondez au client directement ici</p></div>
+          <button class="btn-danger btn-sm" onclick="deleteTicket('${escHtml(activeTicket)}')">🗑 Supprimer</button>
+        </div>
+        ${orderActionsHtml}
+        <div class="chat-area" id="chat-area">${msgsHtml}</div>
+        <div class="chat-input-bar">
+          <input type="text" class="chat-input" id="chat-input" placeholder="Répondre à ${escHtml(activeTicket)}..." onkeypress="if(event.key==='Enter')sendMsg()">
+          <button class="chat-send-btn" onclick="sendMsg()">➤</button>
+        </div>
+      </div>`;
   } else {
-    mainHtml = `<div class="support-main" style="display:flex;align-items:center;justify-content:center;"><div style="text-align:center;color:var(--text3);font-family:var(--font-mono);font-size:0.82rem;"><div style="font-size:2rem;margin-bottom:10px;">💬</div>Sélectionnez un salon pour répondre</div></div>`;
+    mainHtml = `
+      <div class="support-main" style="display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;color:var(--text3);font-family:var(--font-mono);font-size:0.82rem;">
+          <div style="font-size:2rem;margin-bottom:10px;">💬</div>Sélectionnez un salon pour répondre
+        </div>
+      </div>`;
   }
-  root.innerHTML = `<div class="support-layout"><div class="support-sidebar"><div class="support-sidebar-head"><h4>🎟 Salons (${usernames.length})</h4></div><div class="ticket-list">${sidebarItems}</div></div>${mainHtml}</div>`;
+
+  root.innerHTML = `
+    <div class="support-layout">
+      <div class="support-sidebar">
+        <div class="support-sidebar-head"><h4>🎟 Salons (${usernames.length})</h4></div>
+        <div class="ticket-list">${sidebarItems}</div>
+      </div>
+      ${mainHtml}
+    </div>`;
   scrollChat();
+}
+
+// Staff actions: mark order as taken
+async function markOrderTaken(username, orderId) {
+  const msgs = tickets[username] || [];
+  const orderMsg = msgs.find(m => m.orderMeta && m.orderMeta.orderId === orderId);
+  if (!orderMsg || !orderMsg.discordMsgId) { toast('Message Discord introuvable', 'error'); return; }
+
+  const takenBy = currentUser.username;
+  const takenPayload = buildTakenEmbed({ ...orderMsg.orderMeta, takenBy, siteUrl: siteBaseUrl });
+  const ok = await editDiscordEmbed(orderMsg.discordMsgId, takenPayload);
+
+  // Mark in ticket
+  orderMsg.status = 'taken';
+  orderMsg.takenBy = takenBy;
+
+  // Add staff note in support
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  tickets[username].push({
+    user: currentUser.username, emoji: currentUser.emoji || '👤', role: currentUser.role,
+    text: `✅ Commande "${orderMsg.orderMeta.serviceName}" — "${orderMsg.orderMeta.tierName}" prise en charge par ${takenBy}. Réf : ${orderId}`,
+    time: timeStr, type: 'status'
+  });
+  save(); renderSupport();
+  toast(ok ? 'Discord mis à jour — Pris en charge !' : 'Ticket mis à jour (Discord PATCH échoué)', ok ? 'success' : 'error');
+}
+
+// Staff actions: mark order as done
+async function markOrderDone(username, orderId) {
+  const msgs = tickets[username] || [];
+  const orderMsg = msgs.find(m => m.orderMeta && m.orderMeta.orderId === orderId);
+  if (!orderMsg || !orderMsg.discordMsgId) { toast('Message Discord introuvable', 'error'); return; }
+
+  const doneBy = currentUser.username;
+  const donePayload = buildDoneEmbed({ ...orderMsg.orderMeta, doneBy });
+  const ok = await editDiscordEmbed(orderMsg.discordMsgId, donePayload);
+
+  orderMsg.status = 'done';
+  orderMsg.doneBy = doneBy;
+
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  tickets[username].push({
+    user: currentUser.username, emoji: currentUser.emoji || '👤', role: currentUser.role,
+    text: `🏁 Commande "${orderMsg.orderMeta.serviceName}" — "${orderMsg.orderMeta.tierName}" marquée comme terminée par ${doneBy}. Réf : ${orderId}`,
+    time: timeStr, type: 'status'
+  });
+  save(); renderSupport();
+  toast(ok ? 'Discord mis à jour — Terminé !' : 'Ticket mis à jour (Discord PATCH échoué)', ok ? 'success' : 'error');
 }
 
 function renderMsgHtml(m, idx, ticketOwner) {
   const isOwn = currentUser && m.user === currentUser.username;
-  const nameCls = m.role==='owner'?'is-owner':(m.role==='mod'?'is-mod':'');
-  const badgeHtml = m.role==='owner'?`<span class="msg-badge owner">Owner</span>`:m.role==='mod'?`<span class="msg-badge mod">Mod</span>`:'';
+  const nameCls = m.role === 'owner' ? 'is-owner' : (m.role === 'mod' ? 'is-mod' : '');
+  const badgeHtml = m.role === 'owner'
+    ? `<span class="msg-badge owner">Owner</span>`
+    : m.role === 'mod' ? `<span class="msg-badge mod">Mod</span>` : '';
   const canDel = currentUser && (isStaff(currentUser.role) || isOwn);
-  const delBtn = canDel ? `<button class="msg-del" onclick="deleteMsg('${escHtml(ticketOwner)}',${idx})" title="Supprimer">✕</button>` : '';
-  return `<div class="chat-msg${isOwn?' own':''}"><div class="msg-avatar">${m.emoji||'👤'}</div><div class="msg-body"><div class="msg-meta"><span class="msg-name ${nameCls}">${escHtml(m.user)}</span>${badgeHtml}<span class="msg-time">${m.time}</span></div><div class="msg-bubble">${escHtml(m.text)}${delBtn}</div></div></div>`;
+  const delBtn = canDel ? `<button class="msg-del" onclick="deleteMsg('${escHtml(ticketOwner)}', ${idx})" title="Supprimer">✕</button>` : '';
+  const discordBadge = m.discordMsgId ? `<span class="discord-msg-badge" title="ID Discord: ${m.discordMsgId}">🔗 Discord</span>` : '';
+  const statusIcon = m.status === 'taken' ? ' 🎯' : m.status === 'done' ? ' ✅' : '';
+  return `
+    <div class="chat-msg${isOwn ? ' own' : ''}">
+      <div class="msg-avatar">${m.emoji || '👤'}</div>
+      <div class="msg-body">
+        <div class="msg-meta">
+          <span class="msg-name ${nameCls}">${escHtml(m.user)}</span>
+          ${badgeHtml}
+          ${discordBadge}
+          <span class="msg-time">${m.time}${statusIcon}</span>
+        </div>
+        <div class="msg-bubble">${escHtml(m.text)}${delBtn}</div>
+      </div>
+    </div>`;
 }
 
 function openTicket(username) { activeTicket = username; renderSupport(); }
+
 function deleteTicket(username) {
   if (!confirm(`Supprimer le salon de "${username}" ?`)) return;
   delete tickets[username];
-  if (activeTicket===username) activeTicket=null;
+  if (activeTicket === username) activeTicket = null;
   save(); renderSupport(); toast('Salon supprimé', 'success');
 }
+
 function deleteMsg(ticketOwner, idx) {
   if (!tickets[ticketOwner]) return;
   if (!confirm('Supprimer ce message ?')) return;
   tickets[ticketOwner].splice(idx, 1);
   save(); renderSupport();
 }
+
 function sendMsg() {
   if (!currentUser) return;
   const input = document.getElementById('chat-input');
@@ -1273,13 +1678,14 @@ function sendMsg() {
   const text = input.value.trim();
   if (!text) return;
   const now = new Date();
-  const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+  const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
   let target = currentUser.username;
   if (isStaff(currentUser.role) && activeTicket) target = activeTicket;
   if (!tickets[target]) tickets[target] = [];
-  tickets[target].push({ user:currentUser.username, emoji:currentUser.emoji||'👤', role:currentUser.role, text, time:timeStr });
-  save(); input.value=''; renderSupport();
+  tickets[target].push({ user: currentUser.username, emoji: currentUser.emoji || '👤', role: currentUser.role, text, time: timeStr });
+  save(); input.value = ''; renderSupport();
 }
+
 function scrollChat() {
   setTimeout(() => { const area = document.getElementById('chat-area'); if (area) area.scrollTop = area.scrollHeight; }, 50);
 }
@@ -1293,41 +1699,58 @@ function updateHeaderUser() {
     const ud = users[currentUser.username] || {};
     const isOnline = ud.online !== false;
     const roleBadge = currentUser.role !== 'user'
-      ? `<span style="font-size:0.65rem;background:rgba(108,99,255,0.2);color:var(--accent);padding:1px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;">${currentUser.role==='mod'?'Mod':currentUser.role==='owner'?'Owner':currentUser.role}</span>` : '';
+      ? `<span style="font-size:0.65rem;background:rgba(108,99,255,0.2);color:var(--accent);padding:1px 6px;border-radius:4px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">${currentUser.role === 'mod' ? 'Mod' : currentUser.role === 'owner' ? 'Owner' : currentUser.role}</span>`
+      : '';
     hr.innerHTML = `
-      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">${currentTheme==='light'?'☀️':'🌙'}</button>
-      ${isStaff(currentUser.role)?`<button class="btn-ghost" onclick="openAdmin()">⚙ Admin</button>`:''}
+      <button class="theme-toggle" onclick="toggleTheme()" title="${currentTheme === 'light' ? 'Mode sombre' : 'Mode clair'}" id="themeBtn">${currentTheme === 'light' ? '☀️' : '🌙'}</button>
+      ${isStaff(currentUser.role) ? `<button class="btn-ghost" onclick="openAdmin()">⚙ Admin</button>` : ''}
       <button class="btn-ghost" onclick="openSettings()">⚙ Compte</button>
       <div class="user-indicator">
-        <div class="user-dot${isOnline?'':' offline'}"></div>
-        ${currentUser.emoji||'👤'} ${escHtml(currentUser.username)} ${roleBadge}
+        <div class="user-dot${isOnline ? '' : ' offline'}"></div>
+        ${currentUser.emoji || '👤'} ${escHtml(currentUser.username)} ${roleBadge}
         <span style="color:var(--text3);font-size:0.65rem;cursor:pointer;" onclick="logout()">✕</span>
-      </div>`;
+      </div>
+    `;
   } else {
     hr.innerHTML = `
-      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">${currentTheme==='light'?'☀️':'🌙'}</button>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">${currentTheme === 'light' ? '☀️' : '🌙'}</button>
       <button class="btn-ghost" onclick="openAdmin()">⚙ Admin</button>
-      <button class="btn-accent" onclick="openAuth('login')">Connexion</button>`;
+      <button class="btn-accent" onclick="openAuth('login')">Connexion</button>
+    `;
   }
 }
 
 // ================================================
 //  SETTINGS
 // ================================================
-function openSettings() { if (!currentUser) return; renderSettings(); document.getElementById('settingsOverlay').classList.add('open'); }
+function openSettings() {
+  if (!currentUser) return;
+  renderSettings();
+  document.getElementById('settingsOverlay').classList.add('open');
+}
+
 function renderSettings() {
   const ud = users[currentUser.username] || {};
   document.getElementById('settings-body').innerHTML = `
-    <div class="settings-section"><h4>👤 Profil</h4><div class="form-group"><label>Emoji avatar</label><input type="text" class="input" id="set-emoji" value="${escHtml(currentUser.emoji||'👤')}" maxlength="4"></div></div>
-    <div class="settings-section"><h4>📧 Email</h4><div class="form-group"><label>Adresse email</label><input type="email" class="input" id="set-email" value="${escHtml(ud.email||'')}" placeholder="exemple@mail.com"></div></div>
-    <div class="settings-section"><h4>🔑 Mot de passe</h4>
+    <div class="settings-section">
+      <h4>👤 Profil</h4>
+      <div class="form-group"><label>Emoji avatar</label><input type="text" class="input" id="set-emoji" value="${escHtml(currentUser.emoji || '👤')}" maxlength="4"></div>
+    </div>
+    <div class="settings-section">
+      <h4>📧 Email</h4>
+      <div class="form-group"><label>Adresse email</label><input type="email" class="input" id="set-email" value="${escHtml(ud.email || '')}" placeholder="exemple@mail.com"></div>
+    </div>
+    <div class="settings-section">
+      <h4>🔑 Mot de passe</h4>
       <div class="form-group"><label>Mot de passe actuel</label><input type="password" class="input" id="set-pw-cur" placeholder="••••••••"></div>
       <div class="form-group"><label>Nouveau mot de passe</label><input type="password" class="input" id="set-pw-new" placeholder="Min. 4 caractères"></div>
       <div class="form-group"><label>Confirmer</label><input type="password" class="input" id="set-pw-conf" placeholder="••••••••"></div>
     </div>
     <div id="set-msg" class="err" style="margin-bottom:12px;"></div>
-    <button class="btn-primary" onclick="saveSettings()">💾 Sauvegarder</button>`;
+    <button class="btn-primary" onclick="saveSettings()">💾 Sauvegarder</button>
+  `;
 }
+
 function saveSettings() {
   const emoji = document.getElementById('set-emoji').value.trim() || '👤';
   const email = document.getElementById('set-email').value.trim();
@@ -1349,6 +1772,7 @@ function saveSettings() {
   if (email) ud.email = email;
   currentUser.emoji = emoji;
   save();
+  if (jsonbinId && jsonbinKey) pushUsersToJsonBin();
   updateHeaderUser();
   msg.className = 'ok'; msg.textContent = '✓ Paramètres sauvegardés !';
   setTimeout(() => { msg.textContent = ''; }, 3000);
@@ -1357,20 +1781,40 @@ function saveSettings() {
 // ================================================
 //  AUTH
 // ================================================
-let _pendingReg = null, _otpCode = null, _resendTimer = null;
+let _pendingReg = null;
+let _otpCode = null;
+let _resendTimer = null;
 
-function openAuth(tab='login') { document.getElementById('authOverlay').classList.add('open'); switchAuth(tab); }
+function openAuth(tab = 'login') {
+  document.getElementById('authOverlay').classList.add('open');
+  switchAuth(tab);
+}
+
 function switchAuth(tab) {
-  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', ['login','register'][i]===tab));
-  document.getElementById('auth-title').textContent = tab==='login'?'Connexion':'Créer un compte';
-  const randomEmoji = EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+  document.querySelectorAll('.auth-tab').forEach((t, i) => t.classList.toggle('active', ['login','register'][i] === tab));
+  document.getElementById('auth-title').textContent = tab === 'login' ? 'Connexion' : 'Créer un compte';
+  const randomEmoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
   const form = document.getElementById('auth-form');
   const realCount = Object.keys(users).length;
   const jackpotHtml = buildJackpotBanner(realCount);
-  if (tab==='login') {
-    form.innerHTML = `${jackpotHtml}<div class="form-group"><label>Pseudo</label><input type="text" class="input" id="l-user" placeholder="Votre pseudo..."></div><div class="form-group"><label>Mot de passe</label><input type="password" class="input" id="l-pass" placeholder="••••••••" onkeypress="if(event.key==='Enter')doLogin()"></div><div class="err" id="l-err"></div><div style="margin-top:16px;"><button class="btn-primary" onclick="doLogin()">Se connecter →</button></div>`;
+  if (tab === 'login') {
+    form.innerHTML = `
+      ${jackpotHtml}
+      <div class="form-group"><label>Pseudo</label><input type="text" class="input" id="l-user" placeholder="Votre pseudo..."></div>
+      <div class="form-group"><label>Mot de passe</label><input type="password" class="input" id="l-pass" placeholder="••••••••" onkeypress="if(event.key==='Enter')doLogin()"></div>
+      <div class="err" id="l-err"></div>
+      <div style="margin-top:16px;"><button class="btn-primary" onclick="doLogin()">Se connecter →</button></div>
+    `;
   } else {
-    form.innerHTML = `${jackpotHtml}<div class="form-group"><label>Pseudo</label><input type="text" class="input" id="r-user" placeholder="Choisissez un pseudo..."></div><div class="form-group"><label>Email <span style="color:var(--red)">*</span></label><input type="email" class="input" id="r-email" placeholder="exemple@gmail.com"></div><div class="form-group"><label>Mot de passe</label><input type="password" class="input" id="r-pass" placeholder="Min. 4 caractères..."></div><div class="form-group"><label>Avatar (emoji)</label><input type="text" class="input" id="r-emoji" placeholder="${randomEmoji}" maxlength="4"></div><div class="err" id="r-err"></div><div style="margin-top:16px;"><button class="btn-primary" id="r-btn" onclick="doRegister()">Continuer →</button></div>`;
+    form.innerHTML = `
+      ${jackpotHtml}
+      <div class="form-group"><label>Pseudo</label><input type="text" class="input" id="r-user" placeholder="Choisissez un pseudo..."></div>
+      <div class="form-group"><label>Email <span style="color:var(--red)">*</span></label><input type="email" class="input" id="r-email" placeholder="exemple@gmail.com"></div>
+      <div class="form-group"><label>Mot de passe</label><input type="password" class="input" id="r-pass" placeholder="Min. 4 caractères..."></div>
+      <div class="form-group"><label>Avatar (emoji)</label><input type="text" class="input" id="r-emoji" placeholder="${randomEmoji}" maxlength="4"></div>
+      <div class="err" id="r-err"></div>
+      <div style="margin-top:16px;"><button class="btn-primary" id="r-btn" onclick="doRegister()">Continuer →</button></div>
+    `;
   }
   setTimeout(() => animateJackpot(realCount), 80);
 }
@@ -1378,25 +1822,46 @@ function switchAuth(tab) {
 function buildJackpotBanner(count) {
   const formatted = count.toLocaleString('fr-FR');
   const chars = formatted.split('');
-  const cols = chars.map((c,i) => {
-    if (c==='\u00a0'||c===' ') return `<span class="jackpot-sep"> </span>`;
-    const allDigits = [...Array(10).keys()].map(n=>`<span>${n}</span>`);
+  const cols = chars.map((c, i) => {
+    if (c === '\u00a0' || c === ' ') return `<span class="jackpot-sep"> </span>`;
+    const allDigits = [...Array(10).keys()].map(n => `<span>${n}</span>`);
     return `<div class="jackpot-digit-wrap" data-target="${c}" data-idx="${i}"><div class="jackpot-digit-col" id="jcol-${i}">${allDigits.join('')}<span>${c}</span></div></div>`;
   }).join('');
-  return `<div class="jackpot-banner"><div class="jackpot-label">🎰 Communauté active</div><div class="jackpot-digits" id="jackpot-digits">${cols}</div><div class="jackpot-sub">utilisateurs font confiance à <strong>CapWorks Studio</strong></div></div>`;
+  return `
+    <div class="jackpot-banner">
+      <div class="jackpot-label">🎰 Communauté active</div>
+      <div class="jackpot-digits" id="jackpot-digits">${cols}</div>
+      <div class="jackpot-sub">utilisateurs font confiance à <strong>CapWorks Studio</strong><br>— Rejoignez-nous maintenant !</div>
+    </div>`;
 }
+
 function animateJackpot(count) {
-  const formatted = count.toLocaleString('fr-FR'); const chars = formatted.split(''); let colIdx = 0;
-  chars.forEach((c,i) => {
-    if (c==='\u00a0'||c===' ') return;
-    const col = document.getElementById(`jcol-${i}`); if (!col) return;
-    const target = parseInt(c, 10); colIdx++;
+  const formatted = count.toLocaleString('fr-FR');
+  const chars = formatted.split('');
+  let colIdx = 0;
+  chars.forEach((c, i) => {
+    if (c === '\u00a0' || c === ' ') return;
+    const col = document.getElementById(`jcol-${i}`);
+    if (!col) return;
+    const target = parseInt(c, 10);
+    colIdx++;
     const delay = colIdx * 90;
-    setTimeout(() => { col.style.transition='none'; col.style.transform='translateY(0)'; setTimeout(() => { col.style.transition=`transform ${0.55+colIdx*0.04}s cubic-bezier(.2,1,.3,1)`; col.style.transform=`translateY(-${target*2.2}rem)`; }, 30); }, delay);
+    setTimeout(() => {
+      col.style.transition = 'none'; col.style.transform = 'translateY(0)';
+      setTimeout(() => {
+        col.style.transition = `transform ${0.55 + colIdx * 0.04}s cubic-bezier(.2,1,.3,1)`;
+        col.style.transform = `translateY(-${target * 2.2}rem)`;
+      }, 30);
+    }, delay);
   });
 }
-function maskEmail(email) { const [local,domain]=email.split('@'); return local[0]+'*'.repeat(Math.max(local.length-1,3))+'@'+domain; }
-function generateOTP() { return String(Math.floor(100000+Math.random()*900000)); }
+
+function maskEmail(email) {
+  const [local, domain] = email.split('@');
+  return local[0] + '*'.repeat(Math.max(local.length - 1, 3)) + '@' + domain;
+}
+
+function generateOTP() { return String(Math.floor(100000 + Math.random() * 900000)); }
 
 async function doRegister() {
   const u = document.getElementById('r-user').value.trim();
@@ -1404,273 +1869,709 @@ async function doRegister() {
   const p = document.getElementById('r-pass').value;
   const e = document.getElementById('r-emoji').value.trim() || '👤';
   const err = document.getElementById('r-err');
-  if (!u||!email||!p) { err.textContent='✕ Remplissez tous les champs'; return; }
-  if (u.length<2||u.length>20) { err.textContent='✕ Pseudo : 2–20 caractères'; return; }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent='✕ Email invalide'; return; }
-  if (p.length<4) { err.textContent='✕ Mot de passe trop court (min. 4)'; return; }
-  // Pull fresh users from GitHub if available
-  if (ghOwner && ghRepo && ghToken) {
-    const remote = await ghGet('data/users.json').catch(()=>null);
-    if (remote) users = remote;
-  }
-  if (users[u]) { err.textContent='✕ Ce pseudo est déjà pris'; return; }
+  if (!u || !email || !p) { err.textContent = '✕ Remplissez tous les champs'; return; }
+  if (u.length < 2 || u.length > 20) { err.textContent = '✕ Pseudo : 2–20 caractères'; return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = '✕ Email invalide'; return; }
+  if (p.length < 4) { err.textContent = '✕ Mot de passe trop court (min. 4)'; return; }
+  if (users[u]) { err.textContent = '✕ Ce pseudo est déjà pris'; return; }
   _pendingReg = { u, email, p, e };
   _otpCode = generateOTP();
   const btn = document.getElementById('r-btn');
-  btn.disabled=true; btn.textContent='Envoi du code OTP...';
+  btn.disabled = true; btn.textContent = 'Envoi du code...'; err.textContent = '';
   try {
     emailjs.init(emailjsPublicKey);
-    await emailjs.send(emailjsServiceId, emailjsTemplateId, { to_email:email, to_name:u, code:_otpCode });
-  } catch(ex) { err.textContent='✕ Erreur envoi email : '+ex.text; btn.disabled=false; btn.textContent='Continuer →'; return; }
-  document.getElementById('auth-tabs').querySelectorAll('.auth-tab').forEach(t=>t.style.display='none');
-  document.getElementById('auth-form').innerHTML = `
-    <p style="font-size:0.82rem;color:var(--text2);margin-bottom:16px;">Code envoyé à <span class="email-masked">${maskEmail(email)}</span></p>
-    <div class="otp-row">${[0,1,2,3,4,5].map(i=>`<input type="text" class="otp-input" id="otp-${i}" maxlength="1" oninput="otpNext(this,${i})" onkeydown="otpBack(event,${i})">`).join('')}</div>
-    <div class="err" id="otp-err"></div>
-    <div style="margin-top:16px;"><button class="btn-primary" onclick="verifyOTP()">Vérifier →</button></div>
-    <p style="text-align:center;margin-top:12px;font-size:0.75rem;color:var(--text3);">
-      <button class="resend-link" id="resend-btn" onclick="resendOTP()">Renvoyer le code</button>
-    </p>`;
-  setTimeout(() => document.getElementById('otp-0')?.focus(), 100);
+    await emailjs.send(emailjsServiceId, emailjsTemplateId, { to_email: email, to_name: u, code: _otpCode });
+    showVerifyStep(email);
+  } catch(ex) {
+    err.textContent = '✕ Erreur lors de l\'envoi.';
+    btn.disabled = false; btn.textContent = 'Continuer →';
+  }
 }
 
-function otpNext(el, idx) {
-  el.classList.toggle('filled', el.value!=='');
-  if (el.value&&idx<5) document.getElementById(`otp-${idx+1}`)?.focus();
+function showVerifyStep(email) {
+  document.getElementById('auth-title').textContent = 'Vérification';
+  document.querySelectorAll('.auth-tab').forEach(t => t.style.display = 'none');
+  document.getElementById('auth-form').innerHTML = `
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:2rem;margin-bottom:10px;">📬</div>
+      <p style="color:var(--text2);font-size:0.85rem;line-height:1.7;">Un email a été envoyé à<br><span class="email-masked">${maskEmail(email)}</span></p>
+    </div>
+    <label style="display:block;font-size:0.72rem;font-weight:700;color:var(--text2);letter-spacing:0.5px;text-transform:uppercase;text-align:center;margin-bottom:4px;">Code à 6 chiffres</label>
+    <div class="otp-row">
+      ${[0,1,2,3,4,5].map(i => `<input class="otp-input" id="otp${i}" maxlength="1" type="text" inputmode="numeric" oninput="otpInput(this,${i})" onkeydown="otpKey(event,${i})">`).join('')}
+    </div>
+    <div class="err" id="otp-err" style="text-align:center;"></div>
+    <div style="margin-top:16px;"><button class="btn-primary" onclick="verifyOTP()">Vérifier →</button></div>
+    <div style="text-align:center;margin-top:14px;">
+      <button class="resend-link" id="resend-btn" onclick="resendOTP()" disabled>Renvoyer (<span id="resend-count">60</span>s)</button>
+    </div>
+    <div style="text-align:center;margin-top:8px;">
+      <button class="resend-link" onclick="switchAuth('register')" style="color:var(--text3);">← Modifier mes infos</button>
+    </div>
+  `;
+  setTimeout(() => document.getElementById('otp0').focus(), 100);
+  let secs = 60;
+  _resendTimer = setInterval(() => {
+    secs--;
+    const el = document.getElementById('resend-count');
+    const btn = document.getElementById('resend-btn');
+    if (!el) { clearInterval(_resendTimer); return; }
+    if (secs <= 0) { clearInterval(_resendTimer); btn.disabled = false; btn.textContent = 'Renvoyer le code'; }
+    else el.textContent = secs;
+  }, 1000);
 }
-function otpBack(e, idx) {
-  if (e.key==='Backspace'&&!e.target.value&&idx>0) document.getElementById(`otp-${idx-1}`)?.focus();
+
+function otpInput(el, idx) {
+  el.value = el.value.replace(/\D/g, '');
+  if (el.value) { el.classList.add('filled'); if (idx < 5) document.getElementById(`otp${idx+1}`).focus(); else verifyOTP(); }
+  else el.classList.remove('filled');
 }
+
+function otpKey(e, idx) {
+  if (e.key === 'Backspace' && !e.target.value && idx > 0) document.getElementById(`otp${idx-1}`).focus();
+}
+
+function getOTPValue() { return [0,1,2,3,4,5].map(i => document.getElementById(`otp${i}`)?.value || '').join(''); }
+
 function verifyOTP() {
-  const code = [0,1,2,3,4,5].map(i=>document.getElementById(`otp-${i}`)?.value||'').join('');
-  const errEl = document.getElementById('otp-err');
-  if (code!==_otpCode) {
-    [0,1,2,3,4,5].forEach(i=>{const el=document.getElementById(`otp-${i}`);if(el){el.classList.add('error');setTimeout(()=>el.classList.remove('error'),600);}});
-    errEl.textContent='✕ Code incorrect'; return;
+  const entered = getOTPValue();
+  const err = document.getElementById('otp-err');
+  if (entered.length < 6) { err.textContent = '✕ Entrez les 6 chiffres'; return; }
+  if (entered !== _otpCode) {
+    err.textContent = '✕ Code incorrect';
+    [0,1,2,3,4,5].forEach(i => { const el = document.getElementById(`otp${i}`); el.classList.add('error'); setTimeout(() => el.classList.remove('error'), 500); });
+    return;
   }
-  errEl.textContent='';
-  const { u, p, e, email } = _pendingReg;
-  users[u] = { hash:hashPass(p), role:'user', emoji:e, email, supporter:false, online:true };
-  currentUser = { username:u, role:'user', emoji:e };
-  _pendingReg=null; _otpCode=null;
+  clearInterval(_resendTimer);
+  const { u, email, p, e } = _pendingReg;
+  users[u] = { hash: hashPass(p), role: 'user', emoji: e, email, supporter: false, online: true };
+  currentUser = { username: u, role: 'user', emoji: e };
+  _pendingReg = null; _otpCode = null;
   save();
-  document.querySelectorAll('.auth-tab').forEach(t=>t.style.display='');
-  closeOverlay('authOverlay'); updateHeaderUser(); renderSupport();
+  if (jsonbinId && jsonbinKey) pushUsersToJsonBin();
+  document.querySelectorAll('.auth-tab').forEach(t => t.style.display = '');
+  closeOverlay('authOverlay');
+  updateHeaderUser(); renderSupport();
   toast(`✓ Bienvenue, ${u} !`, 'success');
 }
+
 async function resendOTP() {
   if (!_pendingReg) return;
   _otpCode = generateOTP();
-  const btn = document.getElementById('resend-btn'); btn.disabled=true; btn.textContent='Envoi...';
+  const btn = document.getElementById('resend-btn');
+  btn.disabled = true; btn.textContent = 'Envoi...';
   try {
     emailjs.init(emailjsPublicKey);
-    await emailjs.send(emailjsServiceId, emailjsTemplateId, { to_email:_pendingReg.email, to_name:_pendingReg.u, code:_otpCode });
-    let secs=60; btn.innerHTML='Renvoyer (<span id="resend-count">60</span>s)';
-    _resendTimer=setInterval(()=>{ secs--; const el=document.getElementById('resend-count'); if(!el){clearInterval(_resendTimer);return;} if(secs<=0){clearInterval(_resendTimer);btn.disabled=false;btn.textContent='Renvoyer le code';}else el.textContent=secs; },1000);
+    await emailjs.send(emailjsServiceId, emailjsTemplateId, { to_email: _pendingReg.email, to_name: _pendingReg.u, code: _otpCode });
+    let secs = 60;
+    btn.innerHTML = 'Renvoyer (<span id="resend-count">60</span>s)';
+    _resendTimer = setInterval(() => {
+      secs--;
+      const el = document.getElementById('resend-count');
+      if (!el) { clearInterval(_resendTimer); return; }
+      if (secs <= 0) { clearInterval(_resendTimer); btn.disabled = false; btn.textContent = 'Renvoyer le code'; }
+      else el.textContent = secs;
+    }, 1000);
     toast('Code renvoyé !', 'success');
-  } catch(ex) { btn.disabled=false; btn.textContent='Renvoyer le code'; toast('Erreur d\'envoi', 'error'); }
+  } catch(ex) { btn.disabled = false; btn.textContent = 'Renvoyer le code'; toast('Erreur d\'envoi', 'error'); }
 }
 
-async function doLogin() {
+function doLogin() {
   const u = document.getElementById('l-user').value.trim();
   const p = document.getElementById('l-pass').value;
   const err = document.getElementById('l-err');
-  if (!u||!p) { err.textContent='✕ Remplissez tous les champs'; return; }
-  // Pull fresh users if GitHub configured
-  if (ghOwner && ghRepo && ghToken) {
-    const remote = await ghGet('data/users.json').catch(()=>null);
-    if (remote) users = remote;
-  }
-  if (!users[u]) { err.textContent='✕ Compte introuvable'; return; }
-  if (users[u].hash!==hashPass(p)) { err.textContent='✕ Mot de passe incorrect'; return; }
-  users[u].online=true;
-  currentUser = { username:u, role:users[u].role, emoji:users[u].emoji };
-  save(); closeOverlay('authOverlay'); updateHeaderUser(); renderSupport();
+  if (!u || !p) { err.textContent = '✕ Remplissez tous les champs'; return; }
+  if (!users[u]) { err.textContent = '✕ Compte introuvable'; return; }
+  if (users[u].hash !== hashPass(p)) { err.textContent = '✕ Mot de passe incorrect'; return; }
+  users[u].online = true;
+  currentUser = { username: u, role: users[u].role, emoji: users[u].emoji };
+  save();
+  if (jsonbinId && jsonbinKey) pushUsersToJsonBin();
+  closeOverlay('authOverlay');
+  updateHeaderUser(); renderSupport();
   toast(`Bienvenue, ${u} !`, 'success');
 }
 
 function logout() {
   setOnlineStatus(false);
-  currentUser=null; activeTicket=null;
-  saveSession(); updateHeaderUser(); renderSupport();
+  if (jsonbinId && jsonbinKey) pushUsersToJsonBin();
+  currentUser = null; activeTicket = null;
+  localStorage.removeItem('cw_currentuser');
+  updateHeaderUser(); renderSupport();
   toast('Déconnecté.', 'success');
 }
 
 // ================================================
 //  ADMIN
 // ================================================
-function openAdmin() { document.getElementById('adminOverlay').classList.add('open'); if (adminLoggedIn) return; document.getElementById('admin-pw').value=''; document.getElementById('admin-pw-err').textContent=''; }
+function openAdmin() {
+  document.getElementById('adminOverlay').classList.add('open');
+  if (adminLoggedIn) return;
+  document.getElementById('admin-pw').value = '';
+  document.getElementById('admin-pw-err').textContent = '';
+}
 
-async function loginAdmin() {
+function loginAdmin() {
   const pw = document.getElementById('admin-pw').value;
-  if (pw !== adminPassword) { document.getElementById('admin-pw-err').textContent='✕ Mot de passe incorrect'; return; }
-  adminLoggedIn=true;
-  document.getElementById('admin-login-wall').style.display='none';
-  document.getElementById('admin-panel').style.display='block';
-  document.getElementById('admin-save-bar').style.display='flex';
-  document.getElementById('discord-webhook').value=discordWebhook;
-  document.getElementById('gh-owner').value=ghOwner;
-  document.getElementById('gh-repo').value=ghRepo;
-  document.getElementById('gh-token').value=ghToken;
-  document.getElementById('ejs-pubkey').value=emailjsPublicKey;
-  document.getElementById('ejs-service').value=emailjsServiceId;
-  document.getElementById('ejs-template').value=emailjsTemplateId;
-  document.getElementById('festive-select').value=currentFestive;
-  // Pull depuis GitHub
-  if (ghOwner && ghRepo && ghToken) {
-    const ok = await pullFromGitHub();
-    if (ok) toast('Données chargées depuis GitHub', 'success');
-  }
+  if (pw !== adminPassword) { document.getElementById('admin-pw-err').textContent = '✕ Mot de passe incorrect'; return; }
+  adminLoggedIn = true;
+  document.getElementById('admin-login-wall').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+  document.getElementById('admin-save-bar').style.display = 'flex';
+  document.getElementById('discord-webhook').value = discordWebhook;
+  document.getElementById('discord-role-id').value = discordRoleId;
+  document.getElementById('site-url').value = siteBaseUrl;
+  document.getElementById('jsonbin-id').value = jsonbinId;
+  document.getElementById('jsonbin-key').value = jsonbinKey;
+  document.getElementById('ejs-pubkey').value = emailjsPublicKey;
+  document.getElementById('ejs-service').value = emailjsServiceId;
+  document.getElementById('ejs-template').value = emailjsTemplateId;
+  document.getElementById('festive-select').value = currentFestive;
   renderAdminAll();
-  // Auto-sync toutes les 15 secondes quand panel admin ouvert
-  if (syncInterval) clearInterval(syncInterval);
-  if (ghOwner && ghRepo && ghToken) {
-    syncInterval = setInterval(async () => {
-      if (adminLoggedIn) { await pullFromGitHub(); renderAdminAll(); }
-    }, 15000);
-  }
+  if (jsonbinId && jsonbinKey) startAutoSync();
 }
 
 function aTab(name) {
-  const tabs=['services','paypal','users','support-admin','team','settings'];
-  document.querySelectorAll('.a-tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===name));
-  document.querySelectorAll('.a-tab-content').forEach(c=>c.classList.remove('active'));
+  const tabs = ['services','paypal','users','support-admin','team','settings'];
+  document.querySelectorAll('.a-tab').forEach((t, i) => t.classList.toggle('active', tabs[i] === name));
+  document.querySelectorAll('.a-tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById(`atab-${name}`).classList.add('active');
 }
 
-function renderAdminAll() { renderAdminServices(); renderAdminPaypal(); renderAdminUsers(); renderAdminTickets(); renderAdminTeam(); }
+function renderAdminAll() {
+  renderAdminServices(); renderAdminPaypal(); renderAdminUsers();
+  renderAdminTickets(); renderAdminTeam();
+}
 
 function renderAdminServices() {
-  const list=document.getElementById('admin-service-list'); list.innerHTML='';
-  services.forEach((s,si)=>{
-    const div=document.createElement('div'); div.className='admin-service-item';
-    div.innerHTML=`<div class="flex-row-sb mb12"><div class="flex-row gap8"><input type="text" class="input" value="${escHtml(s.icon)}" maxlength="4" onchange="services[${si}].icon=this.value;markUnsaved();" style="width:54px;text-align:center;font-size:1.2rem;padding:6px;"><input type="text" class="input" value="${escHtml(s.name)}" onchange="services[${si}].name=this.value;markUnsaved();" style="flex:1;font-weight:700;"><button class="toggle${s.active?' on':''}" onclick="services[${si}].active=!services[${si}].active;this.classList.toggle('on',services[${si}].active);markUnsaved();"></button></div><button class="btn-danger btn-sm" style="margin-left:10px;" onclick="delService(${si})">🗑</button></div><input type="text" class="input mb12" value="${escHtml(s.desc)}" onchange="services[${si}].desc=this.value;markUnsaved();" style="width:100%;"><div class="tiers-grid">${s.tiers.map((t,ti)=>`<div class="tier-box ${TIER_CLASSES[ti]}"><label>${t.name}</label><input type="number" class="input mb12" value="${t.price}" min="0" onchange="services[${si}].tiers[${ti}].price=parseFloat(this.value)||0;markUnsaved();"><input type="text" class="input" value="${escHtml(t.desc)}" onchange="services[${si}].tiers[${ti}].desc=this.value;markUnsaved();"></div>`).join('')}</div>`;
+  const list = document.getElementById('admin-service-list');
+  list.innerHTML = '';
+  services.forEach((s, si) => {
+    const div = document.createElement('div');
+    div.className = 'admin-service-item';
+    div.innerHTML = `
+      <div class="flex-row-sb mb12">
+        <div class="flex-row gap8">
+          <input type="text" class="input" value="${escHtml(s.icon)}" maxlength="4" onchange="services[${si}].icon=this.value;markUnsaved();" style="width:54px;text-align:center;font-size:1.2rem;padding:6px;">
+          <input type="text" class="input" value="${escHtml(s.name)}" onchange="services[${si}].name=this.value;markUnsaved();" style="flex:1;font-weight:700;">
+          <button class="toggle${s.active?' on':''}" onclick="services[${si}].active=!services[${si}].active;this.classList.toggle('on',services[${si}].active);markUnsaved();"></button>
+        </div>
+        <button class="btn-danger btn-sm" style="margin-left:10px;" onclick="delService(${si})">🗑</button>
+      </div>
+      <input type="text" class="input mb12" value="${escHtml(s.desc)}" onchange="services[${si}].desc=this.value;markUnsaved();" style="width:100%;">
+      <div class="tiers-grid">
+        ${s.tiers.map((t, ti) => `
+          <div class="tier-box ${TIER_CLASSES[ti]}">
+            <label>${t.name}</label>
+            <input type="number" class="input mb12" value="${t.price}" min="0" onchange="services[${si}].tiers[${ti}].price=parseFloat(this.value)||0;markUnsaved();">
+            <input type="text" class="input" value="${escHtml(t.desc)}" onchange="services[${si}].tiers[${ti}].desc=this.value;markUnsaved();">
+          </div>`).join('')}
+      </div>
+    `;
     list.appendChild(div);
   });
 }
-function delService(si) { if (!confirm(`Supprimer "${services[si].name}" ?`)) return; services.splice(si,1); renderAdminServices(); renderAdminPaypal(); markUnsaved(); }
+
+function delService(si) {
+  if (!confirm(`Supprimer "${services[si].name}" ?`)) return;
+  services.splice(si, 1);
+  renderAdminServices(); renderAdminPaypal(); markUnsaved();
+}
+
 function addService() {
-  const name=document.getElementById('ns-name').value.trim(); const icon=document.getElementById('ns-icon').value.trim()||'📦'; const desc=document.getElementById('ns-desc').value.trim();
-  const p1=parseFloat(document.getElementById('ns-p1').value)||0; const p2=parseFloat(document.getElementById('ns-p2').value)||0; const p3=parseFloat(document.getElementById('ns-p3').value)||0;
-  const d1=document.getElementById('ns-d1').value.trim(); const d2=document.getElementById('ns-d2').value.trim(); const d3=document.getElementById('ns-d3').value.trim();
-  if (!name) { toast('Entrez un nom','error'); return; }
-  const bgs=['icon-bg-1','icon-bg-2','icon-bg-3','icon-bg-4','icon-bg-5'];
-  const id=Math.max(0,...services.map(s=>s.id))+1;
-  services.push({ id,name,icon,iconBg:bgs[id%5],desc,active:true, tiers:[{name:'Utilisable',price:p1,desc:d1,paypal:'',free:false},{name:'De bonne qualité',price:p2,desc:d2,paypal:'',free:false},{name:'Fabuleux',price:p3,desc:d3,paypal:'',free:false}] });
-  ['ns-name','ns-icon','ns-desc','ns-p1','ns-p2','ns-p3','ns-d1','ns-d2','ns-d3'].forEach(id=>document.getElementById(id).value='');
-  renderAdminServices(); renderAdminPaypal(); markUnsaved(); toast('Service ajouté !','success');
+  const name = document.getElementById('ns-name').value.trim();
+  const icon = document.getElementById('ns-icon').value.trim() || '📦';
+  const desc = document.getElementById('ns-desc').value.trim();
+  const p1 = parseFloat(document.getElementById('ns-p1').value) || 0;
+  const p2 = parseFloat(document.getElementById('ns-p2').value) || 0;
+  const p3 = parseFloat(document.getElementById('ns-p3').value) || 0;
+  const d1 = document.getElementById('ns-d1').value.trim();
+  const d2 = document.getElementById('ns-d2').value.trim();
+  const d3 = document.getElementById('ns-d3').value.trim();
+  if (!name) { toast('Entrez un nom', 'error'); return; }
+  const bgs = ['icon-bg-1','icon-bg-2','icon-bg-3','icon-bg-4','icon-bg-5'];
+  const id = Math.max(0, ...services.map(s => s.id)) + 1;
+  services.push({ id, name, icon, iconBg: bgs[id % 5], desc, active: true,
+    tiers:[{name:'Utilisable',price:p1,desc:d1,paypal:'',free:false},{name:'De bonne qualité',price:p2,desc:d2,paypal:'',free:false},{name:'Fabuleux',price:p3,desc:d3,paypal:'',free:false}] });
+  ['ns-name','ns-icon','ns-desc','ns-p1','ns-p2','ns-p3','ns-d1','ns-d2','ns-d3'].forEach(id => document.getElementById(id).value = '');
+  renderAdminServices(); renderAdminPaypal(); markUnsaved();
+  toast('Service ajouté !', 'success');
 }
 
 function renderAdminPaypal() {
-  const list=document.getElementById('admin-paypal-list'); list.innerHTML='';
-  services.forEach((s,si)=>{
-    const div=document.createElement('div'); div.className='admin-service-item';
-    const tiersHtml=s.tiers.map((t,ti)=>{
-      const isFree=t.free===true;
-      return `<div style="margin-bottom:14px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><p style="font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:${['var(--tier1)','var(--tier2)','var(--tier3)'][ti]};">${TIER_ICONS[ti]} ${t.name} — ${isFree?'<span style="color:var(--green);">GRATUIT</span>':t.price+'€'}</p><label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.72rem;font-weight:600;color:${isFree?'var(--green)':'var(--text3)'};">Gratuit <button class="toggle${isFree?' on':''}" onclick="toggleTierFree(${si},${ti},this)"></button></label></div><input type="url" class="input" value="${escHtml(t.paypal||'')}" placeholder="https://paypal.me/..." ${isFree?'disabled style="opacity:0.4;"':''} onchange="services[${si}].tiers[${ti}].paypal=this.value;markUnsaved();" style="width:100%;">${isFree?'<p style="font-size:0.68rem;color:var(--green);font-family:var(--font-mono);margin-top:4px;">✓ Ce tier est gratuit</p>':''}</div>`;
+  const list = document.getElementById('admin-paypal-list');
+  list.innerHTML = '';
+  services.forEach((s, si) => {
+    const div = document.createElement('div');
+    div.className = 'admin-service-item';
+    const tiersHtml = s.tiers.map((t, ti) => {
+      const isFree = t.free === true;
+      return `
+        <div style="margin-bottom:14px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <p style="font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:${['var(--tier1)','var(--tier2)','var(--tier3)'][ti]};">${TIER_ICONS[ti]} ${t.name} — ${isFree ? '<span style="color:var(--green);">GRATUIT</span>' : t.price + '€'}</p>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.72rem;font-weight:600;color:${isFree ? 'var(--green)' : 'var(--text3)'};">
+              <span>Gratuit</span>
+              <button class="toggle${isFree ? ' on' : ''}" onclick="toggleTierFree(${si},${ti},this)"></button>
+            </label>
+          </div>
+          <input type="url" class="input" value="${escHtml(t.paypal||'')}" placeholder="https://paypal.me/..." ${isFree ? 'disabled style="opacity:0.4;"' : ''} onchange="services[${si}].tiers[${ti}].paypal=this.value;markUnsaved();" style="width:100%;">
+          ${isFree ? '<p style="font-size:0.68rem;color:var(--green);font-family:var(--font-mono);margin-top:4px;">✓ Ce tier est gratuit — aucun paiement requis</p>' : ''}
+        </div>`;
     }).join('');
-    div.innerHTML=`<h4 style="font-size:0.88rem;font-weight:700;margin-bottom:12px;">${s.icon} ${escHtml(s.name)}</h4>${tiersHtml}`;
+    div.innerHTML = `<h4 style="font-size:0.88rem;font-weight:700;margin-bottom:12px;">${s.icon} ${escHtml(s.name)}</h4>${tiersHtml}`;
     list.appendChild(div);
   });
 }
-function toggleTierFree(si,ti,btn) { services[si].tiers[ti].free=!services[si].tiers[ti].free; btn.classList.toggle('on',services[si].tiers[ti].free); markUnsaved(); renderAdminPaypal(); }
+
+function toggleTierFree(si, ti, btn) {
+  services[si].tiers[ti].free = !services[si].tiers[ti].free;
+  btn.classList.toggle('on', services[si].tiers[ti].free);
+  markUnsaved(); renderAdminPaypal();
+}
 
 function renderAdminUsers() {
-  const list=document.getElementById('admin-user-list'); list.innerHTML='';
-  const usernames=Object.keys(users);
-  if (!usernames.length) { list.innerHTML=`<p class="empty-state">Aucun utilisateur inscrit.</p>`; return; }
-  usernames.forEach(u=>{
-    const ud=users[u]; const div=document.createElement('div'); div.className='user-admin-item';
-    div.innerHTML=`<div class="user-admin-info"><div class="user-admin-avatar">${ud.emoji||'👤'}</div><div><div class="user-admin-name">${escHtml(u)}</div><div class="user-admin-role">${ud.role} · ${ud.email||'pas d\'email'} · ${ud.online?'🟢 En ligne':'⚫ Hors ligne'}</div></div></div><div style="display:flex;flex-direction:column;gap:8px;min-width:260px;"><div class="flex-row gap8"><input type="text" class="input" value="${escHtml(ud.emoji||'👤')}" maxlength="4" style="width:54px;text-align:center;" placeholder="emoji" onchange="users['${escHtml(u)}'].emoji=this.value;save();renderAdminUsers();"><input type="email" class="input" value="${escHtml(ud.email||'')}" placeholder="Email" style="flex:1;" onchange="users['${escHtml(u)}'].email=this.value;save();"></div><div class="flex-row gap8"><select class="input" style="flex:1;" onchange="adminSetRole('${escHtml(u)}',this.value)"><option value="user"${ud.role==='user'?' selected':''}>Utilisateur</option><option value="mod"${ud.role==='mod'?' selected':''}>Modérateur</option><option value="owner"${ud.role==='owner'?' selected':''}>Owner</option></select></div><div class="flex-row gap8"><input type="password" class="input" id="pw-reset-${escHtml(u)}" placeholder="Nouveau mdp..." style="flex:1;"><button class="btn-ghost btn-sm" onclick="adminResetPass('${escHtml(u)}')">Changer</button><button class="btn-danger btn-sm" onclick="deleteUser('${escHtml(u)}')">🗑</button></div></div>`;
+  const list = document.getElementById('admin-user-list');
+  list.innerHTML = '';
+  const usernames = Object.keys(users);
+  if (!usernames.length) { list.innerHTML = `<p class="empty-state">Aucun utilisateur inscrit.</p>`; return; }
+  usernames.forEach(u => {
+    const ud = users[u];
+    const div = document.createElement('div');
+    div.className = 'user-admin-item';
+    div.innerHTML = `
+      <div class="user-admin-info">
+        <div class="user-admin-avatar">${ud.emoji || '👤'}</div>
+        <div>
+          <div class="user-admin-name">${escHtml(u)}</div>
+          <div class="user-admin-role">${ud.role} · ${ud.email || 'pas d\'email'} · ${ud.online ? '🟢' : '⚫'}</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;min-width:260px;">
+        <div class="flex-row gap8">
+          <input type="text" class="input" value="${escHtml(ud.emoji||'👤')}" maxlength="4" style="width:54px;text-align:center;" onchange="users['${escHtml(u)}'].emoji=this.value;save();if(jsonbinId&&jsonbinKey)pushUsersToJsonBin();renderAdminUsers();">
+          <input type="email" class="input" value="${escHtml(ud.email||'')}" placeholder="Email" style="flex:1;" onchange="users['${escHtml(u)}'].email=this.value;save();if(jsonbinId&&jsonbinKey)pushUsersToJsonBin();">
+        </div>
+        <div class="flex-row gap8">
+          <select class="input" style="flex:1;" onchange="adminSetRole('${escHtml(u)}',this.value)">
+            <option value="user"${ud.role==='user'?' selected':''}>Utilisateur</option>
+            <option value="mod"${ud.role==='mod'?' selected':''}>Modérateur</option>
+            <option value="owner"${ud.role==='owner'?' selected':''}>Owner</option>
+          </select>
+        </div>
+        <div class="flex-row gap8">
+          <input type="password" class="input" id="pw-reset-${escHtml(u)}" placeholder="Nouveau mdp..." style="flex:1;">
+          <button class="btn-ghost btn-sm" onclick="adminResetPass('${escHtml(u)}')">Changer</button>
+          <button class="btn-danger btn-sm" onclick="deleteUser('${escHtml(u)}')">🗑</button>
+        </div>
+      </div>
+    `;
     list.appendChild(div);
   });
 }
-function adminSetRole(u,role) { users[u].role=role; if(currentUser&&currentUser.username===u){currentUser.role=role;updateHeaderUser();} save(); renderAdminUsers(); toast(`Rôle de ${u} → ${role}`,'success'); }
-function adminResetPass(u) { const input=document.getElementById(`pw-reset-${u}`); if(!input||!input.value){toast('Entrez un mot de passe','error');return;} if(input.value.length<4){toast('Min. 4 caractères','error');return;} users[u].hash=hashPass(input.value); input.value=''; save(); toast(`Mot de passe de ${u} changé`,'success'); }
-function deleteUser(u) { if(!confirm(`Supprimer le compte "${u}" ?`))return; delete users[u]; if(currentUser&&currentUser.username===u)logout(); save(); renderAdminUsers(); toast(`Compte ${u} supprimé`,'success'); }
+
+function adminSetRole(u, role) {
+  users[u].role = role;
+  if (currentUser && currentUser.username === u) { currentUser.role = role; updateHeaderUser(); }
+  save(); if (jsonbinId && jsonbinKey) pushUsersToJsonBin(); renderAdminUsers();
+  toast(`Rôle de ${u} → ${role}`, 'success');
+}
+
+function adminResetPass(u) {
+  const input = document.getElementById(`pw-reset-${u}`);
+  if (!input || !input.value) { toast('Entrez un mot de passe', 'error'); return; }
+  if (input.value.length < 4) { toast('Min. 4 caractères', 'error'); return; }
+  users[u].hash = hashPass(input.value); input.value = '';
+  save(); if (jsonbinId && jsonbinKey) pushUsersToJsonBin();
+  toast(`Mot de passe de ${u} changé`, 'success');
+}
+
+function deleteUser(u) {
+  if (!confirm(`Supprimer le compte "${u}" ?`)) return;
+  delete users[u];
+  if (currentUser && currentUser.username === u) logout();
+  save(); if (jsonbinId && jsonbinKey) pushUsersToJsonBin();
+  renderAdminUsers(); toast(`Compte ${u} supprimé`, 'success');
+}
 
 function renderAdminTickets() {
-  const list=document.getElementById('admin-ticket-list'); list.innerHTML='';
-  const usernames=Object.keys(tickets);
-  if (!usernames.length){list.innerHTML=`<p class="empty-state">Aucun salon de support ouvert.</p>`;return;}
-  usernames.forEach(u=>{
-    const msgs=tickets[u]||[]; const last=msgs[msgs.length-1]; const ud=users[u]; const div=document.createElement('div'); div.className='ticket-admin-card';
-    div.innerHTML=`<div class="ticket-admin-card-head"><div class="flex-row gap8"><span style="font-size:1.2rem;">${ud?ud.emoji||'👤':'👤'}</span><div><div style="font-weight:700;">${escHtml(u)}</div><div style="font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);">${msgs.length} message(s) · dernier : ${last?last.time:'—'}</div></div></div><div class="flex-row gap8"><button class="btn-success btn-sm" onclick="adminViewTicket('${escHtml(u)}')">Voir & Répondre</button><button class="btn-danger btn-sm" onclick="adminDelTicket('${escHtml(u)}')">🗑</button></div></div>${last?`<div style="font-size:0.8rem;color:var(--text2);padding:8px 0 0;border-top:1px solid var(--border);margin-top:8px;font-family:var(--font-mono);">${escHtml(last.user)}: ${escHtml(last.text.slice(0,80))}${last.text.length>80?'…':''}</div>`:''}`;
+  const list = document.getElementById('admin-ticket-list');
+  list.innerHTML = '';
+  const usernames = Object.keys(tickets);
+  if (!usernames.length) { list.innerHTML = `<p class="empty-state">Aucun salon de support ouvert.</p>`; return; }
+  usernames.forEach(u => {
+    const msgs = tickets[u] || [];
+    const last = msgs[msgs.length - 1];
+    const ud = users[u];
+    const div = document.createElement('div');
+    div.className = 'ticket-admin-card';
+    div.innerHTML = `
+      <div class="ticket-admin-card-head">
+        <div class="flex-row gap8">
+          <span style="font-size:1.2rem;">${ud ? ud.emoji || '👤' : '👤'}</span>
+          <div>
+            <div style="font-weight:700;">${escHtml(u)}</div>
+            <div style="font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);">${msgs.length} message(s) · dernier : ${last ? last.time : '—'}</div>
+          </div>
+        </div>
+        <div class="flex-row gap8">
+          <button class="btn-success btn-sm" onclick="adminViewTicket('${escHtml(u)}')">Voir & Répondre</button>
+          <button class="btn-danger btn-sm" onclick="adminDelTicket('${escHtml(u)}')">🗑</button>
+        </div>
+      </div>
+      ${last ? `<div style="font-size:0.8rem;color:var(--text2);padding:8px 0 0;border-top:1px solid var(--border);margin-top:8px;font-family:var(--font-mono);">${escHtml(last.user)}: ${escHtml(last.text.slice(0,80))}${last.text.length>80?'…':''}</div>` : ''}
+    `;
     list.appendChild(div);
   });
 }
-function adminViewTicket(u) { activeTicket=u; closeOverlay('adminOverlay'); document.getElementById('support').scrollIntoView({behavior:'smooth'}); renderSupport(); toast(`Salon de ${u} ouvert`,'success'); }
-function adminDelTicket(u) { if(!confirm(`Supprimer le salon de "${u}" ?`))return; delete tickets[u]; save(); renderAdminTickets(); toast('Salon supprimé','success'); }
+
+function adminViewTicket(u) {
+  activeTicket = u;
+  closeOverlay('adminOverlay');
+  document.getElementById('support').scrollIntoView({ behavior: 'smooth' });
+  renderSupport();
+  toast(`Salon de ${u} ouvert`, 'success');
+}
+
+function adminDelTicket(u) {
+  if (!confirm(`Supprimer le salon de "${u}" ?`)) return;
+  delete tickets[u];
+  save(); renderAdminTickets(); toast('Salon supprimé', 'success');
+}
 
 function renderAdminTeam() {
-  const list=document.getElementById('admin-team-list'); list.innerHTML='';
-  team.forEach((m,i)=>{
-    const div=document.createElement('div'); div.className='user-admin-item';
-    div.innerHTML=`<div class="user-admin-info"><div class="user-admin-avatar">${m.avatar}</div><div><div class="user-admin-name">${escHtml(m.name)}</div><div class="user-admin-role">${ROLE_LABELS[m.role]||m.role} ${m.online?'🟢':'⚫'}</div></div></div><div class="flex-row gap8"><button class="toggle${m.online?' on':''}" onclick="team[${i}].online=!team[${i}].online;this.classList.toggle('on',team[${i}].online);markUnsaved();"></button><button class="btn-danger btn-sm" onclick="deleteTeamMember(${i})">🗑</button></div>`;
+  const list = document.getElementById('admin-team-list');
+  list.innerHTML = '';
+  team.forEach((m, i) => {
+    const div = document.createElement('div');
+    div.className = 'user-admin-item';
+    div.innerHTML = `
+      <div class="user-admin-info">
+        <div class="user-admin-avatar">${m.avatar}</div>
+        <div>
+          <div class="user-admin-name">${escHtml(m.name)}</div>
+          <div class="user-admin-role">${ROLE_LABELS[m.role] || m.role} ${m.online ? '🟢' : '⚫'}</div>
+        </div>
+      </div>
+      <div class="flex-row gap8">
+        <button class="toggle${m.online?' on':''}" onclick="team[${i}].online=!team[${i}].online;this.classList.toggle('on',team[${i}].online);markUnsaved();"></button>
+        <button class="btn-danger btn-sm" onclick="deleteTeamMember(${i})">🗑</button>
+      </div>
+    `;
     list.appendChild(div);
   });
 }
+
 function addTeamMember() {
-  const name=document.getElementById('nt-name').value.trim(); const avatar=document.getElementById('nt-avatar').value.trim()||'👤'; const role=document.getElementById('nt-role').value; const tagsRaw=document.getElementById('nt-tags').value; const online=document.getElementById('nt-online').value==='1'; const tags=tagsRaw.split(',').map(t=>t.trim()).filter(Boolean);
-  if (!name){toast('Entrez un pseudo','error');return;}
-  team.push({id:Date.now(),name,avatar,role,tags,online});
-  ['nt-name','nt-avatar','nt-tags'].forEach(id=>document.getElementById(id).value='');
-  renderAdminTeam(); renderTeam(); markUnsaved(); toast('Membre ajouté !','success');
+  const name = document.getElementById('nt-name').value.trim();
+  const avatar = document.getElementById('nt-avatar').value.trim() || '👤';
+  const role = document.getElementById('nt-role').value;
+  const tagsRaw = document.getElementById('nt-tags').value;
+  const online = document.getElementById('nt-online').value === '1';
+  const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+  if (!name) { toast('Entrez un pseudo', 'error'); return; }
+  team.push({ id: Date.now(), name, avatar, role, tags, online });
+  ['nt-name','nt-avatar','nt-tags'].forEach(id => document.getElementById(id).value = '');
+  renderAdminTeam(); renderTeam(); markUnsaved();
+  toast('Membre ajouté !', 'success');
 }
-function deleteTeamMember(i) { if(!confirm(`Retirer "${team[i].name}" ?`))return; team.splice(i,1); renderAdminTeam(); renderTeam(); markUnsaved(); }
+
+function deleteTeamMember(i) {
+  if (!confirm(`Retirer "${team[i].name}" ?`)) return;
+  team.splice(i, 1);
+  renderAdminTeam(); renderTeam(); markUnsaved();
+}
 
 function changeAdminPass() {
-  const p1=document.getElementById('np1').value; const p2=document.getElementById('np2').value; const msg=document.getElementById('pass-msg');
-  if (!p1){msg.textContent='✕ Entrez un mot de passe';return;} if(p1.length<4){msg.textContent='✕ Minimum 4 caractères';return;} if(p1!==p2){msg.textContent='✕ Les mots de passe ne correspondent pas';return;}
-  adminPassword=p1; save(); msg.className='ok mt8'; msg.textContent='✓ Mot de passe changé !'; document.getElementById('np1').value=''; document.getElementById('np2').value=''; setTimeout(()=>{msg.textContent='';msg.className='err';},3000);
+  const p1 = document.getElementById('np1').value;
+  const p2 = document.getElementById('np2').value;
+  const msg = document.getElementById('pass-msg');
+  if (!p1) { msg.textContent = '✕ Entrez un mot de passe'; return; }
+  if (p1.length < 4) { msg.textContent = '✕ Minimum 4 caractères'; return; }
+  if (p1 !== p2) { msg.textContent = '✕ Les mots de passe ne correspondent pas'; return; }
+  adminPassword = p1; save();
+  msg.className = 'ok mt8'; msg.textContent = '✓ Mot de passe changé !';
+  document.getElementById('np1').value = ''; document.getElementById('np2').value = '';
+  setTimeout(() => { msg.textContent = ''; msg.className = 'err'; }, 3000);
 }
 
 function saveEmailJSConfig() {
-  const pk=document.getElementById('ejs-pubkey').value.trim(); const sid=document.getElementById('ejs-service').value.trim(); const tid=document.getElementById('ejs-template').value.trim(); const msg=document.getElementById('ejs-msg');
-  if (!pk||!sid||!tid){msg.style.display='block';msg.className='err';msg.textContent='✕ Remplissez les trois champs';return;}
-  emailjsPublicKey=pk; emailjsServiceId=sid; emailjsTemplateId=tid; emailjs.init(emailjsPublicKey); saveSession();
-  msg.style.display='block'; msg.className='ok'; msg.textContent='✓ Configuration EmailJS sauvegardée !'; setTimeout(()=>{msg.style.display='none';},3000);
+  const pk = document.getElementById('ejs-pubkey').value.trim();
+  const sid = document.getElementById('ejs-service').value.trim();
+  const tid = document.getElementById('ejs-template').value.trim();
+  const msg = document.getElementById('ejs-msg');
+  if (!pk || !sid || !tid) { msg.style.display='block'; msg.className='err'; msg.textContent='✕ Remplissez les trois champs'; return; }
+  emailjsPublicKey = pk; emailjsServiceId = sid; emailjsTemplateId = tid;
+  emailjs.init(emailjsPublicKey); save();
+  msg.style.display='block'; msg.className='ok'; msg.textContent='✓ Configuration EmailJS sauvegardée !';
+  setTimeout(() => { msg.style.display='none'; }, 3000);
+}
+
+function testEmailJSConfig() {
+  const pk = document.getElementById('ejs-pubkey').value.trim();
+  const sid = document.getElementById('ejs-service').value.trim();
+  const tid = document.getElementById('ejs-template').value.trim();
+  const msg = document.getElementById('ejs-msg');
+  if (!pk || !sid || !tid) { msg.style.display='block'; msg.className='err'; msg.textContent='✕ Remplissez les trois champs d\'abord'; return; }
+  msg.style.display='block'; msg.className='ok';
+  msg.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="email" class="input" id="ejs-test-email" placeholder="votre@email.com" style="flex:1;font-family:var(--font-mono);font-size:0.8rem;">
+        <button class="btn-success btn-sm" onclick="sendEmailJSTest()">Envoyer →</button>
+        <button class="btn-ghost btn-sm" onclick="document.getElementById('ejs-msg').style.display='none';">Annuler</button>
+      </div>
+    </div>
+  `;
+  setTimeout(() => document.getElementById('ejs-test-email')?.focus(), 100);
+}
+
+async function sendEmailJSTest() {
+  const pk = document.getElementById('ejs-pubkey').value.trim();
+  const sid = document.getElementById('ejs-service').value.trim();
+  const tid = document.getElementById('ejs-template').value.trim();
+  const testEmail = document.getElementById('ejs-test-email').value.trim();
+  const msg = document.getElementById('ejs-msg');
+  if (!testEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(testEmail)) { msg.innerHTML=''; msg.className='err'; msg.textContent='✕ Entrez un email valide'; return; }
+  msg.innerHTML=''; msg.className='ok'; msg.textContent='⟳ Envoi test...';
+  try {
+    emailjs.init(pk);
+    await emailjs.send(sid, tid, { to_email: testEmail, to_name: 'Test EmailJS', code: '123456' });
+    msg.textContent='✓ Email test envoyé à ' + testEmail;
+    setTimeout(() => { msg.style.display='none'; }, 5000);
+  } catch(e) { msg.className='err'; msg.textContent='✕ Erreur : ' + (e.text || e.message || 'Vérifiez vos identifiants EmailJS'); }
 }
 
 function saveWebhook() {
-  discordWebhook=document.getElementById('discord-webhook').value.trim(); saveSession();
-  const msg=document.getElementById('webhook-msg'); msg.style.display='block'; msg.textContent='✓ Webhook sauvegardé !'; setTimeout(()=>{msg.style.display='none';},3000);
+  discordWebhook = document.getElementById('discord-webhook').value.trim();
+  discordRoleId = document.getElementById('discord-role-id').value.trim();
+  save();
+  const msg = document.getElementById('webhook-msg');
+  msg.style.display = 'block'; msg.textContent = '✓ Webhook et rôle sauvegardés !';
+  setTimeout(() => { msg.style.display = 'none'; }, 3000);
+}
+
+async function testWebhook() {
+  const wh = document.getElementById('discord-webhook').value.trim();
+  const roleId = document.getElementById('discord-role-id').value.trim();
+  const msg = document.getElementById('webhook-msg');
+  if (!wh) { msg.style.display='block'; msg.className='err'; msg.textContent='✕ Entrez d\'abord le webhook'; return; }
+  msg.style.display='block'; msg.className='ok'; msg.textContent='⟳ Test en cours...';
+
+  // Save temp values
+  const savedWh = discordWebhook; const savedRole = discordRoleId;
+  discordWebhook = wh; discordRoleId = roleId;
+
+  const testPayload = buildOrderEmbed({
+    orderId: 'CWS-TEST-001', serviceName: 'Test Service', tierName: 'Utilisable',
+    price: 0, isFree: true, buyerName: 'TestUser', buyerEmoji: '🧪', email: 'test@example.com',
+    siteUrl: siteBaseUrl, roleId
+  });
+  const testPayload2 = { ...testPayload };
+  testPayload2.embeds = [{ ...testPayload2.embeds[0], title: '🧪 Test Webhook — CapWorks Studio', color: 0x6c63ff }];
+
+  const msgId = await sendDiscordEmbed(testPayload2);
+  discordWebhook = savedWh; discordRoleId = savedRole;
+
+  if (msgId) {
+    msg.textContent = `✓ Test envoyé avec succès ! Message ID: ${msgId}`;
+    setTimeout(() => { msg.style.display = 'none'; }, 5000);
+  } else {
+    msg.className = 'err'; msg.textContent = '✕ Échec — Vérifiez l\'URL du webhook';
+  }
+}
+
+function saveSiteUrl() {
+  siteBaseUrl = document.getElementById('site-url').value.trim() || SITE_BASE_URL_DEFAULT;
+  save();
+  const msg = document.getElementById('siteurl-msg');
+  msg.style.display = 'block'; msg.textContent = '✓ URL sauvegardée !';
+  setTimeout(() => { msg.style.display = 'none'; }, 3000);
 }
 
 function resetToDefault() {
   if (!confirm('Réinitialiser TOUS les services ?')) return;
-  services=JSON.parse(JSON.stringify(DEFAULT_SERVICES)); team=JSON.parse(JSON.stringify(DEFAULT_TEAM));
-  save(); renderServices(); renderTeam(); renderAdminAll(); toast('Réinitialisé !','success');
+  services = JSON.parse(JSON.stringify(DEFAULT_SERVICES));
+  team = JSON.parse(JSON.stringify(DEFAULT_TEAM));
+  save(); renderServices(); renderTeam(); renderAdminAll();
+  toast('Réinitialisé !', 'success');
 }
 
-function markUnsaved() { unsaved=true; const s=document.getElementById('save-status'); s.textContent='● Modifications non sauvegardées'; s.className='save-status'; }
-async function saveChanges() {
-  if (ghOwner && ghRepo && ghToken) {
-    await pushAllToGitHub();
-  }
-  save(); renderServices(); renderTeam(); unsaved=false;
-  const s=document.getElementById('save-status'); s.textContent='✓ Sauvegardé'; s.className='save-status saved';
-  toast('Sauvegardé !','success');
-  setTimeout(()=>{s.textContent='Tout est à jour';s.className='save-status';},2500);
+function markUnsaved() {
+  // Always persist immediately — no manual "Save" click needed for services/team
+  save();
+  unsaved = true;
+  const s = document.getElementById('save-status');
+  if (s) { s.textContent = '✓ Sauvegardé automatiquement'; s.className = 'save-status saved'; }
 }
+
+function saveChanges() {
+  save(); renderServices(); renderTeam(); unsaved = false;
+  const s = document.getElementById('save-status');
+  s.textContent = '✓ Sauvegardé !'; s.className = 'save-status saved';
+  setTimeout(() => { s.textContent = 'Tout est à jour'; }, 2000);
+}
+
 function discardChanges() {
-  if (!confirm('Annuler les modifications ?')) return;
-  services=JSON.parse(JSON.stringify(DEFAULT_SERVICES)); team=JSON.parse(JSON.stringify(DEFAULT_TEAM)); unsaved=false;
-  renderAdminAll(); renderServices(); renderTeam();
-  const s=document.getElementById('save-status'); s.textContent='Tout est à jour'; s.className='save-status';
-  toast('Modifications annulées','success');
+  if (!confirm('Annuler les modifications et recharger depuis le stockage ?')) return;
+  load(); renderServices(); renderTeam(); renderAdminAll(); unsaved = false;
+  document.getElementById('save-status').textContent = 'Rechargé depuis le stockage';
 }
 
 // ================================================
-//  OVERLAY / TOAST HELPERS
+//  THEME & FESTIVE
 // ================================================
-function closeOverlay(id) { document.getElementById(id).classList.remove('open'); if(id==='adminOverlay'){adminLoggedIn=false;document.getElementById('admin-login-wall').style.display='block';document.getElementById('admin-panel').style.display='none';document.getElementById('admin-save-bar').style.display='none';if(syncInterval){clearInterval(syncInterval);syncInterval=null;}}} 
-function handleOvClick(e,id) { if(e.target===document.getElementById(id)) closeOverlay(id); }
-function toast(msg, type='success') {
-  const t=document.createElement('div'); t.className=`toast ${type}`;
-  t.innerHTML=`${type==='success'?'✓':'✕'} ${msg}`;
+const FESTIVE_PARTICLES = {
+  christmas: ['❄','🎄','🎅','⭐','🎁','🔔'],
+  newyear: ['🎆','🎇','✨','🥂','🎊','🎉'],
+  valentines: ['❤','💕','💖','🌹','💘','💝'],
+  easter: ['🐣','🐰','🥚','🌷','🦋','🌸'],
+  aprilfools: ['🤡','🎭','😜','🃏','🎪','🐟'],
+  halloween: ['🎃','👻','🦇','🕷','💀','🕸']
+};
+
+const FESTIVE_LABELS = {
+  christmas:'🎄 Noël', newyear:'🎆 Nouvel An', valentines:'💕 Saint-Valentin',
+  easter:'🐣 Pâques', aprilfools:'🤡 Poisson d\'avril', halloween:'🎃 Halloween'
+};
+
+const FESTIVE_BANNERS = {
+  christmas: { emoji:'🎄', text:'Joyeux Noël à tous ! 🎁', emoji2:'❄️' },
+  newyear: { emoji:'🎆', text:'Bonne Année ! Que 2027 soit incroyable', emoji2:'✨' },
+  valentines: { emoji:'❤️', text:'Joyeuse Saint-Valentin !', emoji2:'💕' },
+  easter: { emoji:'🐣', text:'Joyeuses Pâques à vous !', emoji2:'🌷' },
+  aprilfools: { emoji:'🤡', text:'Poisson d\'avril ! Méfiez-vous... 🐟', emoji2:'🎭' },
+  halloween: { emoji:'🎃', text:'Joyeux Halloween ! Boo 👻', emoji2:'🕸️' }
+};
+
+function getAutoFestiveMode() {
+  const now = new Date(); const m = now.getMonth() + 1; const d = now.getDate();
+  if (m === 12 && d >= 20) return 'christmas';
+  if (m === 1 && d <= 3) return 'newyear';
+  if (m === 2 && d >= 13 && d <= 14) return 'valentines';
+  const easter = getEasterDate(now.getFullYear());
+  const eStart = new Date(easter); eStart.setDate(eStart.getDate() - 2);
+  const eEnd = new Date(easter); eEnd.setDate(eEnd.getDate() + 1);
+  if (now >= eStart && now <= eEnd) return 'easter';
+  if (m === 4 && d === 1) return 'aprilfools';
+  if (m === 10 && d >= 28) return 'halloween';
+  return '';
+}
+
+function getEasterDate(year) {
+  const a = year % 19, b = Math.floor(year / 100), c = year % 100;
+  const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3), h = (19*a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4;
+  const l = (32 + 2*e + 2*i - h - k) % 7;
+  const m2 = Math.floor((a + 11*h + 22*l) / 451);
+  const month = Math.floor((h + l - 7*m2 + 114) / 31);
+  const day = ((h + l - 7*m2 + 114) % 31) + 1;
+  return new Date(year, month - 1, day);
+}
+
+function resolvedFestive() { return currentFestive === 'auto' ? getAutoFestiveMode() : currentFestive; }
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) { btn.textContent = currentTheme === 'light' ? '☀️' : '🌙'; }
+}
+
+function toggleTheme() {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme(); save();
+  toast(currentTheme === 'light' ? 'Mode clair activé' : 'Mode sombre activé', 'success');
+}
+
+function setFestiveMode(mode) {
+  currentFestive = mode; applyFestive(); save();
+  const infoBox = document.getElementById('festive-auto-info');
+  if (infoBox) {
+    if (mode === 'auto') {
+      const detected = getAutoFestiveMode();
+      infoBox.style.display = 'block';
+      infoBox.textContent = detected ? `✨ Aujourd'hui : ${FESTIVE_LABELS[detected]}` : `📅 Aucun événement festif détecté`;
+    } else { infoBox.style.display = 'none'; }
+  }
+  const msg = document.getElementById('festive-msg');
+  if (msg) {
+    msg.style.display = 'block'; msg.className = 'ok';
+    msg.textContent = mode ? `✓ Mode ${FESTIVE_LABELS[mode] || mode} activé !` : '✓ Mode festif désactivé';
+    setTimeout(() => { msg.style.display = 'none'; }, 3000);
+  }
+  toast(mode ? `Mode ${FESTIVE_LABELS[mode] || mode} activé !` : 'Mode festif désactivé', 'success');
+}
+
+function updateFestiveBanner(active) {
+  const banner = document.getElementById('festive-hero-banner');
+  if (!banner) return;
+  if (active && FESTIVE_BANNERS[active]) {
+    const b = FESTIVE_BANNERS[active];
+    document.getElementById('festive-banner-emoji').textContent = b.emoji;
+    document.getElementById('festive-banner-text').textContent = b.text;
+    document.getElementById('festive-banner-emoji2').textContent = b.emoji2;
+    banner.classList.add('visible');
+    banner.style.animation = 'none';
+    requestAnimationFrame(() => { banner.style.animation = ''; });
+  } else { banner.classList.remove('visible'); }
+}
+
+function applyFestive() {
+  const deco = document.getElementById('festive-deco');
+  if (deco) deco.innerHTML = '';
+  const active = resolvedFestive();
+  if (active) { document.documentElement.setAttribute('data-festive', active); spawnFestiveParticles(active); }
+  else { document.documentElement.removeAttribute('data-festive'); }
+  updateFestiveBanner(active);
+  const sel = document.getElementById('festive-select');
+  if (sel) sel.value = currentFestive;
+}
+
+function spawnFestiveParticles(active) {
+  const deco = document.getElementById('festive-deco');
+  if (!deco || !active) return;
+  const particles = FESTIVE_PARTICLES[active] || [];
+  if (!particles.length) return;
+  deco.innerHTML = '';
+  const TOTAL = 30; const INTERVAL = 380;
+  let spawned = 0;
+  function spawnOne() {
+    if (!deco.isConnected) return;
+    const p = document.createElement('span');
+    p.className = 'festive-particle';
+    p.textContent = particles[Math.floor(Math.random() * particles.length)];
+    const duration = 7 + Math.random() * 8;
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.animationDuration = duration + 's';
+    p.style.animationDelay = '0s';
+    p.style.fontSize = (0.9 + Math.random() * 1.3) + 'rem';
+    deco.appendChild(p);
+    p.addEventListener('animationend', () => {
+      p.remove();
+      if (deco.isConnected && document.documentElement.hasAttribute('data-festive')) setTimeout(spawnOne, INTERVAL);
+    }, { once: true });
+    spawned++;
+    if (spawned < TOTAL) setTimeout(spawnOne, INTERVAL);
+  }
+  spawnOne();
+}
+
+// ================================================
+//  OVERLAY HELPERS
+// ================================================
+function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
+function handleOvClick(e, id) { if (e.target === document.getElementById(id)) closeOverlay(id); }
+
+// ================================================
+//  TOAST
+// ================================================
+function toast(msg, type = 'success') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `${type === 'success' ? '✓' : '✕'} ${msg}`;
   document.body.appendChild(t);
-  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(8px)';t.style.transition='all 0.3s';setTimeout(()=>t.remove(),300);},3000);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(8px)'; t.style.transition='all 0.3s'; setTimeout(() => t.remove(), 300); }, 3000);
 }
 
 // ================================================
@@ -1683,8 +2584,11 @@ renderServices();
 renderTeam();
 renderSupport();
 updateHeaderUser();
-// Init EmailJS
-emailjs.init(emailjsPublicKey);
+if (currentUser) setOnlineStatus(true);
+if (jsonbinId && jsonbinKey) {
+  setSyncBadge('syncing', '⟳ Connexion...');
+  pullUsersFromJsonBin();
+}
 </script>
 </body>
 </html>
