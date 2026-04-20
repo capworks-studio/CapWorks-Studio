@@ -1183,6 +1183,43 @@ async function testJsonBinConnection() {
   } catch(e) { msg.className='err'; msg.textContent='✕ Impossible de joindre JSONBin'; }
 }
 
+// ================================================
+//  EMAILJS CONFIG
+// ================================================
+function saveEmailJSConfig() {
+  emailjsPublicKey = document.getElementById('ejs-pubkey').value.trim();
+  emailjsServiceId = document.getElementById('ejs-service').value.trim();
+  emailjsTemplateId = document.getElementById('ejs-template').value.trim();
+  const msg = document.getElementById('ejs-msg');
+  if (!emailjsPublicKey || !emailjsServiceId || !emailjsTemplateId) {
+    msg.style.display='block'; msg.className='err'; msg.textContent='✕ Remplissez les trois champs'; return;
+  }
+  save();
+  emailjs.init(emailjsPublicKey);
+  msg.style.display='block'; msg.className='ok'; msg.textContent='✓ Configuration EmailJS sauvegardée !';
+  setTimeout(() => { msg.style.display='none'; }, 3000);
+}
+
+async function testEmailJSConfig() {
+  const pubkey = document.getElementById('ejs-pubkey').value.trim();
+  const service = document.getElementById('ejs-service').value.trim();
+  const template = document.getElementById('ejs-template').value.trim();
+  const msg = document.getElementById('ejs-msg');
+  if (!pubkey || !service || !template) {
+    msg.style.display='block'; msg.className='err'; msg.textContent='✕ Remplissez d\'abord les trois champs'; return;
+  }
+  msg.style.display='block'; msg.className='ok'; msg.textContent='⟳ Test en cours...';
+  try {
+    emailjs.init(pubkey);
+    // Send a test email to verify the configuration works
+    await emailjs.send(service, template, { to_email: 'test@test.com', to_name: 'Test', code: '000000' });
+    msg.textContent='✓ Configuration valide — email test envoyé !';
+    setTimeout(() => { msg.style.display='none'; }, 3000);
+  } catch(e) {
+    msg.className='err'; msg.textContent=`✕ Erreur: ${e.text || e.message || 'Vérifiez vos identifiants EmailJS'}`;
+  }
+}
+
 function clearJsonBinConfig() {
   if (!confirm('Supprimer la configuration JSONBin ?')) return;
   jsonbinId = ''; jsonbinKey = '';
