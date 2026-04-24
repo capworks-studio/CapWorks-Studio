@@ -15,7 +15,7 @@ font-family:Arial;
 overflow:hidden;
 }
 
-/* 🌌 CANVAS */
+/* 🌌 BACKGROUND */
 canvas{
 position:fixed;
 inset:0;
@@ -69,10 +69,11 @@ justify-content:center;
 align-items:center;
 height:100vh;
 text-align:center;
+padding-top:60px;
 }
 
 h1{
-font-size:60px;
+font-size:62px;
 background:linear-gradient(90deg,#fff,#35d6ff,#ff3355);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
@@ -105,6 +106,30 @@ transform:translateY(-4px);
 border-color:#35d6ff;
 }
 
+/* 📦 DEPLOY BOX */
+.deploy{
+position:fixed;
+bottom:12px;
+right:12px;
+padding:12px 14px;
+border-radius:14px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(53,214,255,.2);
+backdrop-filter:blur(10px);
+font-family:monospace;
+font-size:12px;
+min-width:220px;
+}
+
+#deployStatus{
+font-weight:800;
+color:#35ff9a;
+margin-bottom:4px;
+}
+
+.deploy.warn #deployStatus{color:#ffcc00}
+.deploy.error #deployStatus{color:#ff3355}
+
 </style>
 </head>
 
@@ -125,6 +150,12 @@ border-color:#35d6ff;
 <p>Cyber infrastructure interface</p>
 </div>
 
+<!-- DEPLOY STATUS -->
+<div id="deployBox" class="deploy">
+<div id="deployStatus">🟢 Site à jour</div>
+<div id="deployInfo">Aucune modification récente</div>
+</div>
+
 <script>
 
 /* NAV SIMPLE */
@@ -140,7 +171,7 @@ document.getElementById("home").innerHTML=`
 `;
 }
 
-/* CANVAS */
+/* 🌌 NEURAL WIRES */
 const c=document.getElementById("bg");
 const ctx=c.getContext("2d");
 
@@ -151,47 +182,48 @@ c.height=innerHeight;
 addEventListener("resize",resize);
 resize();
 
-/* 🧠 PIPE NETWORK (POLYLINES CONNECTED) */
+/* PIPE NETWORK */
 let pipes=[];
 
-/* create bent pipes (L shaped paths) */
+/* create connected bent lines */
 function createPipe(){
 let x=Math.random()*c.width;
 let y=Math.random()*c.height;
 
-let segments=[];
+let segs=[];
 
-for(let i=0;i<6;i++){
+for(let i=0;i<5;i++){
 let dir=Math.random()<0.5?"x":"y";
-let len=80+Math.random()*120;
+let len=60+Math.random()*140;
 
-if(dir==="x"){
-segments.push({x1:x,y1:y,x2:x+len,y2:y});
-x+=len;
-}else{
-segments.push({x1:x,y1:y,x2:x,y2:y+len});
-y+=len;
+let x2=x, y2=y;
+
+if(dir==="x") x2+=len;
+else y2+=len;
+
+segs.push({x1:x,y1:y,x2,y2});
+
+x=x2;
+y=y2;
 }
+
+pipes.push(segs);
 }
 
-pipes.push({segments});
-}
+for(let i=0;i<12;i++)createPipe();
 
-/* initial network */
-for(let i=0;i<10;i++)createPipe();
-
-/* 💡 FLOW PARTICLES (SLOW + IRREGULAR) */
+/* CURRENT PARTICLES */
 let particles=[];
 
-function spawnParticle(){
-let p=pipes[Math.floor(Math.random()*pipes.length)];
-let s=p.segments[0];
-
+function spawn(){
+pipes.forEach(p=>{
+let s=p[0];
 particles.push({
-seg:p.segments,
+p,
 i:0,
 t:0,
 speed:0.002+Math.random()*0.003
+});
 });
 }
 
@@ -199,12 +231,12 @@ speed:0.002+Math.random()*0.003
 function loop(){
 ctx.clearRect(0,0,c.width,c.height);
 
-/* DRAW PIPES */
-ctx.lineWidth=2;
+/* WIRES */
 ctx.strokeStyle="rgba(53,214,255,.18)";
+ctx.lineWidth=2;
 
 pipes.forEach(p=>{
-p.segments.forEach(s=>{
+p.forEach(s=>{
 ctx.beginPath();
 ctx.moveTo(s.x1,s.y1);
 ctx.lineTo(s.x2,s.y2);
@@ -212,48 +244,74 @@ ctx.stroke();
 });
 });
 
-/* FLOW (SLOW IRREGULAR LIGHT) */
-particles.forEach((p,idx)=>{
+/* FLOW LIGHT */
+particles.forEach((p,i)=>{
+let seg=p.p[p.i];
 
-let seg=p.seg[p.i];
-if(!seg)return;
+if(!seg) return;
 
-/* interpolation */
 p.t+=p.speed;
 
 let x=seg.x1+(seg.x2-seg.x1)*p.t;
 let y=seg.y1+(seg.y2-seg.y1)*p.t;
 
-ctx.fillStyle="rgba(53,214,255,.9)";
+ctx.fillStyle="#35d6ff";
 ctx.beginPath();
-ctx.arc(x,y,2.2,0,Math.PI*2);
+ctx.arc(x,y,2,0,Math.PI*2);
 ctx.fill();
 
-/* move segment */
 if(p.t>=1){
 p.i++;
 p.t=0;
-
-/* end of pipe */
-if(p.i>=p.seg.length){
-particles.splice(idx,1);
+if(p.i>=p.p.length){
+particles.splice(i,1);
 }
 }
 });
 
-/* irregular spawn (NOT constant) */
-if(Math.random()>0.85){
-spawnParticle();
-}
-
-/* slowly generate more network */
-if(Math.random()>0.98){
-createPipe();
-}
+/* irregular flow */
+if(Math.random()>0.88)spawn();
 
 requestAnimationFrame(loop);
 }
 loop();
+
+/* 📦 DEPLOY SYSTEM */
+const box=document.getElementById("deployBox");
+const status=document.getElementById("deployStatus");
+const info=document.getElementById("deployInfo");
+
+function setDeploy(state,files=""){
+
+if(state==="ok"){
+box.className="deploy";
+status.textContent="🟢 Site à jour";
+info.textContent="Aucune modification récente";
+}
+
+if(state==="update"){
+box.className="deploy warn";
+status.textContent="🟡 Mise à jour détectée";
+info.textContent="Modifié dans : "+files;
+}
+
+if(state==="deploy"){
+box.className="deploy warn";
+status.textContent="⏳ Déploiement...";
+info.textContent="Publication en cours...";
+}
+
+if(state==="error"){
+box.className="deploy error";
+status.textContent="🔴 Erreur";
+info.textContent="Rollback automatique";
+}
+}
+
+/* simulation réaliste */
+setTimeout(()=>setDeploy("update","index.html, style.css"),4000);
+setTimeout(()=>setDeploy("deploy"),8000);
+setTimeout(()=>setDeploy("ok"),12000);
 
 </script>
 
