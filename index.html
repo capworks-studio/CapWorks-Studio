@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CapWorks Studio</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:#050816;color:#fff;overflow-x:hidden}canvas{position:fixed;inset:0;z-index:-1}.nav{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;background:rgba(0,0,0,.35);backdrop-filter:blur(10px);position:sticky;top:0}.logo{font-size:28px;font-weight:700;color:#35d6ff;text-shadow:0 0 12px #35d6ff}.menu a{color:#fff;text-decoration:none;margin-left:20px}.hero{min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px}.hero h1{font-size:64px;color:#35d6ff;text-shadow:0 0 20px #35d6ff}.hero p{margin-top:15px;font-size:22px;color:#ddd;max-width:700px}.btn{margin-top:30px;padding:14px 26px;border-radius:14px;background:linear-gradient(90deg,#35d6ff,#ff3355);color:#fff;text-decoration:none;font-weight:bold;box-shadow:0 0 20px rgba(53,214,255,.5)}section{padding:70px 40px}.title{font-size:42px;margin-bottom:30px;color:#35d6ff}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}.card{background:rgba(255,255,255,.06);border:1px solid rgba(53,214,255,.3);padding:24px;border-radius:22px;box-shadow:0 0 18px rgba(53,214,255,.15)}.card h3{margin-bottom:10px;color:#fff}.card p{color:#ccc}.footer{padding:30px;text-align:center;color:#999}.red{color:#ff3355}.small{font-size:14px;color:#aaa}
+html{scroll-behavior:smooth}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:#050816;color:#fff;overflow-x:hidden}canvas{position:fixed;inset:0;z-index:-1}.nav{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;background:rgba(0,0,0,.35);backdrop-filter:blur(10px);position:sticky;top:0}.logo{font-size:28px;font-weight:700;color:#35d6ff;text-shadow:0 0 12px #35d6ff}.menu a{color:#fff;text-decoration:none;margin-left:20px}.hero{min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px}.hero h1{font-size:64px;color:#35d6ff;text-shadow:0 0 20px #35d6ff}.hero p{margin-top:15px;font-size:22px;color:#ddd;max-width:700px}.btn{margin-top:30px;padding:14px 26px;border-radius:14px;background:linear-gradient(90deg,#35d6ff,#ff3355);color:#fff;text-decoration:none;font-weight:bold;box-shadow:0 0 20px rgba(53,214,255,.5)}section{padding:70px 40px}.title{font-size:42px;margin-bottom:30px;color:#35d6ff}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}.card{text-decoration:none;display:block;transition:.25s transform,.25s box-shadow}.card:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 0 28px rgba(53,214,255,.35)}.card{background:rgba(255,255,255,.06);border:1px solid rgba(53,214,255,.3);padding:24px;border-radius:22px;box-shadow:0 0 18px rgba(53,214,255,.15)}.card h3{margin-bottom:10px;color:#fff}.card p{color:#ccc}.footer{padding:30px;text-align:center;color:#999}.red{color:#ff3355}.small{font-size:14px;color:#aaa}
 </style>
 </head>
 <body>
@@ -26,9 +27,9 @@
 <section id="sites">
 <h2 class="title">Nos sites</h2>
 <div class="grid">
-<div class="card"><h3>Site 1</h3><p>Modifie ce bloc dans le HTML pour mettre ton vrai site.</p></div>
-<div class="card"><h3>Site 2</h3><p>Ajoute ici ton deuxième projet avec description.</p></div>
-<div class="card"><h3>Site 3</h3><p>Un portfolio, un jeu, un journal... fais-toi plaisir.</p></div>
+<a class="card" href="#" target="_blank"><h3>Site 1</h3><p>Modifie ce lien dans le HTML pour ouvrir ton vrai site.</p></a>
+<a class="card" href="#" target="_blank"><h3>Site 2</h3><p>Ajoute ici ton deuxième projet cliquable.</p></a>
+<a class="card" href="#" target="_blank"><h3>Site 3</h3><p>Portfolio, jeu, journal... un clic et ça part.</p></a>
 </div>
 </section>
 <section id="about">
@@ -37,7 +38,13 @@
 </section>
 <div class="footer">© 2026 CapWorks Studio</div>
 <script>
-const c=document.getElementById('bg');const x=c.getContext('2d');function r(){c.width=innerWidth;c.height=innerHeight}addEventListener('resize',r);r();function lightning(){x.clearRect(0,0,c.width,c.height);for(let i=0;i<3;i++){let sx=Math.random()*c.width;let sy=0;x.beginPath();x.moveTo(sx,sy);for(let j=0;j<10;j++){sx+=Math.random()*60-30;sy+=Math.random()*70;x.lineTo(sx,sy)}x.strokeStyle=i%2?'rgba(53,214,255,.6)':'rgba(255,51,85,.35)';x.lineWidth=2;x.shadowBlur=18;x.shadowColor=x.strokeStyle;x.stroke();}}setInterval(lightning,1400);lightning();
+const c=document.getElementById('bg');const ctx=c.getContext('2d');function size(){c.width=innerWidth;c.height=innerHeight}addEventListener('resize',size);size();
+let bolts=[];
+function makeBolt(){const startX=Math.random()*c.width;let x=startX,y=0;const pts=[[x,y]];while(y<c.height*0.75){x+=Math.random()*50-25;y+=20+Math.random()*45;pts.push([x,y]);if(Math.random()>.82){pts.push([x+(Math.random()*80-40),y+40]);}}
+bolts.push({pts,life:0,alpha:1});}
+function drawBolt(b){ctx.beginPath();ctx.moveTo(b.pts[0][0],b.pts[0][1]);for(let i=1;i<b.pts.length;i++)ctx.lineTo(b.pts[i][0],b.pts[i][1]);ctx.strokeStyle='rgba(180,230,255,'+b.alpha+')';ctx.lineWidth=2.2;ctx.shadowBlur=22;ctx.shadowColor='rgba(80,180,255,'+b.alpha+')';ctx.stroke();ctx.beginPath();ctx.moveTo(b.pts[0][0],b.pts[0][1]);for(let i=1;i<b.pts.length;i++)ctx.lineTo(b.pts[i][0],b.pts[i][1]);ctx.strokeStyle='rgba(255,255,255,'+(b.alpha*.9)+')';ctx.lineWidth=1;ctx.stroke();}
+function anim(){ctx.clearRect(0,0,c.width,c.height);if(Math.random()>.965)makeBolt();for(let i=bolts.length-1;i>=0;i--){const b=bolts[i];drawBolt(b);b.life++;b.alpha*=0.92;if(b.life>12)bolts.splice(i,1);}requestAnimationFrame(anim)}anim();
+const els=document.querySelectorAll('.hero h1,.hero p,.btn,.card,.title');const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.transform='translateY(0)';e.target.style.opacity='1';}}),{threshold:.12});els.forEach(el=>{el.style.opacity='0';el.style.transform='translateY(30px)';el.style.transition='all .8s ease';io.observe(el);});
 </script>
 </body>
 </html>
