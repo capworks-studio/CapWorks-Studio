@@ -15,7 +15,7 @@ font-family:Arial;
 overflow:hidden;
 }
 
-/* 🌌 CANVAS BACKGROUND */
+/* 🌌 CANVAS */
 canvas{
 position:fixed;
 inset:0;
@@ -51,12 +51,7 @@ text-shadow:0 0 10px #ff3355;
 }
 
 /* MENU */
-.menu{
-display:flex;
-gap:12px;
-}
-
-button{
+.menu button{
 padding:10px 16px;
 border-radius:12px;
 border:none;
@@ -64,53 +59,45 @@ cursor:pointer;
 font-weight:800;
 background:linear-gradient(90deg,#35d6ff,#ff3355);
 color:white;
-transition:.2s;
 }
 
-button:hover{
-transform:scale(1.05);
-}
-
-/* SCREENS */
+/* SCREEN */
 .screen{
-display:none;
-height:100vh;
+display:flex;
+flex-direction:column;
 justify-content:center;
 align-items:center;
-flex-direction:column;
+height:100vh;
 text-align:center;
 }
 
-.active{display:flex}
-
 h1{
-font-size:64px;
+font-size:60px;
 background:linear-gradient(90deg,#fff,#35d6ff,#ff3355);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
-/* SUB TEXT */
 p{
-opacity:.8;
+opacity:.7;
 margin-top:10px;
 }
 
 /* PROJECTS */
 .projects{
-display:none;
-flex-direction:column;
-gap:12px;
 margin-top:20px;
+display:flex;
+flex-direction:column;
+gap:10px;
 }
 
 .card{
-padding:14px 18px;
+width:260px;
+padding:14px;
 border-radius:14px;
 background:rgba(255,255,255,.05);
 border:1px solid rgba(53,214,255,.2);
 transition:.2s;
-width:260px;
 }
 
 .card:hover{
@@ -118,16 +105,6 @@ transform:translateY(-4px);
 border-color:#35d6ff;
 }
 
-/* BACK */
-.back{
-margin-top:20px;
-opacity:.7;
-cursor:pointer;
-}
-.back:hover{
-opacity:1;
-color:#35d6ff;
-}
 </style>
 </head>
 
@@ -137,42 +114,33 @@ color:#35d6ff;
 
 <header>
 <div class="logo"><span>CapWorks</span> <span>Studio</span></div>
-
 <div class="menu">
-<button onclick="show('home')">START</button>
-<button onclick="show('projects')">PROJECTS</button>
+<button onclick="showProjects()">PROJECTS</button>
 </div>
 </header>
 
 <!-- HOME -->
-<div id="home" class="screen active">
-<h1>PRESS START</h1>
-<p>Cyber studio interface</p>
+<div class="screen" id="home">
+<h1>NEURAL SYSTEM</h1>
+<p>Cyber infrastructure interface</p>
 </div>
 
-<!-- PROJECTS -->
-<div id="projects" class="screen">
-<h1>PROJECTS</h1>
+<script>
 
-<div class="projects" style="display:flex">
+/* NAV SIMPLE */
+function showProjects(){
+document.getElementById("home").innerHTML=`
+<h1>PROJECTS</h1>
+<div class="projects">
 <div class="card">🌐 SITES</div>
 <div class="card">🎮 JEUX</div>
 <div class="card">🧠 LOGICIELS</div>
 <div class="card">📦 AUTRES</div>
 </div>
-
-<div class="back" onclick="show('home')">← Retour</div>
-</div>
-
-<script>
-
-/* NAV */
-function show(id){
-document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-document.getElementById(id).classList.add('active');
+`;
 }
 
-/* 🌌 ELECTRIC BACKGROUND */
+/* CANVAS */
 const c=document.getElementById("bg");
 const ctx=c.getContext("2d");
 
@@ -183,30 +151,47 @@ c.height=innerHeight;
 addEventListener("resize",resize);
 resize();
 
-/* ⚡ LINES */
-let lines=[];
+/* 🧠 PIPE NETWORK (POLYLINES CONNECTED) */
+let pipes=[];
 
-for(let i=0;i<18;i++){
-lines.push({
-x1:Math.random()*innerWidth,
-y1:Math.random()*innerHeight,
-x2:Math.random()*innerWidth,
-y2:Math.random()*innerHeight
-});
+/* create bent pipes (L shaped paths) */
+function createPipe(){
+let x=Math.random()*c.width;
+let y=Math.random()*c.height;
+
+let segments=[];
+
+for(let i=0;i<6;i++){
+let dir=Math.random()<0.5?"x":"y";
+let len=80+Math.random()*120;
+
+if(dir==="x"){
+segments.push({x1:x,y1:y,x2:x+len,y2:y});
+x+=len;
+}else{
+segments.push({x1:x,y1:y,x2:x,y2:y+len});
+y+=len;
+}
 }
 
-/* 💡 CURRENT MOVING */
+pipes.push({segments});
+}
+
+/* initial network */
+for(let i=0;i<10;i++)createPipe();
+
+/* 💡 FLOW PARTICLES (SLOW + IRREGULAR) */
 let particles=[];
 
 function spawnParticle(){
-lines.forEach(l=>{
+let p=pipes[Math.floor(Math.random()*pipes.length)];
+let s=p.segments[0];
+
 particles.push({
-x:l.x1,
-y:l.y1,
-vx:(l.x2-l.x1)/80,
-vy:(l.y2-l.y1)/80,
-life:80
-});
+seg:p.segments,
+i:0,
+t:0,
+speed:0.002+Math.random()*0.003
 });
 }
 
@@ -214,34 +199,57 @@ life:80
 function loop(){
 ctx.clearRect(0,0,c.width,c.height);
 
-/* ELECTRIC LINES */
-ctx.strokeStyle="rgba(53,214,255,.25)";
+/* DRAW PIPES */
 ctx.lineWidth=2;
+ctx.strokeStyle="rgba(53,214,255,.18)";
 
-lines.forEach(l=>{
+pipes.forEach(p=>{
+p.segments.forEach(s=>{
 ctx.beginPath();
-ctx.moveTo(l.x1,l.y1);
-ctx.lineTo(l.x2,l.y2);
+ctx.moveTo(s.x1,s.y1);
+ctx.lineTo(s.x2,s.y2);
 ctx.stroke();
 });
-
-/* MOVING CURRENT */
-ctx.fillStyle="#35d6ff";
-
-particles.forEach((p,i)=>{
-ctx.beginPath();
-ctx.arc(p.x,p.y,2,0,Math.PI*2);
-ctx.fill();
-
-p.x+=p.vx;
-p.y+=p.vy;
-p.life--;
-
-if(p.life<=0)particles.splice(i,1);
 });
 
-/* respawn current */
-if(Math.random()>0.92)spawnParticle();
+/* FLOW (SLOW IRREGULAR LIGHT) */
+particles.forEach((p,idx)=>{
+
+let seg=p.seg[p.i];
+if(!seg)return;
+
+/* interpolation */
+p.t+=p.speed;
+
+let x=seg.x1+(seg.x2-seg.x1)*p.t;
+let y=seg.y1+(seg.y2-seg.y1)*p.t;
+
+ctx.fillStyle="rgba(53,214,255,.9)";
+ctx.beginPath();
+ctx.arc(x,y,2.2,0,Math.PI*2);
+ctx.fill();
+
+/* move segment */
+if(p.t>=1){
+p.i++;
+p.t=0;
+
+/* end of pipe */
+if(p.i>=p.seg.length){
+particles.splice(idx,1);
+}
+}
+});
+
+/* irregular spawn (NOT constant) */
+if(Math.random()>0.85){
+spawnParticle();
+}
+
+/* slowly generate more network */
+if(Math.random()>0.98){
+createPipe();
+}
 
 requestAnimationFrame(loop);
 }
