@@ -3,17 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CapWorks Studio</title>
+<title>CapWorks Studio // GAME MODE</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-
 body{
-font-family:Arial,Helvetica,sans-serif;
 background:#050816;
 color:#fff;
-overflow-x:hidden;
+font-family:Arial;
+overflow:hidden;
 cursor:none;
 }
 
@@ -24,19 +22,10 @@ inset:0;
 z-index:-3;
 }
 
-body:before{
-content:"";
-position:fixed;
-inset:0;
-background:radial-gradient(circle at top,#0b1c44 0%,#050816 50%,#02030a 100%);
-z-index:-4;
-}
-
 /* 🖱️ CURSOR */
 .cursor{
 position:fixed;
-width:16px;
-height:16px;
+width:14px;height:14px;
 border:2px solid #35d6ff;
 border-radius:50%;
 transform:translate(-50%,-50%);
@@ -45,167 +34,124 @@ box-shadow:0 0 12px #35d6ff;
 z-index:999;
 }
 
-/* NAV */
-.nav{
+/* 🎬 BOOT SCREEN */
+#boot{
+position:fixed;
+inset:0;
 display:flex;
-justify-content:space-between;
-align-items:center;
-padding:18px 42px;
-position:sticky;
-top:0;
-background:rgba(0,0,0,.3);
-backdrop-filter:blur(14px);
-border-bottom:1px solid rgba(53,214,255,.15);
-z-index:20;
-}
-
-/* LOGO GAME STYLE */
-.logo{
-font-size:22px;
-font-weight:900;
-letter-spacing:1px;
-}
-.logo span:first-child{
-color:#35d6ff;
-text-shadow:0 0 12px #35d6ff;
-}
-.logo span:last-child{
-color:#ff3355;
-text-shadow:0 0 12px #ff3355;
-}
-
-/* MENU */
-.menu a{
-text-decoration:none;
-color:#fff;
-margin-left:20px;
-font-weight:700;
-transition:.2s;
-}
-.menu a:hover{
-color:#35d6ff;
-text-shadow:0 0 10px #35d6ff;
-}
-
-/* HERO (GAME MENU STYLE) */
-.hero{
-min-height:100vh;
-display:flex;
-flex-direction:column;
 justify-content:center;
 align-items:center;
-text-align:center;
-padding:40px;
+flex-direction:column;
+background:#050816;
+z-index:50;
 }
 
-.hero h1{
-font-size:72px;
+#boot h1{
+font-size:42px;
 background:linear-gradient(90deg,#fff,#35d6ff,#ff3355);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
-animation:glow 3s infinite ease-in-out;
 }
 
-@keyframes glow{
-0%,100%{filter:brightness(1)}
-50%{filter:brightness(1.4)}
+#press{
+margin-top:20px;
+padding:12px 24px;
+border:1px solid #35d6ff;
+border-radius:12px;
+cursor:pointer;
+box-shadow:0 0 15px #35d6ff;
 }
 
-.hero p{
-margin-top:18px;
-font-size:20px;
-color:#cfdcff;
+/* ⏳ LOADING */
+#loading{
+position:fixed;
+inset:0;
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:40;
+background:#050816;
 }
 
-/* BUTTONS (GAME MENU) */
-.btns{
-display:flex;
-gap:16px;
-margin-top:30px;
-flex-wrap:wrap;
+.bar{
+width:300px;
+height:8px;
+background:rgba(255,255,255,.1);
+border-radius:10px;
+overflow:hidden;
+margin-top:20px;
+}
+
+.bar div{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#35d6ff,#ff3355);
+}
+
+/* 🎮 MENU */
+#menu{
+display:none;
+height:100vh;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+text-align:center;
+}
+
+h1{
+font-size:70px;
+background:linear-gradient(90deg,#fff,#35d6ff,#ff3355);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 .btn{
+margin-top:20px;
 padding:14px 26px;
-border-radius:14px;
+border-radius:12px;
+border:none;
 background:linear-gradient(90deg,#35d6ff,#ff3355);
-text-decoration:none;
 color:#fff;
 font-weight:800;
-box-shadow:0 0 20px rgba(53,214,255,.35);
-transition:.25s;
+cursor:pointer;
+box-shadow:0 0 20px rgba(53,214,255,.3);
+transition:.2s;
 }
 
-.btn:hover{
-transform:scale(1.05);
-}
+.btn:hover{transform:scale(1.05)}
 
-.ghost{
-background:rgba(255,255,255,.06);
-border:1px solid rgba(255,255,255,.15);
-}
-
-/* SECTIONS */
-section{
-padding:90px 42px;
-}
-
-.title{
-font-size:46px;
-margin-bottom:24px;
-color:#35d6ff;
-text-shadow:0 0 12px rgba(53,214,255,.4);
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:22px;
-}
-
-.card{
-background:rgba(255,255,255,.05);
-padding:24px;
-border-radius:20px;
-border:1px solid rgba(53,214,255,.15);
-transition:.25s;
-text-decoration:none;
-color:#fff;
-}
-
-.card:hover{
-transform:translateY(-8px);
-border-color:#35d6ff;
-box-shadow:0 0 24px rgba(53,214,255,.25);
-}
-
-/* 🧠 HACK VIBE (subtil) */
-.hackline{
-position:fixed;
-bottom:12px;
-left:12px;
-font-family:monospace;
-font-size:12px;
-color:#35ff9a;
+.small{
+margin-top:12px;
 opacity:.7;
 }
 
-/* fade */
-.reveal{
-opacity:0;
-transform:translateY(30px);
-transition:1s;
-}
-.show{
-opacity:1;
-transform:translateY(0);
+/* 🧠 PANELS */
+.panel{
+display:none;
+padding:40px;
+text-align:center;
 }
 
-@media(max-width:800px){
-.hero h1{font-size:46px}
-.menu{display:none}
+.card{
+margin-top:20px;
+padding:20px;
+border:1px solid rgba(53,214,255,.2);
+border-radius:16px;
+background:rgba(255,255,255,.05);
 }
 
+/* glitch */
+.glitch{
+animation:glitch .2s infinite;
+}
+@keyframes glitch{
+0%{transform:translate(0)}
+25%{transform:translate(1px,-1px)}
+50%{transform:translate(-1px,1px)}
+75%{transform:translate(1px,1px)}
+100%{transform:translate(0)}
+}
 </style>
 </head>
 
@@ -214,53 +160,49 @@ transform:translateY(0);
 <canvas id="bg"></canvas>
 <div class="cursor" id="cursor"></div>
 
-<nav class="nav">
-<div class="logo"><span>CapWorks</span> <span>Studio</span></div>
-<div class="menu">
-<a href="#home">Accueil</a>
-<a href="#games">Projets</a>
-<a href="#services">Services</a>
-<a href="#about">Studio</a>
+<!-- 🎬 BOOT -->
+<div id="boot">
+<h1>CapWorks Studio</h1>
+<div id="press">PRESS START</div>
 </div>
-</nav>
 
-<section class="hero" id="home">
-<h1 class="reveal">START GAME</h1>
-<p class="reveal">Studio créatif inspiré des interfaces de jeu vidéo futuriste</p>
-
-<div class="btns reveal">
-<a class="btn" href="#games">PLAY</a>
-<a class="btn ghost" href="#about">OPTIONS</a>
+<!-- ⏳ LOADING -->
+<div id="loading">
+<h2>Loading world...</h2>
+<div class="bar"><div id="bar"></div></div>
 </div>
-</section>
 
-<section id="games">
-<h2 class="title reveal">Projets</h2>
-<div class="grid">
-<a class="card reveal"><h3>Aranky</h3><p>Multiplayer fun world</p></a>
-<a class="card reveal"><h3>CapNews</h3><p>Cyber journal system</p></a>
-<a class="card reveal"><h3>Bosto</h3><p>Construction sim tools</p></a>
+<!-- 🎮 MENU -->
+<div id="menu">
+<h1 id="title">START GAME</h1>
+<button class="btn" onclick="openPanel('play')">PLAY</button>
+<button class="btn" onclick="openPanel('proj')">PROJECTS</button>
+<button class="btn" onclick="openPanel('opt')">OPTIONS</button>
+<div class="small">CapWorks Engine v1.0</div>
 </div>
-</section>
 
-<section id="services">
-<h2 class="title reveal">Services</h2>
-<div class="grid">
-<div class="card reveal"><h3>UI Design</h3><p>Game-style interfaces</p></div>
-<div class="card reveal"><h3>Dev</h3><p>Fast & optimized</p></div>
-<div class="card reveal"><h3>Concept</h3><p>World building</p></div>
+<!-- PANELS -->
+<div id="play" class="panel">
+<h1>GAME MODE</h1>
+<div class="card">🎮 Simulation active</div>
+<button class="btn" onclick="back()">BACK</button>
 </div>
-</section>
 
-<section id="about">
-<h2 class="title reveal">Studio</h2>
-<div class="card reveal">
-<h3>CapWorks Studio</h3>
-<p>On crée des expériences web inspirées des jeux vidéo & univers cyberpunk.</p>
+<div id="proj" class="panel">
+<h1>PROJECTS</h1>
+<div class="card">Aranky - Multiplayer world</div>
+<div class="card">CapNews - Cyber journal</div>
+<div class="card">Bosto - Simulation tools</div>
+<button class="btn" onclick="back()">BACK</button>
 </div>
-</section>
 
-<div class="hackline" id="hack">[SYS] Booting interface...</div>
+<div id="opt" class="panel">
+<h1>OPTIONS</h1>
+<div class="card">Graphics: ULTRA</div>
+<div class="card">Neon: ON</div>
+<div class="card">Rain: ACTIVE</div>
+<button class="btn" onclick="back()">BACK</button>
+</div>
 
 <script>
 
@@ -271,7 +213,7 @@ cursor.style.left=e.clientX+"px";
 cursor.style.top=e.clientY+"px";
 });
 
-/* canvas rain + light hack vibe */
+/* 🌧️ RAIN */
 const c=document.getElementById("bg");
 const ctx=c.getContext("2d");
 
@@ -279,9 +221,8 @@ function resize(){c.width=innerWidth;c.height=innerHeight}
 addEventListener("resize",resize);
 resize();
 
-/* rain */
 let rain=[];
-for(let i=0;i<180;i++){
+for(let i=0;i<200;i++){
 rain.push({
 x:Math.random()*c.width,
 y:Math.random()*c.height,
@@ -290,11 +231,9 @@ s:Math.random()*2+1.5
 });
 }
 
-/* draw */
 function loop(){
 ctx.clearRect(0,0,c.width,c.height);
 
-/* rain */
 ctx.strokeStyle="rgba(53,214,255,.2)";
 for(let r of rain){
 ctx.beginPath();
@@ -306,40 +245,50 @@ r.y+=r.s;
 if(r.y>c.height){r.y=-20;r.x=Math.random()*c.width}
 }
 
-/* subtle glitch flicker */
-if(Math.random()>0.995){
-document.body.style.filter="brightness(1.4)";
-setTimeout(()=>document.body.style.filter="none",80);
-}
-
 requestAnimationFrame(loop);
 }
 loop();
 
-/* reveal */
-const io=new IntersectionObserver(e=>{
-e.forEach(el=>{
-if(el.isIntersecting)el.target.classList.add("show")
-});
-},{threshold:.15});
+/* 🎬 START */
+document.getElementById("press").onclick=()=>{
+document.getElementById("boot").style.display="none";
+document.getElementById("loading").style.display="flex";
 
-document.querySelectorAll(".reveal").forEach(e=>io.observe(e));
+let bar=document.getElementById("bar");
+let p=0;
 
-/* fake hack line */
-const hack=document.getElementById("hack");
-const lines=[
-"[SYS] Initializing CapWorks engine...",
-"[NET] Secure connection OK",
-"[UI] Loading game menu...",
-"[OK] Ready to play",
-"[SCAN] No threats detected"
-];
+let load=setInterval(()=>{
+p+=2;
+bar.style.width=p+"%";
 
-let i=0;
+if(p>=100){
+clearInterval(load);
+document.getElementById("loading").style.display="none";
+document.getElementById("menu").style.display="flex";
+document.getElementById("title").classList.add("glitch");
+}
+},30);
+};
+
+/* 🎮 NAV */
+function openPanel(id){
+document.getElementById("menu").style.display="none";
+document.querySelectorAll(".panel").forEach(p=>p.style.display="none");
+document.getElementById(id).style.display="block";
+}
+
+function back(){
+document.querySelectorAll(".panel").forEach(p=>p.style.display="none");
+document.getElementById("menu").style.display="flex";
+}
+
+/* random glitch */
 setInterval(()=>{
-hack.textContent=lines[i%lines.length];
-i++;
-},2000);
+if(Math.random()>0.97){
+document.body.style.filter="brightness(1.4)";
+setTimeout(()=>document.body.style.filter="none",80);
+}
+},500);
 
 </script>
 
