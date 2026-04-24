@@ -12,7 +12,7 @@
 <canvas id="bg"></canvas>
 <nav class="nav">
 <div class="logo"><img src="CWS_Logo.png" alt="CapWorks Studio"></div>
-<div class="menu">
+<label style="display:flex;align-items:center;gap:8px;margin-right:18px;font-size:14px;color:#cfe8ff;"><input id="stormToggle" type="checkbox" checked> Éclairs</label><div class="menu">
 <a href="#home">Accueil</a>
 <a href="#sites">Nos sites</a>
 <a href="#services">Services</a>
@@ -35,10 +35,9 @@
 <section id="sites">
 <h2 class="title reveal">Nos sites</h2>
 <div class="grid">
-<a class="card reveal" href="#" target="_blank"><h3>Projet One</h3><p>Remplace ce lien par ton site principal.</p></a>
-<a class="card reveal" href="#" target="_blank"><h3>Projet Two</h3><p>Ajoute ici un jeu, portfolio ou journal.</p></a>
-<a class="card reveal" href="#" target="_blank"><h3>Projet Three</h3><p>Un site qui envoie du lourd. Un clic suffit.</p></a>
-<a class="card reveal" href="#" target="_blank"><h3>Projet Four</h3><p>Encore un projet ? La place est prête.</p></a>
+<a class="card reveal" href="https://capworks-studio.github.io/Aranky" target="_blank"><h3>Aranky</h3><p>Jouer avec vos amis sur Aranky !</p></a>
+<a class="card reveal" href="https://capworks-studio.github.io/CapNews" target="_blank"><h3>CapNews</h3><p>Un journal motivant chaque jour à 18h !</p></a>
+<a class="card reveal" href="https://capworks-studio.github.io/Bosto" target="_blank"><h3>Bosto</h3><p>Le site d'une entreprise pour tout ce qui est chantier !</p></a>
 </div>
 </section>
 <section id="services">
@@ -53,9 +52,10 @@
 <h2 class="title reveal">Le Studio</h2>
 <div class="card reveal"><h3>Pourquoi nous ?</h3><p>CapWorks Studio transforme les idées simples en projets mémorables. Nous aimons le style, la vitesse et les expériences qui claquent visuellement.</p></div>
 </section>
-<div class="footer">© 2026 CapWorks Studio — Build something electric ⚡</div>
+<div class="footer">© 2026 CapWorks Studio — Tous droits réservés — Build something electric ⚡</div>
 <script>
-const c=document.getElementById('bg'),ctx=c.getContext('2d');function rs(){c.width=innerWidth;c.height=innerHeight}addEventListener('resize',rs);rs();let bolts=[];function bolt(){let x=Math.random()*c.width,y=0,p=[[x,y]];while(y<c.height*.85){x+=Math.random()*60-30;y+=18+Math.random()*42;p.push([x,y]);if(Math.random()>.84)p.push([x+(Math.random()*90-45),y+35])}bolts.push({p,a:1,l:0})}function draw(b){ctx.beginPath();ctx.moveTo(b.p[0][0],b.p[0][1]);for(let i=1;i<b.p.length;i++)ctx.lineTo(b.p[i][0],b.p[i][1]);ctx.strokeStyle='rgba(170,230,255,'+b.a+')';ctx.lineWidth=2.4;ctx.shadowBlur=26;ctx.shadowColor='rgba(53,214,255,'+b.a+')';ctx.stroke();ctx.beginPath();ctx.moveTo(b.p[0][0],b.p[0][1]);for(let i=1;i<b.p.length;i++)ctx.lineTo(b.p[i][0],b.p[i][1]);ctx.strokeStyle='rgba(255,255,255,'+(b.a*.95)+')';ctx.lineWidth=1;ctx.stroke()}function stars(){for(let i=0;i<40;i++){ctx.fillStyle='rgba(255,255,255,.04)';ctx.fillRect(Math.random()*c.width,Math.random()*c.height,2,2)}}function loop(){ctx.clearRect(0,0,c.width,c.height);stars();if(Math.random()>.97)bolt();for(let i=bolts.length-1;i>=0;i--){draw(bolts[i]);bolts[i].a*=0.9;bolts[i].l++;if(bolts[i].l>14)bolts.splice(i,1)}requestAnimationFrame(loop)}loop();const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show')}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const c=document.getElementById('bg'),ctx=c.getContext('2d');function rs(){c.width=innerWidth;c.height=innerHeight}addEventListener('resize',rs);rs();let bolts=[];function bolt(){let x=Math.random()*c.width,y=0,p=[[x,y]];while(y<c.height*.85){x+=Math.random()*60-30;y+=18+Math.random()*42;p.push([x,y]);if(Math.random()>.84)p.push([x+(Math.random()*90-45),y+35])}bolts.push({p,a:1,l:0})}function draw(b){ctx.beginPath();ctx.moveTo(b.p[0][0],b.p[0][1]);for(let i=1;i<b.p.length;i++)ctx.lineTo(b.p[i][0],b.p[i][1]);ctx.strokeStyle='rgba(170,230,255,'+b.a+')';ctx.lineWidth=2.4;ctx.shadowBlur=26;ctx.shadowColor='rgba(53,214,255,'+b.a+')';ctx.stroke();ctx.beginPath();ctx.moveTo(b.p[0][0],b.p[0][1]);for(let i=1;i<b.p.length;i++)ctx.lineTo(b.p[i][0],b.p[i][1]);ctx.strokeStyle='rgba(255,255,255,'+(b.a*.95)+')';ctx.lineWidth=1;ctx.stroke()}function stars(){for(let i=0;i<40;i++){ctx.fillStyle='rgba(255,255,255,.04)';ctx.fillRect(Math.random()*c.width,Math.random()*c.height,2,2)}}let lightningEnabled=true;document.getElementById('stormToggle').addEventListener('change',e=>lightningEnabled=e.target.checked);
+function loop(){ctx.clearRect(0,0,c.width,c.height);stars();if(lightningEnabled && Math.random()>.97)bolt();for(let i=bolts.length-1;i>=0;i--){if(lightningEnabled) draw(bolts[i]);bolts[i].a*=0.9;bolts[i].l++;if(bolts[i].l>14)bolts.splice(i,1)}requestAnimationFrame(loop)}loop();const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show')}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
