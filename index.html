@@ -6,27 +6,28 @@
 <title>CapWorks Studio — Projets</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-<!-- Firebase SDK -->
+<!-- Firebase SDK v12 -->
 <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getFirestore, collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  import { initializeApp }    from 'https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js';
+  import { getFirestore, collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment }
+    from 'https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js';
 
-  // ╔══════════════════════════════════════════════╗
-  // ║  REMPLACE ICI par ton firebaseConfig         ║
-  // ╚══════════════════════════════════════════════╝
   const firebaseConfig = {
-    apiKey: "REPLACE_API_KEY",
-    authDomain: "REPLACE.firebaseapp.com",
-    projectId: "REPLACE_PROJECT_ID",
-    storageBucket: "REPLACE.appspot.com",
-    messagingSenderId: "REPLACE",
-    appId: "REPLACE"
+    apiKey:            "AIzaSyAJOq0GjS7g75RPyL5WsqKogXp9K1Qja7M",
+    authDomain:        "capworks-studio-fr.firebaseapp.com",
+    databaseURL:       "https://capworks-studio-fr-default-rtdb.firebaseio.com",
+    projectId:         "capworks-studio-fr",
+    storageBucket:     "capworks-studio-fr.firebasestorage.app",
+    messagingSenderId: "466455700751",
+    appId:             "1:466455700751:web:6ca548df73dd8e47b70a7a",
+    measurementId:     "G-8DMZPBS6J3"
   };
 
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  window.__db = db;
-  window.__firebase = { collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment };
+  const db  = getFirestore(app);
+
+  window.__db        = db;
+  window.__firebase  = { collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, increment };
   window.__firebaseReady = true;
   document.dispatchEvent(new Event('firebase-ready'));
 </script>
@@ -1708,18 +1709,24 @@ function buildProjectForm(cat, proj) {
   } else if (cat === 'games') {
     fields += `
       <div class="form-grid2">
-        <div class="form-group"><label>Lien de téléchargement</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="https://..."></div>
-        <div class="form-group"><label>Lien pour jouer (web)</label><input class="inp" id="pf-playUrl" value="${v('playUrl')}" placeholder="https://..."></div>
+        <div class="form-group"><label>🔗 Lien de téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub Releases, Google Drive, Mega, itch.io..."></div>
+        <div class="form-group"><label>▶ Lien pour jouer en ligne (web)</label><input class="inp" id="pf-playUrl" value="${v('playUrl')}" placeholder="https://itch.io/... ou lien web"></div>
+      </div>
+      <div style="background:rgba(108,99,255,.06);border:1px solid rgba(108,99,255,.18);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:.7rem;color:var(--accent);font-family:var(--mono);">
+        💡 Hébergeurs recommandés : <strong>itch.io</strong> (idéal pour jeux), <strong>GitHub Releases</strong>, <strong>Mega.nz</strong>, <strong>Google Drive</strong>
       </div>
       <div class="form-grid2">
         <div class="form-group"><label>Plateformes (virgule)</label><input class="inp" id="pf-platforms" value="${v('platforms')}" placeholder="PC, Android, iOS, Web"></div>
-        <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="Unity, Godot..."></div>
+        <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="Unity, Godot, Pygame..."></div>
       </div>`;
   } else if (cat === 'software') {
     fields += `
       <div class="form-grid2">
-        <div class="form-group"><label>Lien de téléchargement</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="https://..."></div>
-        <div class="form-group"><label>URL infos (optionnel)</label><input class="inp" id="pf-url" value="${v('url')}" placeholder="https://..."></div>
+        <div class="form-group"><label>🔗 Lien de téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub Releases, Google Drive, Mega..."></div>
+        <div class="form-group"><label>🌐 URL page info (optionnel)</label><input class="inp" id="pf-url" value="${v('url')}" placeholder="https://..."></div>
+      </div>
+      <div style="background:rgba(0,245,147,.05);border:1px solid rgba(0,245,147,.15);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:.7rem;color:var(--green);font-family:var(--mono);">
+        💡 Hébergeurs recommandés : <strong>GitHub Releases</strong> (versioning), <strong>Mega.nz</strong>, <strong>Google Drive</strong>
       </div>
       <div class="form-grid3">
         <div class="form-group"><label>Version</label><input class="inp" id="pf-version" value="${v('version')}" placeholder="1.0.0"></div>
@@ -1729,8 +1736,11 @@ function buildProjectForm(cat, proj) {
   } else if (cat === 'animations') {
     fields += `
       <div class="form-grid2">
-        <div class="form-group"><label>Lien de téléchargement</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="https://..."></div>
-        <div class="form-group"><label>Logiciel utilisé</label><input class="inp" id="pf-software" value="${v('software')}" placeholder="After Effects, Blender..."></div>
+        <div class="form-group"><label>🔗 Lien de téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="Google Drive, Mega, WeTransfer..."></div>
+        <div class="form-group"><label>🎨 Logiciel utilisé</label><input class="inp" id="pf-software" value="${v('software')}" placeholder="After Effects, Blender, DaVinci..."></div>
+      </div>
+      <div style="background:rgba(255,106,176,.05);border:1px solid rgba(255,106,176,.18);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:.7rem;color:var(--pink);font-family:var(--mono);">
+        💡 Pour partager la vidéo : <strong>YouTube</strong> (coller le lien YT ci-dessus), ou héberger sur <strong>Google Drive / Mega</strong> pour le DL fichier source
       </div>
       <div class="form-grid2">
         <div class="form-group"><label>Durée</label><input class="inp" id="pf-duration" value="${v('duration')}" placeholder="0:42"></div>
@@ -1758,8 +1768,8 @@ function buildProjectForm(cat, proj) {
         <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="Python, PyTorch..."></div>
       </div>
       <div class="form-grid2">
-        <div class="form-group"><label>Lien Demo</label><input class="inp" id="pf-demoUrl" value="${v('demoUrl')}" placeholder="https://..."></div>
-        <div class="form-group"><label>Lien téléchargement</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="https://..."></div>
+        <div class="form-group"><label>🔗 Lien Demo en ligne</label><input class="inp" id="pf-demoUrl" value="${v('demoUrl')}" placeholder="https://huggingface.co/... ou lien demo"></div>
+        <div class="form-group"><label>⬇ Lien téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub, HuggingFace, Google Drive..."></div>
       </div>
       <div class="form-group"><label>Fonctionnalités (une par ligne)</label>
         <textarea class="inp" id="pf-features" rows="4" placeholder="Génère du texte&#10;Analyse des images&#10;...">${v('features')}</textarea>
@@ -1770,8 +1780,15 @@ function buildProjectForm(cat, proj) {
     const rootFiles = proj?.files || [];
     fields += `
       <div class="form-grid2">
-        <div class="form-group"><label>URL de téléchargement ZIP *</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="https://github.com/.../archive.zip"></div>
-        <div class="form-group"><label>Taille du ZIP</label><input class="inp" id="pf-size" value="${v('size')}" placeholder="12.4 MB"></div>
+        <div class="form-group"><label>🔗 Lien de téléchargement ZIP externe *</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub Releases, Google Drive, Mega, OneDrive..."></div>
+        <div class="form-group"><label>💾 Taille du ZIP</label><input class="inp" id="pf-size" value="${v('size')}" placeholder="12.4 MB"></div>
+      </div>
+      <div style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.18);border-radius:9px;padding:10px 14px;margin-bottom:14px;font-size:.72rem;color:var(--cyan);font-family:var(--mono);line-height:1.8;">
+        💡 <strong>Hébergeurs recommandés :</strong><br>
+        • <strong>GitHub Releases</strong> — Lien direct stable, parfait pour les projets publics<br>
+        • <strong>Google Drive</strong> — Partage → "Tout le monde avec le lien" → copier le lien de téléchargement direct<br>
+        • <strong>Mega.nz</strong> — Gratuit, 20 GB, liens permanents<br>
+        • <strong>OneDrive / Dropbox</strong> — Remplacer <code>?dl=0</code> par <code>?dl=1</code> pour le DL direct
       </div>
       <div class="form-grid2">
         <div class="form-group"><label>URL preview (optionnel)</label><input class="inp" id="pf-previewUrl" value="${v('previewUrl')}" placeholder="https://..."></div>
