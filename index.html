@@ -3,16 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CapWorks Studio // Game OS</title>
+<title>CapWorks Studio // Game OS Clean</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{
-font-family:Arial;
 background:#050816;
 color:#fff;
+font-family:Arial;
 overflow:hidden;
-cursor:none;
 }
 
 /* 🖱️ CURSOR */
@@ -25,14 +24,6 @@ transform:translate(-50%,-50%);
 pointer-events:none;
 box-shadow:0 0 10px #35d6ff;
 z-index:999;
-}
-
-/* 🌌 BACKGROUND */
-canvas{
-position:fixed;
-inset:0;
-z-index:-3;
-transition:filter .8s;
 }
 
 /* HEADER */
@@ -51,63 +42,121 @@ border-bottom:1px solid rgba(53,214,255,.2);
 .logo span:last-child{color:#ff3355;font-weight:900}
 
 /* MENU */
-.menu{
-display:flex;
-gap:12px;
-}
-
-button{
-padding:10px 16px;
+.menu button{
+margin-left:10px;
+padding:10px 14px;
 border-radius:12px;
 border:none;
-font-weight:800;
 cursor:pointer;
+font-weight:800;
 background:linear-gradient(90deg,#35d6ff,#ff3355);
 color:#fff;
+}
+
+/* 🌦️ WEATHER CARROUSEL */
+.weather{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.arrow{
+background:rgba(255,255,255,.1);
+border:1px solid rgba(255,255,255,.2);
+padding:6px 10px;
+border-radius:10px;
+cursor:pointer;
+}
+
+/* 🌧️ BACKGROUND */
+canvas{
+position:fixed;
+inset:0;
+z-index:-3;
+}
+
+/* 🌦️ EFFECTS */
+.sunFlash{
+animation:sun 2s;
+}
+@keyframes sun{
+0%{filter:brightness(1)}
+20%{filter:brightness(1.5)}
+100%{filter:brightness(1)}
+}
+
+/* 🧠 TROLL SWITCH */
+.switch{
+display:flex;
+align-items:center;
+gap:8px;
+cursor:pointer;
+}
+
+.toggle{
+width:44px;
+height:22px;
+background:rgba(255,255,255,.15);
+border-radius:999px;
+position:relative;
+border:1px solid rgba(255,255,255,.2);
+}
+
+.knob{
+width:18px;
+height:18px;
+background:#35d6ff;
+border-radius:50%;
+position:absolute;
+top:1px;
+left:2px;
 transition:.2s;
 }
 
-button:hover{transform:scale(1.05)}
-
-.secondary{
-background:rgba(255,255,255,.06);
-border:1px solid rgba(255,255,255,.15);
-}
-
-/* 🧠 PANELS */
-.page{
-display:none;
-height:calc(100vh - 70px);
-padding:30px;
-text-align:center;
-}
-
-.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
-
-/* 🌦️ WEATHER */
-.weatherBtn{
-position:fixed;
-bottom:10px;
-right:10px;
-display:flex;
-flex-direction:column;
-gap:6px;
-}
-
-.smallBtn{
-padding:8px 10px;
-font-size:12px;
+.on .knob{
+left:22px;
+background:#ff3355;
 }
 
 /* GAME */
+.game-area{
+display:none;
+height:calc(100vh - 70px);
+position:relative;
+}
+
 .target{
 position:absolute;
-width:28px;
-height:28px;
+width:26px;height:26px;
 border-radius:50%;
 background:#35d6ff;
-box-shadow:0 0 15px #35d6ff;
+box-shadow:0 0 12px #35d6ff;
 cursor:pointer;
+}
+
+/* POLICE */
+.police{
+position:absolute;
+width:30px;height:30px;
+background:#ff3355;
+border-radius:6px;
+box-shadow:0 0 12px #ff3355;
+}
+
+/* PROJECT WINDOWS */
+.window{
+position:absolute;
+width:220px;
+padding:14px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(53,214,255,.2);
+border-radius:14px;
+backdrop-filter:blur(10px);
+transition:.3s;
+}
+
+.window:hover{
+transform:scale(1.05);
 }
 
 /* HUD */
@@ -118,31 +167,8 @@ left:10px;
 font-family:monospace;
 font-size:12px;
 color:#35ff9a;
-opacity:.8;
 }
 
-/* 🌪️ WEATHER EFFECTS */
-.weather-rain canvas{filter:brightness(1.2)}
-.weather-snow canvas{filter:contrast(1.2)}
-.weather-storm canvas{filter:brightness(1.6)}
-.weather-sun canvas{filter:sepia(.2) brightness(1.3)}
-.weather-hail canvas{filter:contrast(1.5)}
-
-/* TROLL MODE */
-.troll button{
-position:relative;
-transition:.2s;
-}
-
-/* glitch */
-.glitchFlash{
-animation:flash .2s;
-}
-@keyframes flash{
-0%{filter:brightness(1)}
-50%{filter:brightness(2)}
-100%{filter:brightness(1)}
-}
 </style>
 </head>
 
@@ -154,53 +180,22 @@ animation:flash .2s;
 <header>
 <div class="logo"><span>CapWorks</span> <span>Studio</span></div>
 
-<div class="menu">
-<button onclick="openPage('home')">HOME</button>
-<button onclick="openPage('projects')">PROJECTS</button>
-<button onclick="openPage('game')">GAME</button>
-<button class="secondary" onclick="toggleTroll()">TROLL MODE</button>
+<div class="weather">
+<button class="arrow" onclick="prevWeather()">◀</button>
+<div id="weatherLabel">RAIN</div>
+<button class="arrow" onclick="nextWeather()">▶</button>
+</div>
+
+<div class="switch" onclick="toggleTroll()">
+<div class="toggle" id="toggle"><div class="knob"></div></div>
+TROLL
 </div>
 </header>
 
-<!-- HOME -->
-<div id="home" class="page active">
-<h1>GAME OS READY</h1>
-<p>Change météo, jouer, explorer projets</p>
-</div>
-
-<!-- PROJECTS -->
-<div id="projects" class="page">
-<h1>PROJECTS</h1>
-
-<div class="menu" style="margin-top:20px">
-<button onclick="projectTab('sites')">SITES</button>
-<button onclick="projectTab('games')">JEUX</button>
-<button onclick="projectTab('soft')">LOGICIELS</button>
-<button onclick="projectTab('other')">AUTRES</button>
-</div>
-
-<div id="sites" class="card">Aranky / CapNews</div>
-<div id="games" class="card" style="display:none">Mini games system</div>
-<div id="soft" class="card" style="display:none">Tools & apps</div>
-<div id="other" class="card" style="display:none">Experiments</div>
-</div>
-
-<!-- GAME -->
-<div id="game" class="page">
-<h1>DATA HUNTERS</h1>
-<p>Attrape les voleurs avant la police ⚡</p>
-</div>
+<!-- GAME AREA -->
+<div class="game-area" id="game"></div>
 
 <div id="hud">[SYS] Ready</div>
-
-<!-- 🌦️ WEATHER CONTROL -->
-<div class="weatherBtn">
-<button class="smallBtn" onclick="setWeather('rain')">🌧️ Rain</button>
-<button class="smallBtn" onclick="setWeather('storm')">⚡ Storm</button>
-<button class="smallBtn" onclick="setWeather('sun')">☀️ Sun</button>
-<button class="smallBtn" onclick="setWeather('snow')">❄️ Snow</button>
-<button class="smallBtn" onclick="setWeather('hail')">🌨️ Hail</button>
-</div>
 
 <script>
 
@@ -214,56 +209,75 @@ cursor.style.top=e.clientY+"px";
 /* CANVAS */
 const c=document.getElementById("bg");
 const ctx=c.getContext("2d");
-
 function resize(){c.width=innerWidth;c.height=innerHeight}
 addEventListener("resize",resize);
 resize();
 
+/* WEATHER SYSTEM (CARROUSEL) */
+const weatherList=["rain","sun","snow","hail","storm"];
+let wIndex=0;
+let weather="rain";
+
+function setWeather(){
+weather=weatherList[wIndex];
+document.getElementById("weatherLabel").textContent=weather.toUpperCase();
+
+if(weather==="sun"){
+document.body.classList.add("sunFlash");
+setTimeout(()=>document.body.classList.remove("sunFlash"),800);
+}
+hud("[WEATHER] "+weather);
+}
+
+function nextWeather(){
+wIndex=(wIndex+1)%weatherList.length;
+setWeather();
+}
+
+function prevWeather(){
+wIndex=(wIndex-1+weatherList.length)%weatherList.length;
+setWeather();
+}
+
 /* RAIN */
 let rain=[];
 for(let i=0;i<160;i++){
-rain.push({x:Math.random()*c.width,y:Math.random()*c.height,s:2+Math.random()*2})
+rain.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,s:2+Math.random()*2})
 }
 
-/* WEATHER */
-let weather="rain";
-
-function setWeather(w){
-weather=w;
-document.body.className="weather-"+w;
-hud("[SYS] Weather -> "+w.toUpperCase());
-}
-
-/* GAME TARGETS */
+/* GAME */
+const game=document.getElementById("game");
+let police=[];
 let targets=[];
 
 function spawnTarget(){
-let el=document.createElement("div");
-el.className="target";
-el.style.left=Math.random()*window.innerWidth+"px";
-el.style.top=Math.random()*window.innerHeight+"px";
+let t=document.createElement("div");
+t.className="target";
+t.style.left=Math.random()*innerWidth+"px";
+t.style.top=Math.random()*innerHeight+"px";
 
-el.onclick=()=>{
-el.remove();
-hud("[OK] Data stolen recovered!");
-};
+t.onclick=()=>t.remove();
 
-document.body.appendChild(el);
-targets.push(el);
+game.appendChild(t);
+targets.push(t);
 }
 
-/* GAME LOOP */
-setInterval(()=>{
-if(document.getElementById("game").classList.contains("active")){
-spawnTarget();
-}
-},1200);
+/* POLICE AI */
+function spawnPolice(){
+let p=document.createElement("div");
+p.className="police";
+p.style.left=Math.random()*innerWidth+"px";
+p.style.top=Math.random()*innerHeight+"px";
 
-/* DRAW */
+game.appendChild(p);
+police.push(p);
+}
+
+/* LOOP */
 function loop(){
 ctx.clearRect(0,0,c.width,c.height);
 
-/* rain effect */
+/* rain */
 if(weather==="rain"||weather==="storm"){
 ctx.strokeStyle="rgba(53,214,255,.2)";
 for(let r of rain){
@@ -276,53 +290,58 @@ if(r.y>c.height){r.y=0;r.x=Math.random()*c.width}
 }
 }
 
-/* storm flash */
-if(weather==="storm" && Math.random()>0.98){
-document.body.classList.add("glitchFlash");
-setTimeout(()=>document.body.classList.remove("glitchFlash"),120);
+/* snow simple */
+if(weather==="snow"){
+ctx.fillStyle="rgba(255,255,255,.6)";
+for(let i=0;i<50;i++){
+ctx.fillRect(Math.random()*c.width,Math.random()*c.height,2,2);
+}
+}
+
+/* game active */
+if(game.style.display==="block"){
+if(Math.random()>0.98)spawnTarget();
+if(Math.random()>0.99)spawnPolice();
+
+/* police chase */
+police.forEach(p=>{
+let tx=innerWidth/2,ty=innerHeight/2;
+p.style.left=(parseFloat(p.style.left)+Math.random()*4-2)+"px";
+p.style.top=(parseFloat(p.style.top)+Math.random()*4-2)+"px";
+});
 }
 
 requestAnimationFrame(loop);
 }
 loop();
 
-/* NAV */
-function openPage(id){
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-hud("[NAV] "+id.toUpperCase());
+/* TROLL MODE (PROPRE TOGGLE) */
+let troll=false;
+const toggle=document.getElementById("toggle");
+
+function toggleTroll(){
+troll=!troll;
+toggle.classList.toggle("on");
+
+if(troll){
+setInterval(()=>{
+document.querySelectorAll("button").forEach(b=>{
+b.style.transform=`translate(${Math.random()*20-10}px,${Math.random()*10-5}px)`;
+});
+},400);
+}
 }
 
-/* PROJECT TABS */
-function projectTab(id){
-["sites","games","soft","other"].forEach(i=>{
-document.getElementById(i).style.display="none";
-});
-document.getElementById(id).style.display="block";
-}
+/* GAME START */
+setTimeout(()=>{
+game.style.display="block";
+},1000);
 
 /* HUD */
 const hudEl=document.getElementById("hud");
 function hud(t){hudEl.textContent=t}
 
-/* TROLL MODE */
-let troll=false;
-
-function toggleTroll(){
-troll=!troll;
-hud("[SYS] Troll mode "+(troll?"ON":"OFF"));
-}
-
-/* buttons escape */
-setInterval(()=>{
-if(troll){
-document.querySelectorAll("button").forEach(b=>{
-b.style.position="relative";
-b.style.left=(Math.random()*40-20)+"px";
-b.style.top=(Math.random()*20-10)+"px";
-});
-}
-},400);
+setWeather();
 
 </script>
 
