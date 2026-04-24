@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CapWorks Studio // GAME MODE</title>
+<title>CapWorks Studio // Playable Mode</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -12,7 +12,6 @@ background:#050816;
 color:#fff;
 font-family:Arial;
 overflow:hidden;
-cursor:none;
 }
 
 /* 🌧️ BACKGROUND */
@@ -30,127 +29,122 @@ border:2px solid #35d6ff;
 border-radius:50%;
 transform:translate(-50%,-50%);
 pointer-events:none;
-box-shadow:0 0 12px #35d6ff;
+box-shadow:0 0 10px #35d6ff;
 z-index:999;
 }
 
-/* 🎬 BOOT SCREEN */
-#boot{
-position:fixed;
-inset:0;
+/* HEADER */
+header{
 display:flex;
-justify-content:center;
+justify-content:space-between;
 align-items:center;
+padding:18px 30px;
+background:rgba(0,0,0,.35);
+backdrop-filter:blur(12px);
+border-bottom:1px solid rgba(53,214,255,.2);
+position:sticky;
+top:0;
+z-index:10;
+}
+
+.logo{
+font-weight:900;
+font-size:20px;
+}
+.logo span:first-child{color:#35d6ff}
+.logo span:last-child{color:#ff3355}
+
+/* MAIN MENU */
+.menu{
+display:flex;
 flex-direction:column;
-background:#050816;
-z-index:50;
-}
-
-#boot h1{
-font-size:42px;
-background:linear-gradient(90deg,#fff,#35d6ff,#ff3355);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-}
-
-#press{
-margin-top:20px;
-padding:12px 24px;
-border:1px solid #35d6ff;
-border-radius:12px;
-cursor:pointer;
-box-shadow:0 0 15px #35d6ff;
-}
-
-/* ⏳ LOADING */
-#loading{
-position:fixed;
-inset:0;
-display:none;
-justify-content:center;
 align-items:center;
-flex-direction:column;
-z-index:40;
-background:#050816;
-}
-
-.bar{
-width:300px;
-height:8px;
-background:rgba(255,255,255,.1);
-border-radius:10px;
-overflow:hidden;
-margin-top:20px;
-}
-
-.bar div{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#35d6ff,#ff3355);
-}
-
-/* 🎮 MENU */
-#menu{
-display:none;
-height:100vh;
 justify-content:center;
-align-items:center;
-flex-direction:column;
+height:calc(100vh - 80px);
 text-align:center;
+gap:14px;
 }
 
 h1{
-font-size:70px;
+font-size:62px;
 background:linear-gradient(90deg,#fff,#35d6ff,#ff3355);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
+/* BUTTONS */
 .btn{
-margin-top:20px;
 padding:14px 26px;
-border-radius:12px;
+border-radius:14px;
 border:none;
-background:linear-gradient(90deg,#35d6ff,#ff3355);
-color:#fff;
 font-weight:800;
 cursor:pointer;
-box-shadow:0 0 20px rgba(53,214,255,.3);
+color:#fff;
+background:linear-gradient(90deg,#35d6ff,#ff3355);
+box-shadow:0 0 18px rgba(53,214,255,.35);
 transition:.2s;
+min-width:220px;
 }
 
-.btn:hover{transform:scale(1.05)}
-
-.small{
-margin-top:12px;
-opacity:.7;
+.btn:hover{
+transform:scale(1.05);
 }
 
-/* 🧠 PANELS */
+.btn.secondary{
+background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.15);
+}
+
+/* PANELS */
 .panel{
 display:none;
+height:calc(100vh - 80px);
 padding:40px;
 text-align:center;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:16px;
 }
 
 .card{
-margin-top:20px;
-padding:20px;
+padding:18px;
+border-radius:14px;
 border:1px solid rgba(53,214,255,.2);
-border-radius:16px;
-background:rgba(255,255,255,.05);
+background:rgba(255,255,255,.04);
+width:300px;
 }
 
-/* glitch */
-.glitch{
-animation:glitch .2s infinite;
+/* BACK */
+.back{
+margin-top:20px;
+opacity:.8;
+cursor:pointer;
 }
-@keyframes glitch{
-0%{transform:translate(0)}
-25%{transform:translate(1px,-1px)}
-50%{transform:translate(-1px,1px)}
-75%{transform:translate(1px,1px)}
-100%{transform:translate(0)}
+
+.back:hover{
+opacity:1;
+color:#35d6ff;
+}
+
+/* SMALL HUD */
+.hud{
+position:fixed;
+bottom:10px;
+left:10px;
+font-family:monospace;
+font-size:12px;
+color:#35ff9a;
+opacity:.7;
+}
+
+/* FADE */
+.show{
+animation:fade .3s ease;
+}
+@keyframes fade{
+from{opacity:0;transform:translateY(10px)}
+to{opacity:1;transform:translateY(0)}
 }
 </style>
 </head>
@@ -160,60 +154,65 @@ animation:glitch .2s infinite;
 <canvas id="bg"></canvas>
 <div class="cursor" id="cursor"></div>
 
-<!-- 🎬 BOOT -->
-<div id="boot">
-<h1>CapWorks Studio</h1>
-<div id="press">PRESS START</div>
+<header>
+<div class="logo"><span>CapWorks</span> <span>Studio</span></div>
+<div>CYBER GAME MODE</div>
+</header>
+
+<!-- MENU PRINCIPAL -->
+<div id="main" class="menu">
+<h1>START GAME</h1>
+
+<button class="btn" onclick="openPanel('play')">▶ PLAY</button>
+<button class="btn" onclick="openPanel('projects')">📁 PROJECTS</button>
+<button class="btn secondary" onclick="openPanel('options')">⚙ OPTIONS</button>
+
 </div>
 
-<!-- ⏳ LOADING -->
-<div id="loading">
-<h2>Loading world...</h2>
-<div class="bar"><div id="bar"></div></div>
-</div>
-
-<!-- 🎮 MENU -->
-<div id="menu">
-<h1 id="title">START GAME</h1>
-<button class="btn" onclick="openPanel('play')">PLAY</button>
-<button class="btn" onclick="openPanel('proj')">PROJECTS</button>
-<button class="btn" onclick="openPanel('opt')">OPTIONS</button>
-<div class="small">CapWorks Engine v1.0</div>
-</div>
-
-<!-- PANELS -->
+<!-- PLAY -->
 <div id="play" class="panel">
 <h1>GAME MODE</h1>
-<div class="card">🎮 Simulation active</div>
-<button class="btn" onclick="back()">BACK</button>
+<div class="card">🎮 Mission: Explorer CapWorks World</div>
+<div class="card">🌧️ Weather: Cyber Rain Active</div>
+<div class="card">⚡ System: Stable</div>
+
+<div class="back" onclick="back()">← Retour menu</div>
 </div>
 
-<div id="proj" class="panel">
+<!-- PROJECTS -->
+<div id="projects" class="panel">
 <h1>PROJECTS</h1>
-<div class="card">Aranky - Multiplayer world</div>
-<div class="card">CapNews - Cyber journal</div>
-<div class="card">Bosto - Simulation tools</div>
-<button class="btn" onclick="back()">BACK</button>
+
+<div class="card">Aranky — Multiplayer game world</div>
+<div class="card">CapNews — Digital cyber journal</div>
+<div class="card">Bosto — Simulation tools</div>
+
+<div class="back" onclick="back()">← Retour menu</div>
 </div>
 
-<div id="opt" class="panel">
+<!-- OPTIONS -->
+<div id="options" class="panel">
 <h1>OPTIONS</h1>
+
 <div class="card">Graphics: ULTRA</div>
-<div class="card">Neon: ON</div>
-<div class="card">Rain: ACTIVE</div>
-<button class="btn" onclick="back()">BACK</button>
+<div class="card">Rain: ON</div>
+<div class="card">Neon: ACTIVE</div>
+
+<div class="back" onclick="back()">← Retour menu</div>
 </div>
+
+<div class="hud" id="hud">[SYS] Ready</div>
 
 <script>
 
-/* cursor */
+/* CURSOR */
 const cursor=document.getElementById("cursor");
 addEventListener("mousemove",e=>{
 cursor.style.left=e.clientX+"px";
 cursor.style.top=e.clientY+"px";
 });
 
-/* 🌧️ RAIN */
+/* CANVAS RAIN */
 const c=document.getElementById("bg");
 const ctx=c.getContext("2d");
 
@@ -222,7 +221,7 @@ addEventListener("resize",resize);
 resize();
 
 let rain=[];
-for(let i=0;i<200;i++){
+for(let i=0;i<160;i++){
 rain.push({
 x:Math.random()*c.width,
 y:Math.random()*c.height,
@@ -234,7 +233,7 @@ s:Math.random()*2+1.5
 function loop(){
 ctx.clearRect(0,0,c.width,c.height);
 
-ctx.strokeStyle="rgba(53,214,255,.2)";
+ctx.strokeStyle="rgba(53,214,255,.18)";
 for(let r of rain){
 ctx.beginPath();
 ctx.moveTo(r.x,r.y);
@@ -249,46 +248,33 @@ requestAnimationFrame(loop);
 }
 loop();
 
-/* 🎬 START */
-document.getElementById("press").onclick=()=>{
-document.getElementById("boot").style.display="none";
-document.getElementById("loading").style.display="flex";
+/* NAV SYSTEM */
+const hud=document.getElementById("hud");
 
-let bar=document.getElementById("bar");
-let p=0;
-
-let load=setInterval(()=>{
-p+=2;
-bar.style.width=p+"%";
-
-if(p>=100){
-clearInterval(load);
-document.getElementById("loading").style.display="none";
-document.getElementById("menu").style.display="flex";
-document.getElementById("title").classList.add("glitch");
-}
-},30);
-};
-
-/* 🎮 NAV */
 function openPanel(id){
-document.getElementById("menu").style.display="none";
+document.getElementById("main").style.display="none";
 document.querySelectorAll(".panel").forEach(p=>p.style.display="none");
-document.getElementById(id).style.display="block";
+
+let panel=document.getElementById(id);
+panel.style.display="flex";
+panel.classList.add("show");
+
+hud.textContent="[SYS] Opened "+id.toUpperCase();
 }
 
 function back(){
 document.querySelectorAll(".panel").forEach(p=>p.style.display="none");
-document.getElementById("menu").style.display="flex";
+document.getElementById("main").style.display="flex";
+hud.textContent="[SYS] Main Menu";
 }
 
-/* random glitch */
+/* small glitch effect */
 setInterval(()=>{
 if(Math.random()>0.97){
-document.body.style.filter="brightness(1.4)";
+document.body.style.filter="brightness(1.3)";
 setTimeout(()=>document.body.style.filter="none",80);
 }
-},500);
+},600);
 
 </script>
 
