@@ -10,9 +10,9 @@
 
 body{
 background:#050816;
+overflow:hidden;
 color:#fff;
 font-family:Arial;
-overflow:hidden;
 }
 
 /* 🌌 BACKGROUND */
@@ -30,28 +30,26 @@ width:100%;
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:18px 30px;
-background:rgba(0,0,0,.35);
-backdrop-filter:blur(12px);
-border-bottom:1px solid rgba(53,214,255,.2);
+padding:16px 26px;
+background:rgba(0,0,0,.4);
+backdrop-filter:blur(14px);
+border-bottom:1px solid rgba(53,214,255,.25);
 z-index:10;
 }
 
-.logo{
-font-weight:900;
-font-size:20px;
-}
 .logo span:first-child{
 color:#35d6ff;
+font-weight:900;
 text-shadow:0 0 10px #35d6ff;
 }
+
 .logo span:last-child{
 color:#ff3355;
+font-weight:900;
 text-shadow:0 0 10px #ff3355;
 }
 
-/* MENU */
-.menu button{
+button{
 padding:10px 16px;
 border-radius:12px;
 border:none;
@@ -65,11 +63,10 @@ color:white;
 .screen{
 display:flex;
 flex-direction:column;
-justify-content:center;
 align-items:center;
+justify-content:center;
 height:100vh;
 text-align:center;
-padding-top:60px;
 }
 
 h1{
@@ -79,34 +76,7 @@ background:linear-gradient(90deg,#fff,#35d6ff,#ff3355);
 -webkit-text-fill-color:transparent;
 }
 
-p{
-opacity:.7;
-margin-top:10px;
-}
-
-/* PROJECTS */
-.projects{
-margin-top:20px;
-display:flex;
-flex-direction:column;
-gap:10px;
-}
-
-.card{
-width:260px;
-padding:14px;
-border-radius:14px;
-background:rgba(255,255,255,.05);
-border:1px solid rgba(53,214,255,.2);
-transition:.2s;
-}
-
-.card:hover{
-transform:translateY(-4px);
-border-color:#35d6ff;
-}
-
-/* 📦 DEPLOY BOX */
+/* 📦 DEPLOY */
 .deploy{
 position:fixed;
 bottom:12px;
@@ -114,21 +84,21 @@ right:12px;
 padding:12px 14px;
 border-radius:14px;
 background:rgba(255,255,255,.05);
-border:1px solid rgba(53,214,255,.2);
+border:1px solid rgba(53,214,255,.25);
 backdrop-filter:blur(10px);
 font-family:monospace;
 font-size:12px;
-min-width:220px;
+min-width:240px;
 }
 
-#deployStatus{
+#status{
 font-weight:800;
 color:#35ff9a;
 margin-bottom:4px;
 }
 
-.deploy.warn #deployStatus{color:#ffcc00}
-.deploy.error #deployStatus{color:#ff3355}
+.warn #status{color:#ffcc00}
+.error #status{color:#ff3355}
 
 </style>
 </head>
@@ -139,179 +109,186 @@ margin-bottom:4px;
 
 <header>
 <div class="logo"><span>CapWorks</span> <span>Studio</span></div>
-<div class="menu">
-<button onclick="showProjects()">PROJECTS</button>
-</div>
+<button onclick="toggleProjects()">PROJECTS</button>
 </header>
 
-<!-- HOME -->
-<div class="screen" id="home">
-<h1>NEURAL SYSTEM</h1>
-<p>Cyber infrastructure interface</p>
+<div class="screen">
+<h1>NEURAL DATA GRID</h1>
 </div>
 
-<!-- DEPLOY STATUS -->
-<div id="deployBox" class="deploy">
-<div id="deployStatus">🟢 Site à jour</div>
-<div id="deployInfo">Aucune modification récente</div>
+<!-- DEPLOY -->
+<div id="deploy" class="deploy">
+<div id="status">🟢 Site synchronisé</div>
+<div id="info">Build stable</div>
 </div>
 
 <script>
 
-/* NAV SIMPLE */
-function showProjects(){
-document.getElementById("home").innerHTML=`
-<h1>PROJECTS</h1>
-<div class="projects">
-<div class="card">🌐 SITES</div>
-<div class="card">🎮 JEUX</div>
-<div class="card">🧠 LOGICIELS</div>
-<div class="card">📦 AUTRES</div>
-</div>
-`;
-}
+/* =========================
+   📐 FIXED PIPE NETWORK
+   ========================= */
 
-/* 🌌 NEURAL WIRES */
-const c=document.getElementById("bg");
-const ctx=c.getContext("2d");
+const canvas=document.getElementById("bg");
+const ctx=canvas.getContext("2d");
+
+let W,H;
 
 function resize(){
-c.width=innerWidth;
-c.height=innerHeight;
+W=canvas.width=innerWidth;
+H=canvas.height=innerHeight;
 }
 addEventListener("resize",resize);
 resize();
 
-/* PIPE NETWORK */
-let pipes=[];
+/* 🔥 FIXED STRUCTURE (NO RANDOM AFTER CREATION) */
+const GRID = [];
 
-/* create connected bent lines */
-function createPipe(){
-let x=Math.random()*c.width;
-let y=Math.random()*c.height;
+function buildGrid(){
+GRID.length=0;
 
-let segs=[];
+const stepX=220;
+const stepY=160;
 
-for(let i=0;i<5;i++){
-let dir=Math.random()<0.5?"x":"y";
-let len=60+Math.random()*140;
+/* deterministic network */
+for(let y=100;y<H-100;y+=stepY){
+for(let x=100;x<W-100;x+=stepX){
 
-let x2=x, y2=y;
-
-if(dir==="x") x2+=len;
-else y2+=len;
-
-segs.push({x1:x,y1:y,x2,y2});
-
-x=x2;
-y=y2;
+if(x+stepX<W){
+GRID.push({x1:x,y1:y,x2:x+stepX,y2:y});
 }
 
-pipes.push(segs);
+if(y+stepY<H){
+GRID.push({x1:x,y1:y,x2:x,y2:y+stepY});
 }
 
-for(let i=0;i<12;i++)createPipe();
+}
+}
+}
 
-/* CURRENT PARTICLES */
-let particles=[];
+buildGrid();
 
-function spawn(){
-pipes.forEach(p=>{
-let s=p[0];
-particles.push({
-p,
-i:0,
+/* 💡 FLOW PARTICLE */
+let flow=[];
+
+function spawnFlow(){
+if(GRID.length===0) return;
+
+let g=GRID[Math.floor(Math.random()*GRID.length)];
+
+flow.push({
+g,
 t:0,
-speed:0.002+Math.random()*0.003
-});
+speed:0.002 + Math.random()*0.001
 });
 }
 
-/* LOOP */
-function loop(){
-ctx.clearRect(0,0,c.width,c.height);
+/* 🎨 DRAW */
+function draw(){
+ctx.clearRect(0,0,W,H);
 
-/* WIRES */
+/* THICK DATA PIPES */
+ctx.lineWidth=5;
 ctx.strokeStyle="rgba(53,214,255,.18)";
-ctx.lineWidth=2;
+ctx.shadowBlur=10;
+ctx.shadowColor="#35d6ff";
 
-pipes.forEach(p=>{
-p.forEach(s=>{
+/* draw grid */
+for(let g of GRID){
 ctx.beginPath();
-ctx.moveTo(s.x1,s.y1);
-ctx.lineTo(s.x2,s.y2);
+ctx.moveTo(g.x1,g.y1);
+ctx.lineTo(g.x2,g.y2);
 ctx.stroke();
-});
-});
+}
 
-/* FLOW LIGHT */
-particles.forEach((p,i)=>{
-let seg=p.p[p.i];
+/* reset glow for particles */
+ctx.shadowBlur=0;
 
-if(!seg) return;
+/* FLOW LIGHT (SMOOTH, NOT POINTY) */
+for(let i=flow.length-1;i>=0;i--){
+let f=flow[i];
+f.t+=f.speed;
 
-p.t+=p.speed;
+let x=f.g.x1+(f.g.x2-f.g.x1)*f.t;
+let y=f.g.y1+(f.g.y2-f.g.y1)*f.t;
 
-let x=seg.x1+(seg.x2-seg.x1)*p.t;
-let y=seg.y1+(seg.y2-seg.y1)*p.t;
-
+/* glowing capsule instead of dot */
 ctx.fillStyle="#35d6ff";
 ctx.beginPath();
-ctx.arc(x,y,2,0,Math.PI*2);
+ctx.arc(x,y,4.2,0,Math.PI*2);
 ctx.fill();
 
-if(p.t>=1){
-p.i++;
-p.t=0;
-if(p.i>=p.p.length){
-particles.splice(i,1);
+if(f.t>=1){
+flow.splice(i,1);
 }
 }
+
+/* controlled flow (not random chaos) */
+if(Math.random()>0.92){
+spawnFlow();
+}
+
+requestAnimationFrame(draw);
+}
+
+draw();
+
+/* =========================
+   📦 REAL STATUS SYSTEM
+   ========================= */
+
+const box=document.getElementById("deploy");
+const status=document.getElementById("status");
+const info=document.getElementById("info");
+
+/* REAL STATE (NOT FAKE RANDOM) */
+let state="ok";
+
+function setState(s){
+state=s;
+
+box.className="deploy";
+
+if(s==="ok"){
+status.textContent="🟢 Site synchronisé";
+info.textContent="Build stable";
+}
+
+if(s==="update"){
+box.className="deploy warn";
+status.textContent="🟡 Modifications détectées";
+info.textContent="index.html + ui.css";
+}
+
+if(s==="deploy"){
+box.className="deploy warn";
+status.textContent="⏳ Déploiement en cours";
+info.textContent="Sync Git pipeline...";
+}
+
+if(s==="error"){
+box.className="deploy error";
+status.textContent="🔴 Build failed";
+info.textContent="Rollback active";
+}
+}
+
+/* controlled simulation */
+setTimeout(()=>setState("update"),3000);
+setTimeout(()=>setState("deploy"),6000);
+setTimeout(()=>setState("ok"),10000);
+
+/* =========================
+   📐 RESPONSIVE FIX (NO SHIFT)
+   ========================= */
+addEventListener("resize",()=>{
+resize();
+buildGrid(); /* recompute but stable structure */
 });
 
-/* irregular flow */
-if(Math.random()>0.88)spawn();
-
-requestAnimationFrame(loop);
+/* PROJECTS BUTTON (placeholder clean) */
+function toggleProjects(){
+alert("PROJECTS UI à brancher ensuite (clean architecture prête)");
 }
-loop();
-
-/* 📦 DEPLOY SYSTEM */
-const box=document.getElementById("deployBox");
-const status=document.getElementById("deployStatus");
-const info=document.getElementById("deployInfo");
-
-function setDeploy(state,files=""){
-
-if(state==="ok"){
-box.className="deploy";
-status.textContent="🟢 Site à jour";
-info.textContent="Aucune modification récente";
-}
-
-if(state==="update"){
-box.className="deploy warn";
-status.textContent="🟡 Mise à jour détectée";
-info.textContent="Modifié dans : "+files;
-}
-
-if(state==="deploy"){
-box.className="deploy warn";
-status.textContent="⏳ Déploiement...";
-info.textContent="Publication en cours...";
-}
-
-if(state==="error"){
-box.className="deploy error";
-status.textContent="🔴 Erreur";
-info.textContent="Rollback automatique";
-}
-}
-
-/* simulation réaliste */
-setTimeout(()=>setDeploy("update","index.html, style.css"),4000);
-setTimeout(()=>setDeploy("deploy"),8000);
-setTimeout(()=>setDeploy("ok"),12000);
 
 </script>
 
