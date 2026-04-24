@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CapWorks Studio // Game OS Clean</title>
+<title>CapWorks Studio</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
 body{
 background:#050816;
 color:#fff;
@@ -14,334 +15,237 @@ font-family:Arial;
 overflow:hidden;
 }
 
-/* 🖱️ CURSOR */
-.cursor{
+/* 🌌 CANVAS BACKGROUND */
+canvas{
 position:fixed;
-width:14px;height:14px;
-border:2px solid #35d6ff;
-border-radius:50%;
-transform:translate(-50%,-50%);
-pointer-events:none;
-box-shadow:0 0 10px #35d6ff;
-z-index:999;
+inset:0;
+z-index:-2;
 }
 
 /* HEADER */
 header{
+position:fixed;
+top:0;
+width:100%;
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:16px 26px;
+padding:18px 30px;
 background:rgba(0,0,0,.35);
 backdrop-filter:blur(12px);
 border-bottom:1px solid rgba(53,214,255,.2);
+z-index:10;
 }
 
-/* LOGO */
-.logo span:first-child{color:#35d6ff;font-weight:900}
-.logo span:last-child{color:#ff3355;font-weight:900}
+.logo{
+font-weight:900;
+font-size:20px;
+}
+.logo span:first-child{
+color:#35d6ff;
+text-shadow:0 0 10px #35d6ff;
+}
+.logo span:last-child{
+color:#ff3355;
+text-shadow:0 0 10px #ff3355;
+}
 
 /* MENU */
-.menu button{
-margin-left:10px;
-padding:10px 14px;
+.menu{
+display:flex;
+gap:12px;
+}
+
+button{
+padding:10px 16px;
 border-radius:12px;
 border:none;
 cursor:pointer;
 font-weight:800;
 background:linear-gradient(90deg,#35d6ff,#ff3355);
-color:#fff;
-}
-
-/* 🌦️ WEATHER CARROUSEL */
-.weather{
-display:flex;
-align-items:center;
-gap:10px;
-}
-
-.arrow{
-background:rgba(255,255,255,.1);
-border:1px solid rgba(255,255,255,.2);
-padding:6px 10px;
-border-radius:10px;
-cursor:pointer;
-}
-
-/* 🌧️ BACKGROUND */
-canvas{
-position:fixed;
-inset:0;
-z-index:-3;
-}
-
-/* 🌦️ EFFECTS */
-.sunFlash{
-animation:sun 2s;
-}
-@keyframes sun{
-0%{filter:brightness(1)}
-20%{filter:brightness(1.5)}
-100%{filter:brightness(1)}
-}
-
-/* 🧠 TROLL SWITCH */
-.switch{
-display:flex;
-align-items:center;
-gap:8px;
-cursor:pointer;
-}
-
-.toggle{
-width:44px;
-height:22px;
-background:rgba(255,255,255,.15);
-border-radius:999px;
-position:relative;
-border:1px solid rgba(255,255,255,.2);
-}
-
-.knob{
-width:18px;
-height:18px;
-background:#35d6ff;
-border-radius:50%;
-position:absolute;
-top:1px;
-left:2px;
+color:white;
 transition:.2s;
 }
 
-.on .knob{
-left:22px;
-background:#ff3355;
-}
-
-/* GAME */
-.game-area{
-display:none;
-height:calc(100vh - 70px);
-position:relative;
-}
-
-.target{
-position:absolute;
-width:26px;height:26px;
-border-radius:50%;
-background:#35d6ff;
-box-shadow:0 0 12px #35d6ff;
-cursor:pointer;
-}
-
-/* POLICE */
-.police{
-position:absolute;
-width:30px;height:30px;
-background:#ff3355;
-border-radius:6px;
-box-shadow:0 0 12px #ff3355;
-}
-
-/* PROJECT WINDOWS */
-.window{
-position:absolute;
-width:220px;
-padding:14px;
-background:rgba(255,255,255,.05);
-border:1px solid rgba(53,214,255,.2);
-border-radius:14px;
-backdrop-filter:blur(10px);
-transition:.3s;
-}
-
-.window:hover{
+button:hover{
 transform:scale(1.05);
 }
 
-/* HUD */
-#hud{
-position:fixed;
-bottom:10px;
-left:10px;
-font-family:monospace;
-font-size:12px;
-color:#35ff9a;
+/* SCREENS */
+.screen{
+display:none;
+height:100vh;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+text-align:center;
 }
 
+.active{display:flex}
+
+h1{
+font-size:64px;
+background:linear-gradient(90deg,#fff,#35d6ff,#ff3355);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+/* SUB TEXT */
+p{
+opacity:.8;
+margin-top:10px;
+}
+
+/* PROJECTS */
+.projects{
+display:none;
+flex-direction:column;
+gap:12px;
+margin-top:20px;
+}
+
+.card{
+padding:14px 18px;
+border-radius:14px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(53,214,255,.2);
+transition:.2s;
+width:260px;
+}
+
+.card:hover{
+transform:translateY(-4px);
+border-color:#35d6ff;
+}
+
+/* BACK */
+.back{
+margin-top:20px;
+opacity:.7;
+cursor:pointer;
+}
+.back:hover{
+opacity:1;
+color:#35d6ff;
+}
 </style>
 </head>
 
 <body>
 
 <canvas id="bg"></canvas>
-<div class="cursor" id="cursor"></div>
 
 <header>
 <div class="logo"><span>CapWorks</span> <span>Studio</span></div>
 
-<div class="weather">
-<button class="arrow" onclick="prevWeather()">◀</button>
-<div id="weatherLabel">RAIN</div>
-<button class="arrow" onclick="nextWeather()">▶</button>
-</div>
-
-<div class="switch" onclick="toggleTroll()">
-<div class="toggle" id="toggle"><div class="knob"></div></div>
-TROLL
+<div class="menu">
+<button onclick="show('home')">START</button>
+<button onclick="show('projects')">PROJECTS</button>
 </div>
 </header>
 
-<!-- GAME AREA -->
-<div class="game-area" id="game"></div>
+<!-- HOME -->
+<div id="home" class="screen active">
+<h1>PRESS START</h1>
+<p>Cyber studio interface</p>
+</div>
 
-<div id="hud">[SYS] Ready</div>
+<!-- PROJECTS -->
+<div id="projects" class="screen">
+<h1>PROJECTS</h1>
+
+<div class="projects" style="display:flex">
+<div class="card">🌐 SITES</div>
+<div class="card">🎮 JEUX</div>
+<div class="card">🧠 LOGICIELS</div>
+<div class="card">📦 AUTRES</div>
+</div>
+
+<div class="back" onclick="show('home')">← Retour</div>
+</div>
 
 <script>
 
-/* CURSOR */
-const cursor=document.getElementById("cursor");
-addEventListener("mousemove",e=>{
-cursor.style.left=e.clientX+"px";
-cursor.style.top=e.clientY+"px";
-});
+/* NAV */
+function show(id){
+document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
 
-/* CANVAS */
+/* 🌌 ELECTRIC BACKGROUND */
 const c=document.getElementById("bg");
 const ctx=c.getContext("2d");
-function resize(){c.width=innerWidth;c.height=innerHeight}
+
+function resize(){
+c.width=innerWidth;
+c.height=innerHeight;
+}
 addEventListener("resize",resize);
 resize();
 
-/* WEATHER SYSTEM (CARROUSEL) */
-const weatherList=["rain","sun","snow","hail","storm"];
-let wIndex=0;
-let weather="rain";
+/* ⚡ LINES */
+let lines=[];
 
-function setWeather(){
-weather=weatherList[wIndex];
-document.getElementById("weatherLabel").textContent=weather.toUpperCase();
-
-if(weather==="sun"){
-document.body.classList.add("sunFlash");
-setTimeout(()=>document.body.classList.remove("sunFlash"),800);
-}
-hud("[WEATHER] "+weather);
+for(let i=0;i<18;i++){
+lines.push({
+x1:Math.random()*innerWidth,
+y1:Math.random()*innerHeight,
+x2:Math.random()*innerWidth,
+y2:Math.random()*innerHeight
+});
 }
 
-function nextWeather(){
-wIndex=(wIndex+1)%weatherList.length;
-setWeather();
-}
+/* 💡 CURRENT MOVING */
+let particles=[];
 
-function prevWeather(){
-wIndex=(wIndex-1+weatherList.length)%weatherList.length;
-setWeather();
-}
-
-/* RAIN */
-let rain=[];
-for(let i=0;i<160;i++){
-rain.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,s:2+Math.random()*2})
-}
-
-/* GAME */
-const game=document.getElementById("game");
-let police=[];
-let targets=[];
-
-function spawnTarget(){
-let t=document.createElement("div");
-t.className="target";
-t.style.left=Math.random()*innerWidth+"px";
-t.style.top=Math.random()*innerHeight+"px";
-
-t.onclick=()=>t.remove();
-
-game.appendChild(t);
-targets.push(t);
-}
-
-/* POLICE AI */
-function spawnPolice(){
-let p=document.createElement("div");
-p.className="police";
-p.style.left=Math.random()*innerWidth+"px";
-p.style.top=Math.random()*innerHeight+"px";
-
-game.appendChild(p);
-police.push(p);
+function spawnParticle(){
+lines.forEach(l=>{
+particles.push({
+x:l.x1,
+y:l.y1,
+vx:(l.x2-l.x1)/80,
+vy:(l.y2-l.y1)/80,
+life:80
+});
+});
 }
 
 /* LOOP */
 function loop(){
 ctx.clearRect(0,0,c.width,c.height);
 
-/* rain */
-if(weather==="rain"||weather==="storm"){
-ctx.strokeStyle="rgba(53,214,255,.2)";
-for(let r of rain){
+/* ELECTRIC LINES */
+ctx.strokeStyle="rgba(53,214,255,.25)";
+ctx.lineWidth=2;
+
+lines.forEach(l=>{
 ctx.beginPath();
-ctx.moveTo(r.x,r.y);
-ctx.lineTo(r.x,r.y+10);
+ctx.moveTo(l.x1,l.y1);
+ctx.lineTo(l.x2,l.y2);
 ctx.stroke();
-r.y+=r.s;
-if(r.y>c.height){r.y=0;r.x=Math.random()*c.width}
-}
-}
-
-/* snow simple */
-if(weather==="snow"){
-ctx.fillStyle="rgba(255,255,255,.6)";
-for(let i=0;i<50;i++){
-ctx.fillRect(Math.random()*c.width,Math.random()*c.height,2,2);
-}
-}
-
-/* game active */
-if(game.style.display==="block"){
-if(Math.random()>0.98)spawnTarget();
-if(Math.random()>0.99)spawnPolice();
-
-/* police chase */
-police.forEach(p=>{
-let tx=innerWidth/2,ty=innerHeight/2;
-p.style.left=(parseFloat(p.style.left)+Math.random()*4-2)+"px";
-p.style.top=(parseFloat(p.style.top)+Math.random()*4-2)+"px";
 });
-}
+
+/* MOVING CURRENT */
+ctx.fillStyle="#35d6ff";
+
+particles.forEach((p,i)=>{
+ctx.beginPath();
+ctx.arc(p.x,p.y,2,0,Math.PI*2);
+ctx.fill();
+
+p.x+=p.vx;
+p.y+=p.vy;
+p.life--;
+
+if(p.life<=0)particles.splice(i,1);
+});
+
+/* respawn current */
+if(Math.random()>0.92)spawnParticle();
 
 requestAnimationFrame(loop);
 }
 loop();
-
-/* TROLL MODE (PROPRE TOGGLE) */
-let troll=false;
-const toggle=document.getElementById("toggle");
-
-function toggleTroll(){
-troll=!troll;
-toggle.classList.toggle("on");
-
-if(troll){
-setInterval(()=>{
-document.querySelectorAll("button").forEach(b=>{
-b.style.transform=`translate(${Math.random()*20-10}px,${Math.random()*10-5}px)`;
-});
-},400);
-}
-}
-
-/* GAME START */
-setTimeout(()=>{
-game.style.display="block";
-},1000);
-
-/* HUD */
-const hudEl=document.getElementById("hud");
-function hud(t){hudEl.textContent=t}
-
-setWeather();
 
 </script>
 
