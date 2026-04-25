@@ -8,32 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <!-- Firebase SDK v12 -->
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js';
-import {
-  getFirestore, doc, getDoc, setDoc, updateDoc, collection,
-  getDocs, addDoc, deleteDoc, onSnapshot, serverTimestamp
-} from 'https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js';
-
-const firebaseConfig = {
-  apiKey:            "AIzaSyAJOq0GjS7g75RPyL5WsqKogXp9K1Qja7M",
-  authDomain:        "capworks-studio-fr.firebaseapp.com",
-  databaseURL:       "https://capworks-studio-fr-default-rtdb.firebaseio.com",
-  projectId:         "capworks-studio-fr",
-  storageBucket:     "capworks-studio-fr.firebasestorage.app",
-  messagingSenderId: "466455700751",
-  appId:             "1:466455700751:web:6ca548df73dd8e47b70a7a",
-  measurementId:     "G-8DMZPBS6J3"
-};
-
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
-
-window.__db = db;
-window.__FB = { doc, getDoc, setDoc, updateDoc, collection, getDocs, addDoc, deleteDoc, onSnapshot, serverTimestamp };
-window.__firebaseReady = true;
-document.dispatchEvent(new Event('firebase-ready'));
-</script>
+<!-- Firebase already loaded by index.html -->
 
 <style>
 /* ═══════════════════════════ VARIABLES ═══════════════════════════ */
@@ -350,6 +325,606 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
 .skel-icon{width:44px;height:44px;border-radius:10px;flex-shrink:0}
 .skel-tier{height:48px;border-radius:10px;margin-bottom:7px}
 
+
+/* ═══════════════════════════════════════
+   VARIABLES & RESET
+═══════════════════════════════════════ */
+
+*,*::before,*::after { margin:0;padding:0;box-sizing:border-box; }
+
+/* Grid background */
+
+/* Scanlines */
+
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+
+nav a.active{color:var(--accent);background:rgba(108,99,255,.1)}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+.hero{
+  position:relative;z-index:1;text-align:center;
+  padding:88px 40px 64px;overflow:hidden;
+}
+.hero-aurora{
+  position:absolute;top:-120px;left:50%;transform:translateX(-50%);
+  width:700px;height:520px;
+  background:radial-gradient(ellipse at center,
+    rgba(108,99,255,.1) 0%,rgba(0,212,255,.05) 45%,transparent 70%);
+  pointer-events:none;filter:blur(1px);
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:.66rem;color:var(--cyan);
+  letter-spacing:2.5px;text-transform:uppercase;
+  border:1px solid rgba(0,212,255,.22);background:rgba(0,212,255,.05);
+  padding:5px 15px;border-radius:100px;margin-bottom:32px;
+}
+.hero-tag .pulse{
+  width:6px;height:6px;border-radius:50%;background:var(--cyan);
+  animation:pulse 1.5s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 var(--cyang)}50%{opacity:.3;box-shadow:0 0 0 6px transparent}}
+.hero h1{
+  font-size:clamp(2.4rem,5.5vw,4.8rem);font-weight:900;line-height:1.06;
+  letter-spacing:-2.5px;margin-bottom:16px;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(120deg,var(--accent) 0%,var(--cyan) 50%,var(--pink) 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:shimmer 5s linear infinite;
+}
+@keyframes shimmer{to{background-position:200% center}}
+.hero p{color:var(--text2);font-size:.92rem;max-width:440px;margin:0 auto 44px;line-height:1.85}
+
+/* ═══════════════════════════════════════
+   SEARCH BAR
+═══════════════════════════════════════ */
+.search-wrap{
+  position:relative;max-width:520px;margin:0 auto 52px;
+}
+.search-icon{
+  position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  color:var(--text3);font-size:1rem;pointer-events:none;
+}
+.search-input{
+  width:100%;background:var(--surface2);border:1px solid var(--border2);
+  color:var(--text);padding:13px 48px;border-radius:12px;
+  font-family:var(--font);font-size:.88rem;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentg)}
+.search-input::placeholder{color:var(--text3)}
+.search-clear{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--text3);cursor:pointer;
+  font-size:.85rem;padding:4px;border-radius:5px;transition:color .2s;display:none;
+}
+.search-clear:hover{color:var(--text)}
+.search-results-count{
+  text-align:center;font-family:var(--mono);font-size:.7rem;color:var(--text3);
+  margin-top:-36px;margin-bottom:36px;
+}
+
+/* ═══════════════════════════════════════
+   CATEGORY TABS
+═══════════════════════════════════════ */
+.cat-
+.cat-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:9px 18px;border-radius:100px;
+  font-family:var(--font);font-size:.78rem;font-weight:600;
+  cursor:pointer;transition:all .25s;border:1px solid var(--border2);
+  background:var(--surface2);color:var(--text2);
+  white-space:nowrap;
+}
+.cat-btn:hover{border-color:var(--accent);color:var(--text)}
+.cat-btn.active{
+  background:rgba(108,99,255,.14);border-color:rgba(108,99,255,.5);
+  color:var(--text);box-shadow:0 0 16px var(--accentg);
+}
+.cat-btn .cico{font-size:.95rem}
+.cat-count{
+  font-family:var(--mono);font-size:.62rem;
+  background:var(--surface3);color:var(--text3);
+  padding:1px 6px;border-radius:100px;border:1px solid var(--border2);
+}
+.cat-btn.active .cat-count{background:rgba(108,99,255,.2);color:var(--accent);border-color:rgba(108,99,255,.3)}
+
+/* ═══════════════════════════════════════
+   SECTION / GRID
+═══════════════════════════════════════ */
+.section{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:0 40px 80px}
+.section-head{margin-bottom:32px;display:flex;align-items:center;justify-content:space-between}
+.section-head-left{display:flex;align-items:center;gap:12px}
+.section-label{
+  font-family:var(--mono);font-size:.62rem;color:var(--accent);
+  letter-spacing:3px;text-transform:uppercase;
+}
+.section-head h2{font-size:1.5rem;font-weight:800;letter-spacing:-1px}
+
+/* Category-specific accent colors */
+.cat-header[data-cat="sites"]      .section-label{color:var(--cat-sites-c)}
+.cat-header[data-cat="games"]      .section-label{color:var(--cat-games-c)}
+.cat-header[data-cat="software"]   .section-label{color:var(--cat-software-c)}
+.cat-header[data-cat="animations"] .section-label{color:var(--cat-animations-c)}
+.cat-header[data-cat="bots"]       .section-label{color:var(--cat-bots-c)}
+.cat-header[data-cat="ai"]         .section-label{color:var(--cat-ai-c)}
+.cat-header[data-cat="assets"]     .section-label{color:var(--cat-assets-c)}
+.cat-header[data-cat="other"]      .section-label{color:var(--cat-other-c)}
+
+/* Grid layouts per category */
+.projects-grid{display:grid;gap:20px}
+.projects-grid.grid-sites      { grid-template-columns:repeat(auto-fill,minmax(340px,1fr)) }
+.projects-grid.grid-games      { grid-template-columns:repeat(auto-fill,minmax(300px,1fr)) }
+.projects-grid.grid-software   { grid-template-columns:repeat(auto-fill,minmax(320px,1fr)) }
+.projects-grid.grid-animations { grid-template-columns:repeat(auto-fill,minmax(380px,1fr)) }
+.projects-grid.grid-bots       { grid-template-columns:repeat(auto-fill,minmax(300px,1fr)) }
+.projects-grid.grid-ai         { grid-template-columns:repeat(auto-fill,minmax(340px,1fr)) }
+.projects-grid.grid-assets     { grid-template-columns:repeat(auto-fill,minmax(280px,1fr)) }
+.projects-grid.grid-other      { grid-template-columns:repeat(auto-fill,minmax(300px,1fr)) }
+
+/* ═══════════════════════════════════════
+   PROJECT CARDS — BASE
+═══════════════════════════════════════ */
+.proj-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;transition:transform .3s cubic-bezier(.2,.8,.3,1),border-color .3s,box-shadow .3s;
+  animation:fadeUp .45s ease both;cursor:pointer;position:relative;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.proj-card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 20px 56px rgba(108,99,255,.14),0 0 0 1px rgba(108,99,255,.08)}
+
+/* Card accent top border on hover */
+.proj-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--cyan));
+  opacity:0;transition:opacity .3s;z-index:2;
+}
+.proj-card:hover::before{opacity:1}
+
+/* Category-tinted hover */
+.proj-card[data-cat="sites"]:hover      {border-color:var(--cat-sites-c);box-shadow:0 20px 56px rgba(0,212,255,.1)}
+.proj-card[data-cat="games"]:hover      {border-color:var(--cat-games-c);box-shadow:0 20px 56px rgba(108,99,255,.14)}
+.proj-card[data-cat="software"]:hover   {border-color:var(--cat-software-c);box-shadow:0 20px 56px rgba(0,245,147,.1)}
+.proj-card[data-cat="animations"]:hover {border-color:var(--cat-animations-c);box-shadow:0 20px 56px rgba(255,106,176,.1)}
+.proj-card[data-cat="bots"]:hover       {border-color:var(--cat-bots-c);box-shadow:0 20px 56px rgba(255,201,71,.08)}
+.proj-card[data-cat="ai"]:hover         {border-color:var(--cat-ai-c);box-shadow:0 20px 56px rgba(167,139,250,.1)}
+.proj-card[data-cat="assets"]:hover     {border-color:var(--cat-assets-c);box-shadow:0 20px 56px rgba(251,146,60,.1)}
+
+/* Media container */
+.card-media{
+  position:relative;width:100%;
+  background:var(--surface2);overflow:hidden;
+}
+.card-media.ratio-16-9{padding-top:56.25%}
+.card-media.ratio-1-1{padding-top:100%}
+.card-media.compact{height:140px;padding-top:0}
+.card-media img,.card-media video,.card-media iframe{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+}
+.card-media iframe{border:none}
+.card-no-media{
+  height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:2.4rem;background:var(--surface2);
+}
+.card-media-overlay{
+  position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,10,.7) 0%,transparent 50%);
+  pointer-events:none;
+}
+.play-btn{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.45);transition:background .2s;cursor:pointer;
+}
+.play-btn:hover{background:rgba(0,0,0,.3)}
+.play-circle{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(8px);
+  border:2px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;padding-left:3px;transition:transform .2s;
+}
+.play-btn:hover .play-circle{transform:scale(1.1)}
+
+/* Stats row (views / likes / downloads) */
+.card-stats{
+  position:absolute;bottom:8px;right:10px;
+  display:flex;gap:8px;z-index:3;
+}
+.stat-chip{
+  display:flex;align-items:center;gap:4px;
+  font-family:var(--mono);font-size:.62rem;color:rgba(255,255,255,.7);
+  background:rgba(0,0,0,.55);backdrop-filter:blur(6px);
+  padding:3px 8px;border-radius:100px;border:1px solid rgba(255,255,255,.08);
+}
+
+/* Card body */
+.card-
+.card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.tag{
+  font-size:.6rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  padding:2px 8px;border-radius:100px;
+  background:rgba(108,99,255,.12);color:var(--accent);border:1px solid rgba(108,99,255,.25);
+}
+.tag.tech{background:rgba(0,212,255,.08);color:var(--cyan);border-color:rgba(0,212,255,.2)}
+.tag.status-live{background:rgba(0,245,147,.1);color:var(--green);border-color:rgba(0,245,147,.25)}
+.tag.status-wip{background:rgba(255,201,71,.08);color:var(--gold);border-color:rgba(255,201,71,.2)}
+.tag.status-free{background:rgba(0,245,147,.1);color:var(--green);border-color:rgba(0,245,147,.25)}
+.tag.status-dl{background:rgba(108,99,255,.12);color:var(--accent);border-color:rgba(108,99,255,.25)}
+.card-title{font-size:1.05rem;font-weight:700;letter-spacing:-.3px;margin-bottom:6px}
+.card-desc{font-size:.8rem;color:var(--text2);line-height:1.6;margin-bottom:14px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-
+
+/* CTA buttons */
+.btn-cta{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:8px;font-size:.76rem;font-weight:600;
+  cursor:pointer;transition:all .2s;border:none;text-decoration:none;
+}
+.btn-cta.primary{background:var(--accent);color:white;box-shadow:0 0 14px var(--accentg)}
+.btn-cta.primary:hover{background:#7b73ff;transform:scale(1.03)}
+.btn-cta.outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-cta.outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-cta.dl{background:rgba(0,245,147,.12);color:var(--green);border:1px solid rgba(0,245,147,.3)}
+.btn-cta.dl:hover{background:rgba(0,245,147,.2);transform:scale(1.03)}
+.btn-cta.visit{background:rgba(0,212,255,.1);color:var(--cyan);border:1px solid rgba(0,212,255,.25)}
+.btn-cta.visit:hover{background:rgba(0,212,255,.18);transform:scale(1.03)}
+
+/* Like button */
+.like-btn{
+  display:flex;align-items:center;gap:5px;
+  background:none;border:1px solid var(--border2);color:var(--text3);
+  padding:6px 11px;border-radius:8px;font-size:.75rem;font-weight:600;
+  cursor:pointer;transition:all .2s;font-family:var(--font);
+}
+.like-btn:hover{border-color:var(--red);color:var(--red);background:var(--redg)}
+.like-btn.liked{border-color:var(--red);color:var(--red);background:var(--redg)}
+.like-btn.liked .like-ico{animation:heartBeat .35s ease}
+@keyframes heartBeat{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+
+/* ═══════════════════════════════════════
+   SITES CARD
+═══════════════════════════════════════ */
+.site-card .card-url{
+  display:flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:.68rem;color:var(--text3);
+  margin-top:-8px;margin-bottom:12px;overflow:hidden;
+}
+.site-card .card-url span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-card .site-status-dot{
+  width:6px;height:6px;border-radius:50%;flex-shrink:0;
+}
+.site-card .site-status-dot.live{background:var(--green);box-shadow:0 0 6px var(--green)}
+.site-card .site-status-dot.wip{background:var(--gold);box-shadow:0 0 6px var(--gold)}
+
+/* ═══════════════════════════════════════
+   GAMES CARD
+═══════════════════════════════════════ */
+.game-card .card-platform{
+  display:flex;align-items:center;gap:6px;margin-bottom:8px;
+}
+.platform-badge{
+  font-size:.62rem;font-weight:700;letter-spacing:.5px;
+  padding:2px 8px;border-radius:4px;text-transform:uppercase;
+}
+.pb-pc{background:rgba(108,99,255,.15);color:var(--accent);border:1px solid rgba(108,99,255,.3)}
+.pb-android{background:rgba(0,245,147,.1);color:var(--green);border:1px solid rgba(0,245,147,.25)}
+.pb-ios{background:rgba(0,212,255,.1);color:var(--cyan);border:1px solid rgba(0,212,255,.25)}
+.pb-web{background:rgba(255,201,71,.08);color:var(--gold);border:1px solid rgba(255,201,71,.2)}
+.game-card .dl-counter{
+  font-family:var(--mono);font-size:.65rem;color:var(--text3);
+  display:flex;align-items:center;gap:4px;
+}
+
+/* ═══════════════════════════════════════
+   ASSETS CARD — FOLDER TREE
+═══════════════════════════════════════ */
+.assets-card .folder-tree{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;padding:12px;margin-bottom:14px;
+  font-family:var(--mono);font-size:.72rem;max-height:160px;overflow-y:auto;
+}
+.folder-tree
+.folder-tree::-webkit-scrollbar-thumb{background:var(--border2)}
+.tree-item{
+  display:flex;align-items:center;gap:7px;
+  padding:3px 4px;border-radius:5px;transition:background .15s;cursor:default;
+}
+.tree-item:hover{background:var(--surface3)}
+.tree-item.folder{color:var(--gold)}
+.tree-item.file{color:var(--text2)}
+.tree-item.file .ext{
+  font-size:.6rem;padding:1px 5px;border-radius:3px;
+  background:var(--surface3);color:var(--text3);border:1px solid var(--border2);margin-left:auto;
+}
+.tree-indent{padding-left:18px}
+.assets-card .asset-size{
+  font-family:var(--mono);font-size:.65rem;color:var(--text3);
+}
+
+/* ═══════════════════════════════════════
+   ANIMATIONS CARD
+═══════════════════════════════════════ */
+.anim-card .card-media{border-radius:10px 10px 0 0}
+.anim-card .duration-badge{
+  position:absolute;bottom:8px;left:10px;
+  font-family:var(--mono);font-size:.65rem;color:white;
+  background:rgba(0,0,0,.65);backdrop-filter:blur(6px);
+  padding:2px 8px;border-radius:100px;border:1px solid rgba(255,255,255,.1);
+}
+
+/* ═══════════════════════════════════════
+   BOTS CARD
+═══════════════════════════════════════ */
+.bot-card .bot-meta{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+}
+.bot-avatar{
+  width:46px;height:46px;border-radius:50%;overflow:hidden;
+  border:2px solid var(--border2);flex-shrink:0;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+}
+.bot-stats{display:flex;gap:10px;margin-bottom:12px}
+.bot-stat{
+  flex:1;text-align:center;padding:8px;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border);
+}
+.bot-stat-val{font-family:var(--mono);font-size:.88rem;font-weight:700;color:var(--accent)}
+.bot-stat-label{font-size:.62rem;color:var(--text3);margin-top:2px}
+
+/* ═══════════════════════════════════════
+   AI CARD
+═══════════════════════════════════════ */
+.ai-card .model-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--mono);font-size:.62rem;font-weight:700;
+  padding:3px 9px;border-radius:6px;margin-bottom:10px;
+  background:rgba(167,139,250,.12);color:var(--cat-ai-c);
+  border:1px solid rgba(167,139,250,.25);
+}
+.ai-card .feature-list{
+  display:flex;flex-direction:column;gap:4px;margin-bottom:12px;
+}
+.ai-feature{
+  display:flex;align-items:center;gap:8px;
+  font-size:.75rem;color:var(--text2);
+}
+.ai-feature::before{content:'▸';color:var(--cat-ai-c);font-size:.65rem}
+
+/* ═══════════════════════════════════════
+   EMPTY STATE
+═══════════════════════════════════════ */
+.empty-state{
+  text-align:center;padding:80px 20px;color:var(--text3);
+  font-family:var(--mono);font-size:.82rem;grid-column:1/-1;
+}
+.empty-state .empty-icon{font-size:2.5rem;margin-bottom:14px;opacity:.5}
+.empty-state p{line-height:1.8}
+
+/* ═══════════════════════════════════════
+   MODAL — PROJECT DETAIL
+═══════════════════════════════════════ */
+
+.modal-proj{
+  background:var(--surface);border:1px solid var(--border2);border-radius:20px;
+  width:100%;max-width:760px;margin:auto;
+  animation:modalIn .35s cubic-bezier(.2,.8,.3,1);position:relative;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(18px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-proj-media{border-radius:20px 20px 0 0;overflow:hidden;position:relative}
+.modal-proj-media img,.modal-proj-media video{width:100%;max-height:380px;object-fit:cover;display:block}
+.modal-proj-
+.modal-proj-title{font-size:1.6rem;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.modal-proj-desc{color:var(--text2);font-size:.88rem;line-height:1.8;margin-bottom:20px}
+.modal-close{
+  position:absolute;top:14px;right:14px;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(8px);border:1px solid var(--border2);
+  color:var(--text2);width:34px;height:34px;border-radius:8px;
+  cursor:pointer;font-size:.9rem;z-index:5;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.modal-close:hover{border-color:var(--red);color:var(--red)}
+.modal-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.modal-meta-item{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;
+}
+.modal-meta-label{font-size:.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-family:var(--mono)}
+.modal-meta-val{font-size:.85rem;font-weight:600;color:var(--text)}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap}
+.modal-folder-tree{
+  background:var(--surface2);border:1px solid var(--border);border-radius:12px;
+  padding:16px;margin-bottom:20px;font-family:var(--mono);font-size:.76rem;
+  max-height:260px;overflow-y:auto;
+}
+.modal-folder-tree
+.modal-folder-tree::-webkit-scrollbar-thumb{background:var(--border2)}
+.modal-folder-head{
+  font-size:.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text3);margin-bottom:12px;font-family:var(--mono);
+}
+
+/* ═══════════════════════════════════════
+   ADMIN MODAL
+═══════════════════════════════════════ */
+.admin-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.92);backdrop-filter:blur(14px);
+  z-index:400;align-items:flex-start;justify-content:center;
+  padding:20px;overflow-y:auto;
+}
+.admin-overlay.open{display:flex}
+.admin-modal{
+  background:var(--surface);border:1px solid var(--border2);border-radius:20px;
+  width:100%;max-width:1020px;margin:auto;
+  display:flex;flex-direction:column;
+  animation:modalIn .3s cubic-bezier(.2,.8,.3,1);
+  max-height:90vh;overflow:hidden;
+}
+.admin-modal-head{
+  padding:20px 28px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.admin-modal-head h2{font-size:1rem;font-weight:800;display:flex;align-items:center;gap:10px}
+.admin-modal-
+
+/* Admin sidebar + content */
+.admin-layout{display:grid;grid-template-columns:220px 1fr;height:100%}
+.admin-sidebar{border-right:1px solid var(--border);padding:16px 12px}
+.admin-sidebar-item{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 12px;border-radius:9px;cursor:pointer;transition:all .2s;
+  font-size:.8rem;font-weight:600;color:var(--text2);margin-bottom:3px;
+  border:1px solid transparent;
+}
+.admin-sidebar-item:hover{background:var(--surface2);color:var(--text)}
+.admin-sidebar-item.active{background:rgba(108,99,255,.12);border-color:rgba(108,99,255,.25);color:var(--text)}
+.admin-sidebar-sep{height:1px;background:var(--border);margin:10px 4px}
+.admin-content{padding:24px;overflow-y:auto}
+.admin-page{display:none}
+.admin-page.active{display:block}
+
+/* Admin form elements */
+.form-group{margin-bottom:14px}
+.form-group label{
+  display:block;font-size:.68rem;font-weight:700;color:var(--text2);
+  letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;font-family:var(--mono);
+}
+
+select
+select.inp option{background:var(--surface2)}
+textarea
+.inp-row{display:flex;gap:8px}
+.inp-row 
+.form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* Admin project list */
+.admin-proj-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.admin-proj-item{
+  background:var(--surface2);border:1px solid var(--border);border-radius:12px;
+  padding:14px 16px;display:flex;align-items:center;gap:12px;
+}
+.admin-proj-item .api{flex-shrink:0;width:40px;height:40px;border-radius:8px;overflow:hidden;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.admin-proj-item .api img{width:100%;height:100%;object-fit:cover}
+.admin-proj-info{flex:1;min-width:0}
+.admin-proj-name{font-weight:700;font-size:.88rem;margin-bottom:2px}
+.admin-proj-sub{font-size:.72rem;color:var(--text3);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-proj-actions{display:flex;gap:6px;flex-shrink:0}
+.btn-edit{background:rgba(108,99,255,.12);color:var(--accent);border:1px solid rgba(108,99,255,.25);padding:6px 11px;border-radius:7px;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-edit:hover{background:rgba(108,99,255,.22)}
+.btn-del{background:rgba(255,77,109,.1);color:var(--red);border:1px solid rgba(255,77,109,.25);padding:6px 11px;border-radius:7px;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-del:hover{background:rgba(255,77,109,.2)}
+.btn-toggle{background:var(--surface3);border:1px solid var(--border2);color:var(--text3);padding:6px 9px;border-radius:7px;font-size:.72rem;cursor:pointer;transition:all .2s}
+.btn-toggle.on{background:rgba(0,245,147,.1);color:var(--green);border-color:rgba(0,245,147,.3)}
+
+/* Add/Edit form panel */
+.edit-panel{
+  background:var(--surface2);border:1px solid var(--border);border-radius:14px;
+  padding:20px;margin-bottom:20px;
+}
+.edit-panel h4{font-size:.88rem;font-weight:700;color:var(--cyan);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.edit-panel-close{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:.85rem;transition:color .2s}
+.edit-panel-close:hover{color:var(--red)}
+
+/* Folder tree editor */
+.folder-editor{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:12px;margin-top:8px;
+}
+.folder-editor-item{
+  display:flex;align-items:center;gap:6px;margin-bottom:6px;
+}
+.folder-editor-item 
+
+/* Firebase status */
+.fb-status{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:.65rem;padding:4px 10px;border-radius:100px;
+}
+.fb-status.ok{color:var(--green);background:rgba(0,245,147,.08);border:1px solid rgba(0,245,147,.2)}
+.fb-status.loading{color:var(--gold);background:rgba(255,201,71,.08);border:1px solid rgba(255,201,71,.2)}
+.fb-status.err{color:var(--red);background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.2)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Settings toggles */
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid var(--border);
+}
+.toggle-row:last-child{border-bottom:none}
+.toggle-row label{font-size:.84rem;font-weight:600}
+.toggle-row p{font-size:.75rem;color:var(--text3);margin-top:2px}
+.toggle{
+  width:40px;height:22px;background:var(--border2);border-radius:100px;
+  border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;
+}
+.toggle::after{
+  content:'';position:absolute;width:16px;height:16px;background:white;
+  border-radius:50%;top:3px;left:3px;transition:transform .2s;
+}
+.toggle.on{background:var(--green)}
+.toggle.on::after{transform:translateX(18px)}
+
+/* Auth modal */
+.overlay-sm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);z-index:500;align-items:center;justify-content:center;padding:20px}
+.overlay-sm.open{display:flex}
+.modal-sm{background:var(--surface);border:1px solid var(--border2);border-radius:18px;width:100%;max-width:420px;animation:modalIn .3s cubic-bezier(.2,.8,.3,1)}
+.modal-sm-head{padding:22px 26px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-sm-head h3{font-size:1rem;font-weight:800}
+.modal-sm-
+.modal-sm-foot{padding:14px 26px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.btn-close{background:transparent;border:1px solid var(--border2);color:var(--text2);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:.85rem;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.btn-close:hover{border-color:var(--red);color:var(--red)}
+
+.btn-secondary:hover{border-color:var(--accent);color:var(--text)}
+.err-msg{color:var(--red);font-size:.74rem;margin-top:6px;font-family:var(--mono)}
+.ok-msg{color:var(--green);font-size:.74rem;margin-top:6px;font-family:var(--mono)}
+
+/* Toast */
+
+.toast.s{border-color:rgba(0,245,147,.4)}
+.toast.e{border-color:rgba(255,77,109,.4)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Loading spinner */
+.loading-grid{
+  grid-column:1/-1;text-align:center;padding:60px;
+  color:var(--text3);font-family:var(--mono);font-size:.8rem;
+}
+.spinner{
+  width:32px;height:32px;border:2px solid var(--border2);
+  border-top-color:var(--accent);border-radius:50%;margin:0 auto 14px;
+  animation:spin .8s linear infinite;
+}
+
+/* Divider */
+.section-div{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:0 40px}
+
+/* Footer */
+
+.footer-logo span{color:var(--cyan)}
+
+/* Category color accents */
+.c-sites{color:var(--cat-sites-c)} .c-games{color:var(--cat-games-c)}
+.c-software{color:var(--cat-software-c)} .c-animations{color:var(--cat-animations-c)}
+.c-bots{color:var(--cat-bots-c)} .c-ai{color:var(--cat-ai-c)}
+.c-assets{color:var(--cat-assets-c)} .c-other{color:var(--cat-other-c)}
+
+
+
+/* PROJECTS PAGE */
+.proj-page-active { display:block !important; }
 </style>
 </head>
 <body>
@@ -364,7 +939,7 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
   </a>
   <nav>
     <a href="#services" id="nav-services">Services</a>
-    <a href="#projects" id="nav-projects" style="display:none">Projets</a>
+    <a href="#proj-page" id="nav-projects" style="display:none" onclick="showProjPage(event)">Projets</a>
     <a href="#team">Équipe</a>
     <a href="#support">Support</a>
     <a href="#about">À propos</a>
@@ -410,13 +985,1254 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
 <div class="sec-divider" id="div-projects" style="display:none"></div>
 
 <!-- PROJECTS -->
-<section class="section" id="projects" style="display:none">
-  <div class="section-head">
-    <span class="section-label">// nos réalisations</span>
-    <h2>Nos projets</h2>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION PROJETS (intégrée depuis project.html)
+═══════════════════════════════════════════════════════════ -->
+<div id="proj-page" style="display:none">
+<!-- ═══ HEADER ═══ -->
+
+
+<!-- ═══ HERO ═══ -->
+
+
+<!-- ═══ CATEGORY TABS ═══ -->
+<div class="cat-nav" id="catNav">
+  <button class="cat-btn active" data-cat="all" onclick="proj_filterCat('all')">
+    <span class="cico">✦</span> Tout <span class="cat-count" id="cnt-all">0</span>
+  </button>
+  <button class="cat-btn" data-cat="sites" onclick="proj_filterCat('sites')">
+    <span class="cico">🌐</span> Sites <span class="cat-count" id="cnt-sites">0</span>
+  </button>
+  <button class="cat-btn" data-cat="games" onclick="proj_filterCat('games')">
+    <span class="cico">🎮</span> Jeux <span class="cat-count" id="cnt-games">0</span>
+  </button>
+  <button class="cat-btn" data-cat="software" onclick="proj_filterCat('software')">
+    <span class="cico">⚙️</span> Logiciels <span class="cat-count" id="cnt-software">0</span>
+  </button>
+  <button class="cat-btn" data-cat="animations" onclick="proj_filterCat('animations')">
+    <span class="cico">🎬</span> Animations <span class="cat-count" id="cnt-animations">0</span>
+  </button>
+  <button class="cat-btn" data-cat="bots" onclick="proj_filterCat('bots')">
+    <span class="cico">🤖</span> Bots <span class="cat-count" id="cnt-bots">0</span>
+  </button>
+  <button class="cat-btn" data-cat="ai" onclick="proj_filterCat('ai')">
+    <span class="cico">🧠</span> IA <span class="cat-count" id="cnt-ai">0</span>
+  </button>
+  <button class="cat-btn" data-cat="assets" onclick="proj_filterCat('assets')">
+    <span class="cico">📦</span> Assets <span class="cat-count" id="cnt-assets">0</span>
+  </button>
+  <button class="cat-btn" data-cat="other" onclick="proj_filterCat('other')">
+    <span class="cico">◈</span> Autres <span class="cat-count" id="cnt-other">0</span>
+  </button>
+</div>
+
+<!-- ═══ PROJECTS SECTIONS ═══ -->
+<div class="section" id="mainSection">
+  <div id="projectsContainer"></div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+
+
+<!-- ═══ PROJECT DETAIL MODAL ═══ -->
+<div class="overlay" id="projOverlay" onclick="handleOvClick(event,'projOverlay')">
+  <div class="modal-proj" id="projModal">
+    <button class="modal-close" onclick="closeOverlay('projOverlay')">✕</button>
+    <div id="projModalContent"></div>
   </div>
-  <div id="proj-cats-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px"></div>
-</section>
+</div>
+
+    <div class="admin-modal-body">
+      <!-- Login wall -->
+      <div id="adminLoginWall" style="padding:56px 28px;text-align:center;">
+        <div style="font-size:2.2rem;margin-bottom:14px;">🔐</div>
+        <h4 style="font-size:1rem;font-weight:700;margin-bottom:6px;">Accès restreint</h4>
+        <p style="color:var(--text2);font-size:.82rem;margin-bottom:22px;">Mot de passe administrateur requis</p>
+        <div style="max-width:260px;margin:0 auto;display:flex;flex-direction:column;gap:8px;">
+          <input type="password" class="inp" id="adminPw" placeholder="Mot de passe..." onkeypress="if(event.key==='Enter')proj_tryAdminLogin()">
+          <button class="btn-primary" onclick="proj_tryAdminLogin()">Accéder →</button>
+          <div class="err-msg" id="adminPwErr"></div>
+        </div>
+      </div>
+      <!-- Admin panel -->
+      <div id="adminPanel" style="display:none;">
+        <div class="admin-layout">
+          <!-- Sidebar -->
+          <div class="admin-sidebar">
+            <div class="admin-sidebar-item active" onclick="proj_adminPage('sites')" id="aside-sites">🌐 Sites</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('games')" id="aside-games">🎮 Jeux vidéos</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('software')" id="aside-software">⚙️ Logiciels</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('animations')" id="aside-animations">🎬 Animations</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('bots')" id="aside-bots">🤖 Bots Discord</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('ai')" id="aside-ai">🧠 IA</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('assets')" id="aside-assets">📦 Assets</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('other')" id="aside-other">◈ Autres</div>
+            <div class="admin-sidebar-sep"></div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('settings')" id="aside-settings">⚡ Paramètres</div>
+          </div>
+          <!-- Content -->
+          <div class="admin-content" id="adminContent">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   CONSTANTS
+══════════════════════════════════════════════════════ */
+const CATS = ['sites','games','software','animations','bots','ai','assets','other'];
+const CAT_META = {
+  sites:      { label:'Sites Web',      icon:'🌐', color:'var(--cat-sites-c)' },
+  games:      { label:'Jeux Vidéos',    icon:'🎮', color:'var(--cat-games-c)' },
+  software:   { label:'Logiciels',      icon:'⚙️', color:'var(--cat-software-c)' },
+  animations: { label:'Animations',     icon:'🎬', color:'var(--cat-animations-c)' },
+  bots:       { label:'Bots Discord',   icon:'🤖', color:'var(--cat-bots-c)' },
+  ai:         { label:'IA',             icon:'🧠', color:'var(--cat-ai-c)' },
+  assets:     { label:'Assets',         icon:'📦', color:'var(--cat-assets-c)' },
+  other:      { label:'Autres',         icon:'◈',  color:'var(--cat-other-c)' }
+};
+const CWS_LOGO = 'https://raw.githubusercontent.com/Capky/CapWorks-Studio/main/CWS_Logo.png';
+const LS_ADMINPW   = 'cw_proj_adminpw';
+const LS_LIKES     = 'cw_proj_likes';
+const LS_SETTINGS  = 'cw_proj_settings';
+
+/* ══════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════ */
+let db = null;
+let FB = null;
+let projects = {};   // { sites:[], games:[], ... }
+let activeCat = 'all';
+let searchQuery = '';
+let adminLoggedIn = false;
+let adminPassword = localStorage.getItem(LS_ADMINPW) || 'admin123';
+let likedProjects = JSON.parse(localStorage.getItem(LS_LIKES) || '{}');
+let settings = JSON.parse(localStorage.getItem(LS_SETTINGS) || JSON.stringify({
+  showServices: false,
+  enableLikes: true,
+  enableViews: true,
+  enableDownloadCount: true
+}));
+let currentEditCat = 'sites';
+let editingId = null;
+
+// Init empty arrays
+CATS.forEach(c => projects[c] = []);
+
+/* ══════════════════════════════════════════════════════
+   FIREBASE INIT
+══════════════════════════════════════════════════════ */
+function proj_waitForFirebase() {
+  return new Promise(resolve => {
+    if (window.__firebaseReady) { resolve(); return; }
+    document.addEventListener('firebase-ready', resolve, { once: true });
+    setTimeout(resolve, 6000); // fallback
+  });
+}
+
+async function proj_initFirebase(){
+  // Reuse Firebase already initialized by index.html
+  await new Promise(r=>{ if(window.__firebaseReady){r();}else{document.addEventListener('firebase-ready',r,{once:true});} });
+  if(!window.__db) return;
+  // Share db with project module via globals
+  window.__proj_db = window.__db;
+  window.__proj_FB = window.__FB;
+  await proj_loadAllProjects();
+}
+
+
+function proj_setFbStatus(type, text){ /* noop */ }
+
+/* ══════════════════════════════════════════════════════
+   FIRESTORE — LOAD
+══════════════════════════════════════════════════════ */
+async function proj_loadAllProjects() {
+  if (!db) return;
+  proj_setFbStatus('loading', '⟳ Chargement...');
+  try {
+    for (const cat of CATS) {
+      const snap = await FB.getDocs(FB.collection(db, `projects_${cat}`));
+      projects[cat] = [];
+      snap.forEach(d => projects[cat].push({ id: d.id, ...d.data() }));
+      // Sort by order field, then by createdAt
+      projects[cat].sort((a, b) => (a.order || 999) - (b.order || 999));
+    }
+    proj_updateCounts();
+    proj_renderAll();
+    proj_setFbStatus('ok', '✓ Firebase');
+  } catch(e) {
+    console.error(e);
+    proj_setFbStatus('err', '✕ Erreur Firestore');
+    toast('Erreur de chargement Firebase', 'e');
+  }
+}
+
+async function proj_saveProject(cat, data, id = null) {
+  if (!db) { toast('Firebase non configuré', 'e'); return null; }
+  try {
+    if (id) {
+      await FB.setDoc(FB.doc(db, `projects_${cat}`, id), { ...data, updatedAt: FB.serverTimestamp() }, { merge: true });
+      return id;
+    } else {
+      const ref = await FB.addDoc(FB.collection(db, `projects_${cat}`), { ...data, views: 0, likes: 0, downloads: 0, createdAt: FB.serverTimestamp() });
+      return ref.id;
+    }
+  } catch(e) { console.error(e); toast('Erreur de sauvegarde', 'e'); return null; }
+}
+
+async function proj_deleteProject(cat, id) {
+  if (!db) return;
+  try {
+    await FB.deleteDoc(FB.doc(db, `projects_${cat}`, id));
+    projects[cat] = projects[cat].filter(p => p.id !== id);
+    proj_updateCounts(); proj_renderAll();
+    toast('Projet supprimé', 's');
+  } catch(e) { toast('Erreur de suppression', 'e'); }
+}
+
+async function proj_incrementStat(cat, id, field) {
+  if (!db) return;
+  try { await FB.updateDoc(FB.doc(db, `projects_${cat}`, id), { [field]: FB.increment(1) }); }
+  catch(e) { /* silent */ }
+}
+
+/* ══════════════════════════════════════════════════════
+   COUNTS & SEARCH
+══════════════════════════════════════════════════════ */
+function proj_updateCounts() {
+  let total = 0;
+  CATS.forEach(c => {
+    const n = projects[c].length;
+    total += n;
+    const el = document.getElementById(`cnt-${c}`);
+    if (el) el.textContent = n;
+  });
+  const el = document.getElementById('cnt-all');
+  if (el) el.textContent = total;
+}
+
+function proj_handleSearch(val) {
+  searchQuery = val.trim().toLowerCase();
+  document.getElementById('searchClear').style.display = val ? 'block' : 'none';
+  proj_renderAll();
+}
+
+function proj_clearSearch() {
+  document.getElementById('globalSearch').value = '';
+  searchQuery = '';
+  document.getElementById('searchClear').style.display = 'none';
+  document.getElementById('searchCount').textContent = '';
+  proj_renderAll();
+}
+
+function proj_filterCat(cat) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  proj_renderAll();
+}
+
+function proj_matchesSearch(proj) {
+  if (!searchQuery) return true;
+  const haystack = [proj.title, proj.desc, proj.tags, proj.tech, proj.url, proj.model, proj.features]
+    .filter(Boolean).join(' ').toLowerCase();
+  return haystack.includes(searchQuery);
+}
+
+function proj_getFilteredProjects(cat) {
+  return (projects[cat] || []).filter(p => {
+    if (p.hidden) return false;
+    return proj_matchesSearch(p);
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   RENDER ENGINE
+══════════════════════════════════════════════════════ */
+function proj_renderAll() {
+  const container = document.getElementById('projectsContainer');
+  container.innerHTML = '';
+
+  let totalVisible = 0;
+  const catsToShow = activeCat === 'all' ? CATS : [activeCat];
+
+  catsToShow.forEach(cat => {
+    const items = proj_getFilteredProjects(cat);
+    if (activeCat === 'all' && items.length === 0) return;
+    totalVisible += items.length;
+    container.appendChild(proj_buildCatSection(cat, items));
+  });
+
+  if (searchQuery) {
+    document.getElementById('searchCount').textContent =
+      totalVisible === 0 ? 'Aucun résultat' : `${totalVisible} projet${totalVisible > 1 ? 's' : ''} trouvé${totalVisible > 1 ? 's' : ''}`;
+  } else {
+    document.getElementById('searchCount').textContent = '';
+  }
+
+  if (totalVisible === 0 && activeCat !== 'all') {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.style.padding = '80px 20px';
+    empty.innerHTML = `<div class="empty-icon">${CAT_META[activeCat]?.icon || '📂'}</div>
+      <p>Aucun projet dans cette catégorie pour l'instant.<br><span style="color:var(--text3)">Revenez bientôt !</span></p>`;
+    container.appendChild(empty);
+  }
+}
+
+function proj_buildCatSection(cat, items) {
+  const wrap = document.createElement('div');
+  wrap.setAttribute('data-section', cat);
+
+  // Section header
+  const head = document.createElement('div');
+  head.className = 'section-head cat-header';
+  head.setAttribute('data-cat', cat);
+  head.innerHTML = `
+    <div class="section-head-left">
+      <span class="section-label">${CAT_META[cat].icon} // ${CAT_META[cat].label.toUpperCase()}</span>
+      <span style="font-family:var(--mono);font-size:.62rem;color:var(--text3);">${items.length} projet${items.length !== 1 ? 's' : ''}</span>
+    </div>
+  `;
+  wrap.appendChild(head);
+
+  // Grid
+  const grid = document.createElement('div');
+  grid.className = `projects-grid grid-${cat}`;
+
+  if (items.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">${CAT_META[cat].icon}</div><p>Aucun projet — revenez bientôt.</p></div>`;
+  } else {
+    items.forEach((proj, i) => {
+      const card = proj_buildCard(cat, proj, i);
+      grid.appendChild(card);
+    });
+  }
+
+  wrap.appendChild(grid);
+
+  // Divider (except last)
+  const div = document.createElement('div');
+  div.className = 'section-div';
+  div.style.margin = '48px 0 44px';
+  wrap.appendChild(div);
+
+  return wrap;
+}
+
+/* ══════════════════════════════════════════════════════
+   CARD BUILDERS
+══════════════════════════════════════════════════════ */
+function proj_buildCard(cat, proj, idx) {
+  const card = document.createElement('div');
+  card.className = `proj-card ${cat}-card`;
+  card.setAttribute('data-cat', cat);
+  card.style.animationDelay = `${idx * 0.06}s`;
+
+  const liked = likedProjects[proj.id];
+
+  switch(cat) {
+    case 'sites':      card.innerHTML = proj_buildSiteCard(proj, liked); break;
+    case 'games':      card.innerHTML = proj_buildGameCard(proj, liked); break;
+    case 'software':   card.innerHTML = proj_buildSoftwareCard(proj, liked); break;
+    case 'animations': card.innerHTML = proj_buildAnimCard(proj, liked); break;
+    case 'bots':       card.innerHTML = proj_buildBotCard(proj, liked); break;
+    case 'ai':         card.innerHTML = proj_buildAiCard(proj, liked); break;
+    case 'assets':     card.innerHTML = proj_buildAssetCard(proj, liked); break;
+    case 'other':      card.innerHTML = proj_buildOtherCard(proj, liked); break;
+  }
+
+  // Click → modal (but not on buttons)
+  card.addEventListener('click', e => {
+    if (e.target.closest('button, a')) return;
+    proj_openProjectModal(cat, proj);
+  });
+
+  return card;
+}
+
+function proj_mediaHtml(proj, ratio='ratio-16-9') {
+  if (proj.videoUrl && (proj.videoUrl.includes('youtube') || proj.videoUrl.includes('youtu.be'))) {
+    const vid = proj_ytId(proj.videoUrl);
+    return `<div class="card-media ${ratio}">
+      <div class="play-btn" onclick="proj_openYT('${vid}',event)">
+        <img src="https://img.youtube.com/vi/${vid}/mqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        <div class="card-media-overlay"></div>
+        <div class="play-circle">▶</div>
+      </div>
+      <div class="card-stats">${proj_statsHtml(proj)}</div>
+    </div>`;
+  }
+  if (proj.imageUrl) {
+    return `<div class="card-media ${ratio}">
+      <img src="${esc(proj.imageUrl)}" alt="${esc(proj.title)}" loading="lazy">
+      <div class="card-media-overlay"></div>
+      <div class="card-stats">${proj_statsHtml(proj)}</div>
+    </div>`;
+  }
+  return `<div class="card-media compact">
+    <div class="card-no-media">${CAT_META[proj._cat||'other']?.icon || '📁'}</div>
+    <div class="card-stats">${proj_statsHtml(proj)}</div>
+  </div>`;
+}
+
+function proj_statsHtml(proj) {
+  const v = (proj.views || 0) > 0 ? `<span class="stat-chip">👁 ${proj_fmt(proj.views)}</span>` : '';
+  const l = (proj.likes || 0) > 0 ? `<span class="stat-chip">❤ ${proj_fmt(proj.likes)}</span>` : '';
+  const d = (proj.downloads || 0) > 0 ? `<span class="stat-chip">↓ ${proj_fmt(proj.downloads)}</span>` : '';
+  return v + l + d;
+}
+
+function proj_fmt(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : n; }
+
+function proj_tagsHtml(proj) {
+  const tags = (proj.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+  return tags.map(t => `<span class="tag">${esc(t)}</span>`).join('');
+}
+function proj_techTagsHtml(proj) {
+  const tags = (proj.tech || '').split(',').map(t => t.trim()).filter(Boolean);
+  return tags.map(t => `<span class="tag tech">${esc(t)}</span>`).join('');
+}
+
+function proj_likeBtn(proj, liked) {
+  return `<button class="like-btn${liked?' liked':''}" onclick="proj_toggleLike('${esc(proj._cat||'other')}','${esc(proj.id)}',this)">
+    <span class="like-ico">❤</span> ${proj.likes || 0}
+  </button>`;
+}
+
+/* --- SITES --- */
+function proj_buildSiteCard(proj, liked) {
+  proj._cat = 'sites';
+  const statusDot = proj.status === 'live'
+    ? `<div class="site-status-dot live"></div>En ligne`
+    : `<div class="site-status-dot wip"></div>En développement`;
+  return `
+    ${proj_mediaHtml(proj)}
+    <div class="card-body">
+      <div class="card-tags">${proj_tagsHtml(proj)}${proj_techTagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-url"><span class="site-status-dot ${proj.status==='live'?'live':'wip'}"></span><span>${esc(proj.url||'—')}</span></div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.url ? `<a class="btn-cta visit" href="${esc(proj.url)}" target="_blank" onclick="proj_trackView('sites','${esc(proj.id)}')">🔗 Visiter</a>` : ''}
+          ${proj.repoUrl ? `<a class="btn-cta outline" href="${esc(proj.repoUrl)}" target="_blank">⎇ Code</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+/* --- GAMES --- */
+function proj_buildGameCard(proj, liked) {
+  proj._cat = 'games';
+  const platforms = (proj.platforms || '').split(',').map(p => p.trim()).filter(Boolean);
+  const platHtml = platforms.map(p => `<span class="platform-badge pb-${p.toLowerCase()}">${p}</span>`).join('');
+  return `
+    ${proj_mediaHtml(proj)}
+    <div class="card-body">
+      <div class="card-platform">${platHtml}</div>
+      <div class="card-tags">${proj_tagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('games','${esc(proj.id)}',event)">⬇ Télécharger</a>` : ''}
+          ${proj.playUrl ? `<a class="btn-cta visit" href="${esc(proj.playUrl)}" target="_blank">▶ Jouer</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+      ${proj.downloadUrl ? `<div class="game-card dl-counter" style="margin-top:10px;">↓ ${proj_fmt(proj.downloads||0)} téléchargements</div>` : ''}
+    </div>`;
+}
+
+/* --- SOFTWARE --- */
+function proj_buildSoftwareCard(proj, liked) {
+  proj._cat = 'software';
+  return `
+    ${proj_mediaHtml(proj)}
+    <div class="card-body">
+      <div class="card-tags">${proj_tagsHtml(proj)}${proj_techTagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      ${proj.version ? `<div style="font-family:var(--mono);font-size:.65rem;color:var(--text3);margin-bottom:10px;">v${esc(proj.version)}${proj.os?' · '+esc(proj.os):''}</div>` : ''}
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('software','${esc(proj.id)}',event)">⬇ Télécharger</a>` : ''}
+          ${proj.url ? `<a class="btn-cta outline" href="${esc(proj.url)}" target="_blank">🔗 En savoir +</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+/* --- ANIMATIONS --- */
+function proj_buildAnimCard(proj, liked) {
+  proj._cat = 'animations';
+  const mediaBlock = proj.videoUrl
+    ? (proj.videoUrl.includes('youtube') || proj.videoUrl.includes('youtu.be')
+      ? `<div class="card-media ratio-16-9">
+          <div class="play-btn" onclick="proj_openYT('${proj_ytId(proj.videoUrl)}',event)">
+            <img src="https://img.youtube.com/vi/${proj_ytId(proj.videoUrl)}/mqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+            <div class="card-media-overlay"></div>
+            <div class="play-circle">▶</div>
+          </div>
+          ${proj.duration ? '<div class="duration-badge">⏱ '+esc(proj.duration)+'</div>' : ''}
+          <div class="card-stats">${proj_statsHtml(proj)}</div>
+        </div>`
+      : `<div class="card-media ratio-16-9">
+          <video src="${esc(proj.videoUrl)}" muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onmouseenter="this.play()" onmouseleave="this.pause()"></video>
+          ${proj.duration ? '<div class="duration-badge">⏱ '+esc(proj.duration)+'</div>' : ''}
+          <div class="card-stats">${proj_statsHtml(proj)}</div>
+        </div>`)
+    : proj_mediaHtml(proj);
+  return `
+    ${mediaBlock}
+    <div class="card-body">
+      <div class="card-tags">${proj_tagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('animations','${esc(proj.id)}',event)">⬇ Télécharger</a>` : ''}
+          ${proj.videoUrl && !proj.videoUrl.includes('youtube') ? `<a class="btn-cta visit" href="${esc(proj.videoUrl)}" target="_blank">▶ Voir</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+/* --- BOTS --- */
+function proj_buildBotCard(proj, liked) {
+  proj._cat = 'bots';
+  const avatarEl = proj.imageUrl
+    ? `<img src="${esc(proj.imageUrl)}" style="width:100%;height:100%;object-fit:cover;">`
+    : `🤖`;
+  return `
+    <div class="card-body" style="padding-top:20px;">
+      <div class="bot-meta">
+        <div class="bot-avatar">${avatarEl}</div>
+        <div>
+          <div class="card-title" style="margin-bottom:2px;">${esc(proj.title||'Bot')}</div>
+          <div style="font-family:var(--mono);font-size:.68rem;color:var(--text3);">${esc(proj.prefix||'/')}</div>
+        </div>
+      </div>
+      <div class="card-tags" style="margin-bottom:10px;">${proj_tagsHtml(proj)}${proj_techTagsHtml(proj)}</div>
+      ${proj.servers||proj.users||proj.commands ? `
+      <div class="bot-stats">
+        ${proj.servers ? `<div class="bot-stat"><div class="bot-stat-val">${esc(proj.servers)}</div><div class="bot-stat-label">Serveurs</div></div>` : ''}
+        ${proj.users ? `<div class="bot-stat"><div class="bot-stat-val">${esc(proj.users)}</div><div class="bot-stat-label">Users</div></div>` : ''}
+        ${proj.commands ? `<div class="bot-stat"><div class="bot-stat-val">${esc(proj.commands)}</div><div class="bot-stat-label">Cmds</div></div>` : ''}
+      </div>` : ''}
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.inviteUrl ? `<a class="btn-cta primary" href="${esc(proj.inviteUrl)}" target="_blank">+ Inviter</a>` : ''}
+          ${proj.url ? `<a class="btn-cta outline" href="${esc(proj.url)}" target="_blank">🔗 Page</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+/* --- AI --- */
+function proj_buildAiCard(proj, liked) {
+  proj._cat = 'ai';
+  const features = (proj.features||'').split('\n').filter(Boolean);
+  return `
+    ${proj.imageUrl ? proj_mediaHtml(proj,'compact') : ''}
+    <div class="card-body">
+      <div class="model-badge">🧠 ${esc(proj.model||'Custom AI')}</div>
+      <div class="card-tags">${proj_tagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      ${features.length ? `<div class="feature-list">${features.slice(0,3).map(f => `<div class="ai-feature">${esc(f)}</div>`).join('')}</div>` : ''}
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.demoUrl ? `<a class="btn-cta primary" href="${esc(proj.demoUrl)}" target="_blank">🔗 Demo</a>` : ''}
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('ai','${esc(proj.id)}',event)">⬇ Télécharger</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+/* --- ASSETS --- */
+function proj_buildAssetCard(proj, liked) {
+  proj._cat = 'assets';
+  const files = proj.files || [];
+  const folders = proj.folders || [];
+  const treeHtml = proj_buildMiniTree(folders, files);
+  return `
+    ${proj.imageUrl ? proj_mediaHtml(proj,'compact') : ''}
+    <div class="card-body">
+      <div class="card-tags">${proj_tagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      ${treeHtml ? `<div class="folder-tree">${treeHtml}</div>` : ''}
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('assets','${esc(proj.id)}',event)">⬇ ZIP (${esc(proj.size||'?')})</a>` : ''}
+          ${proj.previewUrl ? `<a class="btn-cta outline" href="${esc(proj.previewUrl)}" target="_blank">👁 Preview</a>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${proj.downloadUrl ? `<span class="asset-size">↓ ${proj_fmt(proj.downloads||0)}</span>` : ''}
+          ${proj_likeBtn(proj, liked)}
+        </div>
+      </div>
+    </div>`;
+}
+
+/* --- OTHER --- */
+function proj_buildOtherCard(proj, liked) {
+  proj._cat = 'other';
+  return `
+    ${proj.imageUrl ? proj_mediaHtml(proj,'compact') : ''}
+    <div class="card-body">
+      <div class="card-tags">${proj_tagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.url ? `<a class="btn-cta visit" href="${esc(proj.url)}" target="_blank">🔗 Voir</a>` : ''}
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('other','${esc(proj.id)}',event)">⬇ Télécharger</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════════════════
+   FOLDER TREE BUILDER
+══════════════════════════════════════════════════════ */
+function proj_buildMiniTree(folders, files, indent=0) {
+  let html = '';
+  const pad = indent ? `style="padding-left:${indent*14}px"` : '';
+  folders.forEach(f => {
+    html += `<div class="tree-item folder" ${pad}>📁 ${esc(f.name)}</div>`;
+    if (f.files) f.files.forEach(fi => {
+      const ext = fi.name.split('.').pop().toUpperCase();
+      html += `<div class="tree-item file" style="padding-left:${(indent+1)*14}px">📄 ${esc(fi.name)}<span class="ext">.${ext}</span></div>`;
+    });
+  });
+  files.forEach(fi => {
+    const ext = fi.name ? fi.name.split('.').pop().toUpperCase() : '?';
+    html += `<div class="tree-item file" ${pad}>📄 ${esc(fi.name||fi)}<span class="ext">.${ext}</span></div>`;
+  });
+  return html;
+}
+
+/* ══════════════════════════════════════════════════════
+   PROJECT DETAIL MODAL
+══════════════════════════════════════════════════════ */
+function proj_openProjectModal(cat, proj) {
+  if (settings.enableViews) { proj_trackView(cat, proj.id); proj.views = (proj.views||0) + 1; }
+  const liked = likedProjects[proj.id];
+  let mediaEl = '';
+  if (proj.videoUrl && (proj.videoUrl.includes('youtube')||proj.videoUrl.includes('youtu.be'))) {
+    const vid = proj_ytId(proj.videoUrl);
+    mediaEl = `<div class="modal-proj-media" style="background:#000;">
+      <iframe src="https://www.youtube.com/embed/${vid}?autoplay=1&rel=0" allow="autoplay;encrypted-media" allowfullscreen style="width:100%;height:380px;border:none;"></iframe>
+    </div>`;
+  } else if (proj.imageUrl) {
+    mediaEl = `<div class="modal-proj-media"><img src="${esc(proj.imageUrl)}" alt="${esc(proj.title)}"></div>`;
+  }
+
+  // Meta grid items per category
+  let metaItems = '';
+  if (cat === 'sites') {
+    metaItems = proj_metaItem('🔗 URL', proj.url||'—') + proj_metaItem('📊 Statut', proj.status==='live'?'🟢 En ligne':'🟡 WIP');
+  } else if (cat === 'games') {
+    metaItems = proj_metaItem('🖥 Plateformes', proj.platforms||'—') + proj_metaItem('↓ Téléchargements', proj_fmt(proj.downloads||0));
+  } else if (cat === 'software') {
+    metaItems = proj_metaItem('📦 Version', proj.version||'—') + proj_metaItem('🖥 OS', proj.os||'—');
+  } else if (cat === 'bots') {
+    metaItems = proj_metaItem('🔧 Prefix', proj.prefix||'/') + proj_metaItem('🖧 Serveurs', proj.servers||'—');
+  } else if (cat === 'assets') {
+    metaItems = proj_metaItem('💾 Taille ZIP', proj.size||'—') + proj_metaItem('↓ Téléchargements', proj_fmt(proj.downloads||0));
+  } else if (cat === 'ai') {
+    metaItems = proj_metaItem('🧠 Modèle', proj.model||'Custom') + proj_metaItem('🔧 Tech', proj.tech||'—');
+  } else if (cat === 'animations') {
+    metaItems = proj_metaItem('⏱ Durée', proj.duration||'—') + proj_metaItem('🎨 Logiciel', proj.software||'—');
+  }
+  metaItems += proj_metaItem('❤ Likes', proj_fmt(proj.likes||0)) + proj_metaItem('👁 Vues', proj_fmt(proj.views||0));
+
+  // Full folder tree for assets
+  const treeSection = (cat === 'assets' && (proj.files||proj.folders)) ? `
+    <div class="modal-folder-head">📁 Contenu de l'archive</div>
+    <div class="modal-folder-tree">${proj_buildMiniTree(proj.folders||[], proj.files||[])}</div>` : '';
+
+  // Action buttons
+  let actions = '';
+  if (proj.downloadUrl) actions += `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('${cat}','${esc(proj.id)}',event)">⬇ Télécharger ZIP</a>`;
+  if (proj.url) actions += `<a class="btn-cta visit" href="${esc(proj.url)}" target="_blank">🔗 Visiter</a>`;
+  if (proj.inviteUrl) actions += `<a class="btn-cta primary" href="${esc(proj.inviteUrl)}" target="_blank">+ Inviter le bot</a>`;
+  if (proj.demoUrl) actions += `<a class="btn-cta primary" href="${esc(proj.demoUrl)}" target="_blank">🔗 Demo live</a>`;
+  if (proj.repoUrl) actions += `<a class="btn-cta outline" href="${esc(proj.repoUrl)}" target="_blank">⎇ Code source</a>`;
+  if (proj.playUrl) actions += `<a class="btn-cta visit" href="${esc(proj.playUrl)}" target="_blank">▶ Jouer</a>`;
+  actions += `<button class="like-btn${liked?' liked':''}" onclick="proj_toggleLike('${cat}','${esc(proj.id)}',this)" style="margin-left:auto;">❤ ${proj.likes||0}</button>`;
+
+  document.getElementById('projModalContent').innerHTML = `
+    ${mediaEl}
+    <div class="modal-proj-body">
+      <div class="card-tags" style="margin-bottom:10px;">${proj_tagsHtml(proj)}${proj_techTagsHtml(proj)}</div>
+      <div class="modal-proj-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="modal-proj-desc">${esc(proj.desc||'')}</div>
+      ${proj.longDesc ? `<div style="color:var(--text2);font-size:.84rem;line-height:1.85;margin-bottom:20px;white-space:pre-wrap;">${esc(proj.longDesc)}</div>` : ''}
+      <div class="modal-meta-grid">${metaItems}</div>
+      ${treeSection}
+      <div class="modal-actions">${actions}</div>
+    </div>`;
+
+  document.getElementById('projOverlay').classList.add('open');
+}
+
+function proj_metaItem(label, val) {
+  return `<div class="modal-meta-item"><div class="modal-meta-label">${label}</div><div class="modal-meta-val">${esc(String(val))}</div></div>`;
+}
+
+/* ══════════════════════════════════════════════════════
+   LIKES / VIEWS / DOWNLOADS
+══════════════════════════════════════════════════════ */
+function proj_toggleLike(cat, id, btn) {
+  if (!settings.enableLikes) return;
+  const wasLiked = likedProjects[id];
+  likedProjects[id] = !wasLiked;
+  localStorage.setItem(LS_LIKES, JSON.stringify(likedProjects));
+
+  // Update Firebase
+  if (db && id) proj_incrementStat(cat, id, 'likes');
+
+  // Update local
+  const proj = (projects[cat]||[]).find(p => p.id === id);
+  if (proj) proj.likes = (proj.likes||0) + (wasLiked ? -1 : 1);
+
+  btn.classList.toggle('liked', !wasLiked);
+  const countEl = btn.querySelector('.like-ico');
+  if (countEl) countEl.nextSibling && (btn.childNodes[btn.childNodes.length-1].textContent = ` ${proj?.likes||0}`);
+  btn.innerHTML = `<span class="like-ico">❤</span> ${proj?.likes||0}`;
+  btn.className = `like-btn${likedProjects[id]?' liked':''}`;
+
+  // Re-add event
+  btn.onclick = e => { e.stopPropagation(); proj_toggleLike(cat, id, btn); };
+}
+
+function proj_trackView(cat, id) {
+  if (!settings.enableViews || !db) return;
+  proj_incrementStat(cat, id, 'views');
+}
+
+function proj_trackDownload(cat, id, e) {
+  if (!settings.enableDownloadCount || !db) return;
+  proj_incrementStat(cat, id, 'downloads');
+  const proj = (projects[cat]||[]).find(p => p.id === id);
+  if (proj) proj.downloads = (proj.downloads||0) + 1;
+}
+
+function proj_openYT(videoId, e) {
+  e.stopPropagation();
+  // Open YouTube in a lightbox
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;cursor:pointer;';
+  ov.innerHTML = `<div style="width:100%;max-width:860px;position:relative;cursor:default;">
+    <button onclick="this.closest('div[style]').remove()" style="position:absolute;top:-40px;right:0;background:none;border:1px solid rgba(255,255,255,.2);color:white;padding:6px 12px;border-radius:7px;cursor:pointer;font-size:.8rem;">✕ Fermer</button>
+    <div style="padding-top:56.25%;position:relative;">
+      <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" allow="autoplay;encrypted-media" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;border-radius:12px;"></iframe>
+    </div>
+  </div>`;
+  ov.addEventListener('click', function(ev) { if (ev.target === ov) ov.remove(); });
+  document.body.appendChild(ov);
+}
+
+function proj_ytId(url) {
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([^&?/\s]+)/);
+  return m ? m[1] : '';
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — LOGIN
+══════════════════════════════════════════════════════ */
+function proj_openAdmin(){ openAdmin(); /* delegate to index.html admin */ }
+
+function proj_tryAdminLogin() {
+  const pw = document.getElementById('adminPw').value;
+  if (pw !== adminPassword) { document.getElementById('adminPwErr').textContent = '✕ Mot de passe incorrect'; return; }
+  adminLoggedIn = true;
+  document.getElementById('adminLoginWall').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  proj_adminPage('sites');
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — PAGE ROUTING
+══════════════════════════════════════════════════════ */
+function proj_adminPage(name) {
+  currentEditCat = name;
+  document.querySelectorAll('.admin-sidebar-item').forEach(el => {
+    el.classList.toggle('active', el.id === `aside-${name}`);
+  });
+  const content = document.getElementById('adminContent');
+  if (CATS.includes(name)) proj_renderAdminCat(name, content);
+  else if (name === 'settings') proj_renderAdminSettings(content);
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — CATEGORY PAGE
+══════════════════════════════════════════════════════ */
+function proj_renderAdminCat(cat, el) {
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+      <h3 style="font-size:1rem;font-weight:800;">${CAT_META[cat].icon} ${CAT_META[cat].label}</h3>
+      <button class="btn-accent" style="font-size:.76rem;padding:7px 14px;" onclick="proj_showAddForm('${cat}')">+ Ajouter</button>
+    </div>
+    <div id="addFormZone-${cat}"></div>
+    <div class="admin-proj-list" id="adminList-${cat}">
+      ${(projects[cat]||[]).map(p => proj_adminProjItemHtml(cat, p)).join('') || '<p style="color:var(--text3);font-size:.8rem;">Aucun projet.</p>'}
+    </div>`;
+}
+
+function proj_adminProjItemHtml(cat, proj) {
+  const thumb = proj.imageUrl
+    ? `<img src="${esc(proj.imageUrl)}">`
+    : `<span>${CAT_META[cat].icon}</span>`;
+  return `<div class="admin-proj-item" id="aitem-${esc(proj.id)}">
+    <div class="api">${thumb}</div>
+    <div class="admin-proj-info">
+      <div class="admin-proj-name">${esc(proj.title||'Sans titre')}</div>
+      <div class="admin-proj-sub">${esc(proj.desc||'—')}</div>
+    </div>
+    <div class="admin-proj-actions">
+      <button class="btn-toggle${proj.hidden?'':' on'}" title="${proj.hidden?'Afficher':'Masquer'}" onclick="proj_toggleHidden('${cat}','${esc(proj.id)}',this)">${proj.hidden?'👁‍🗨':'👁'}</button>
+      <button class="btn-edit" onclick="proj_showEditForm('${cat}','${esc(proj.id)}')">✎ Éditer</button>
+      <button class="btn-del" onclick="proj_confirmDelete('${cat}','${esc(proj.id)}')">🗑</button>
+    </div>
+  </div>`;
+}
+
+async function proj_toggleHidden(cat, id, btn) {
+  const proj = (projects[cat]||[]).find(p => p.id === id);
+  if (!proj) return;
+  proj.hidden = !proj.hidden;
+  btn.textContent = proj.hidden ? '👁‍🗨' : '👁';
+  btn.className = `btn-toggle${proj.hidden?'':' on'}`;
+  if (db) await proj_saveProject(cat, { hidden: proj.hidden }, id);
+  proj_renderAll();
+}
+
+async function proj_confirmDelete(cat, id) {
+  if (!confirm('Supprimer ce projet ?')) return;
+  await proj_deleteProject(cat, id);
+  document.getElementById(`aitem-${id}`)?.remove();
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — ADD / EDIT FORMS
+══════════════════════════════════════════════════════ */
+function proj_showAddForm(cat) {
+  editingId = null;
+  const zone = document.getElementById(`addFormZone-${cat}`);
+  zone.innerHTML = proj_buildProjectForm(cat, null);
+}
+
+function proj_showEditForm(cat, id) {
+  editingId = id;
+  const proj = (projects[cat]||[]).find(p => p.id === id);
+  if (!proj) return;
+  const zone = document.getElementById(`addFormZone-${cat}`);
+  zone.innerHTML = proj_buildProjectForm(cat, proj);
+  zone.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function proj_buildProjectForm(cat, proj) {
+  const v = k => esc(proj?.[k] || '');
+  const isEdit = !!proj;
+  const title = isEdit ? `✎ Modifier "${v('title')}"` : `+ Nouveau ${CAT_META[cat].label.slice(0,-1)||cat}`;
+
+  // Common fields
+  let fields = `
+    <div class="form-grid2">
+      <div class="form-group"><label>Titre *</label><input class="inp" id="pf-title" value="${v('title')}" placeholder="Titre du projet"></div>
+      <div class="form-group"><label>Tags (virgule)</label><input class="inp" id="pf-tags" value="${v('tags')}" placeholder="tag1, tag2"></div>
+    </div>
+    <div class="form-group"><label>Description courte</label><textarea class="inp" id="pf-desc" rows="2" placeholder="Description courte...">${v('desc')}</textarea></div>
+    <div class="form-group"><label>Description longue (optionnel)</label><textarea class="inp" id="pf-longDesc" rows="3" placeholder="Détails supplémentaires...">${v('longDesc')}</textarea></div>
+    <div class="form-grid2">
+      <div class="form-group"><label>Image URL (optionnel)</label><input class="inp" id="pf-imageUrl" value="${v('imageUrl')}" placeholder="https://..."></div>
+      <div class="form-group"><label>Vidéo / YouTube URL</label><input class="inp" id="pf-videoUrl" value="${v('videoUrl')}" placeholder="https://youtu.be/..."></div>
+    </div>
+    <div class="form-group"><label>Ordre d'affichage</label><input class="inp" type="number" id="pf-order" value="${v('order')||'0'}" style="max-width:100px;"></div>`;
+
+  // Category-specific fields
+  if (cat === 'sites') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>URL du site *</label><input class="inp" id="pf-url" value="${v('url')}" placeholder="https://monsite.fr"></div>
+        <div class="form-group"><label>URL du repo (optionnel)</label><input class="inp" id="pf-repoUrl" value="${v('repoUrl')}" placeholder="https://github.com/..."></div>
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>Technologies (virgule)</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="React, Firebase..."></div>
+        <div class="form-group"><label>Statut</label>
+          <select class="inp" id="pf-status">
+            <option value="live"${proj?.status==='live'?' selected':''}>🟢 En ligne</option>
+            <option value="wip"${proj?.status==='wip'?' selected':''}>🟡 En développement</option>
+          </select>
+        </div>
+      </div>`;
+  } else if (cat === 'games') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>🔗 Lien de téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub Releases, Google Drive, Mega, itch.io..."></div>
+        <div class="form-group"><label>▶ Lien pour jouer en ligne (web)</label><input class="inp" id="pf-playUrl" value="${v('playUrl')}" placeholder="https://itch.io/... ou lien web"></div>
+      </div>
+      <div style="background:rgba(108,99,255,.06);border:1px solid rgba(108,99,255,.18);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:.7rem;color:var(--accent);font-family:var(--mono);">
+        💡 Hébergeurs recommandés : <strong>itch.io</strong> (idéal pour jeux), <strong>GitHub Releases</strong>, <strong>Mega.nz</strong>, <strong>Google Drive</strong>
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>Plateformes (virgule)</label><input class="inp" id="pf-platforms" value="${v('platforms')}" placeholder="PC, Android, iOS, Web"></div>
+        <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="Unity, Godot, Pygame..."></div>
+      </div>`;
+  } else if (cat === 'software') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>🔗 Lien de téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub Releases, Google Drive, Mega..."></div>
+        <div class="form-group"><label>🌐 URL page info (optionnel)</label><input class="inp" id="pf-url" value="${v('url')}" placeholder="https://..."></div>
+      </div>
+      <div style="background:rgba(0,245,147,.05);border:1px solid rgba(0,245,147,.15);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:.7rem;color:var(--green);font-family:var(--mono);">
+        💡 Hébergeurs recommandés : <strong>GitHub Releases</strong> (versioning), <strong>Mega.nz</strong>, <strong>Google Drive</strong>
+      </div>
+      <div class="form-grid3">
+        <div class="form-group"><label>Version</label><input class="inp" id="pf-version" value="${v('version')}" placeholder="1.0.0"></div>
+        <div class="form-group"><label>OS / Compatibilité</label><input class="inp" id="pf-os" value="${v('os')}" placeholder="Windows, macOS, Linux"></div>
+        <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="Python, Electron..."></div>
+      </div>`;
+  } else if (cat === 'animations') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>🔗 Lien de téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="Google Drive, Mega, WeTransfer..."></div>
+        <div class="form-group"><label>🎨 Logiciel utilisé</label><input class="inp" id="pf-software" value="${v('software')}" placeholder="After Effects, Blender, DaVinci..."></div>
+      </div>
+      <div style="background:rgba(255,106,176,.05);border:1px solid rgba(255,106,176,.18);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:.7rem;color:var(--pink);font-family:var(--mono);">
+        💡 Pour partager la vidéo : <strong>YouTube</strong> (coller le lien YT ci-dessus), ou héberger sur <strong>Google Drive / Mega</strong> pour le DL fichier source
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>Durée</label><input class="inp" id="pf-duration" value="${v('duration')}" placeholder="0:42"></div>
+        <div class="form-group"><label>Résolution</label><input class="inp" id="pf-resolution" value="${v('resolution')}" placeholder="1920x1080"></div>
+      </div>`;
+  } else if (cat === 'bots') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>Lien d'invitation</label><input class="inp" id="pf-inviteUrl" value="${v('inviteUrl')}" placeholder="https://discord.com/oauth2/..."></div>
+        <div class="form-group"><label>URL page du bot</label><input class="inp" id="pf-url" value="${v('url')}" placeholder="https://..."></div>
+      </div>
+      <div class="form-grid3">
+        <div class="form-group"><label>Préfixe</label><input class="inp" id="pf-prefix" value="${v('prefix')}" placeholder="/"></div>
+        <div class="form-group"><label>Serveurs</label><input class="inp" id="pf-servers" value="${v('servers')}" placeholder="1.2k"></div>
+        <div class="form-group"><label>Commandes</label><input class="inp" id="pf-commands" value="${v('commands')}" placeholder="42"></div>
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>Utilisateurs</label><input class="inp" id="pf-users" value="${v('users')}" placeholder="5k"></div>
+        <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="discord.py, Node.js..."></div>
+      </div>`;
+  } else if (cat === 'ai') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>Modèle IA</label><input class="inp" id="pf-model" value="${v('model')}" placeholder="GPT-4, Llama3, Custom..."></div>
+        <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="Python, PyTorch..."></div>
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>🔗 Lien Demo en ligne</label><input class="inp" id="pf-demoUrl" value="${v('demoUrl')}" placeholder="https://huggingface.co/... ou lien demo"></div>
+        <div class="form-group"><label>⬇ Lien téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub, HuggingFace, Google Drive..."></div>
+      </div>
+      <div class="form-group"><label>Fonctionnalités (une par ligne)</label>
+        <textarea class="inp" id="pf-features" rows="4" placeholder="Génère du texte&#10;Analyse des images&#10;...">${v('features')}</textarea>
+      </div>`;
+  } else if (cat === 'assets') {
+    // Build folder editor
+    const folders = proj?.folders || [];
+    const rootFiles = proj?.files || [];
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>🔗 Lien de téléchargement ZIP externe *</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub Releases, Google Drive, Mega, OneDrive..."></div>
+        <div class="form-group"><label>💾 Taille du ZIP</label><input class="inp" id="pf-size" value="${v('size')}" placeholder="12.4 MB"></div>
+      </div>
+      <div style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.18);border-radius:9px;padding:10px 14px;margin-bottom:14px;font-size:.72rem;color:var(--cyan);font-family:var(--mono);line-height:1.8;">
+        💡 <strong>Hébergeurs recommandés :</strong><br>
+        • <strong>GitHub Releases</strong> — Lien direct stable, parfait pour les projets publics<br>
+        • <strong>Google Drive</strong> — Partage → "Tout le monde avec le lien" → copier le lien de téléchargement direct<br>
+        • <strong>Mega.nz</strong> — Gratuit, 20 GB, liens permanents<br>
+        • <strong>OneDrive / Dropbox</strong> — Remplacer <code>?dl=0</code> par <code>?dl=1</code> pour le DL direct
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>URL preview (optionnel)</label><input class="inp" id="pf-previewUrl" value="${v('previewUrl')}" placeholder="https://..."></div>
+        <div class="form-group"><label>Licence</label><input class="inp" id="pf-license" value="${v('license')}" placeholder="MIT, CC BY 4.0..."></div>
+      </div>
+      <div class="form-group">
+        <label>📁 Arborescence des fichiers</label>
+        <div class="folder-editor" id="folderEditor">
+          <div id="folderEditorItems">
+            ${folders.map((f,fi) => folderItemHtml(f, fi)).join('')}
+            ${rootFiles.map((f,fi) => fileItemHtml(f, fi)).join('')}
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="btn-cta outline" style="font-size:.72rem;" onclick="proj_addFolderRow()">+ Dossier</button>
+            <button class="btn-cta outline" style="font-size:.72rem;" onclick="proj_addFileRow()">+ Fichier</button>
+          </div>
+        </div>
+      </div>`;
+  } else if (cat === 'other') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>URL (optionnel)</label><input class="inp" id="pf-url" value="${v('url')}" placeholder="https://..."></div>
+        <div class="form-group"><label>Lien téléchargement</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="https://..."></div>
+      </div>
+      <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="..."></div>`;
+  }
+
+  return `<div class="edit-panel">
+    <h4>${title} <button class="edit-panel-close" onclick="this.closest('.edit-panel').remove()">✕</button></h4>
+    <div id="pfErr" class="err-msg" style="margin-bottom:10px;"></div>
+    ${fields}
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button class="btn-accent" style="font-size:.8rem;padding:9px 18px;" onclick="proj_submitProjectForm('${cat}')">
+        ${isEdit ? '💾 Sauvegarder' : '✦ Créer'}
+      </button>
+      <button class="btn-secondary" style="font-size:.8rem;" onclick="this.closest('.edit-panel').remove()">Annuler</button>
+    </div>
+  </div>`;
+}
+
+/* ── Folder/file row builders ── */
+let _folderRows = 0; let _fileRows = 0;
+function folderItemHtml(f, i) {
+  const filesHtml = (f.files||[]).map((fi, j) => `
+    <div class="folder-editor-item" style="padding-left:16px;margin-top:4px;" id="ffi-${i}-${j}">
+      <span style="color:var(--text3);font-size:.75rem;">📄</span>
+      <input class="inp" placeholder="fichier.ext" value="${esc(fi.name||fi)}" style="flex:1;padding:5px 9px;font-size:.76rem;" data-folder="${i}" data-fidx="${j}" data-type="folderfile">
+      <button onclick="document.getElementById('ffi-${i}-${j}').remove()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.8rem;">✕</button>
+    </div>`).join('');
+  return `<div class="folder-editor-item" id="fe-folder-${i}">
+    <span>📁</span>
+    <input class="inp" placeholder="Nom du dossier" value="${esc(f.name||'')}" style="flex:1;padding:6px 10px;font-size:.78rem;" data-folder="${i}" data-type="foldername">
+    <button onclick="proj_addSubFile(${i})" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--cyan);padding:4px 8px;border-radius:6px;font-size:.68rem;cursor:pointer;">+ Fichier</button>
+    <button onclick="document.getElementById('fe-folder-${i}').remove()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.8rem;">✕</button>
+  </div>
+  <div id="fe-subfiles-${i}">${filesHtml}</div>`;
+}
+function fileItemHtml(f, i) {
+  return `<div class="folder-editor-item" id="fe-file-${i}">
+    <span style="color:var(--text3);">📄</span>
+    <input class="inp" placeholder="fichier.ext" value="${esc(f.name||f||'')}" style="flex:1;padding:6px 10px;font-size:.78rem;" data-froot="${i}" data-type="rootfile">
+    <button onclick="document.getElementById('fe-file-${i}').remove()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.8rem;">✕</button>
+  </div>`;
+}
+function proj_addFolderRow() {
+  const el = document.getElementById('folderEditorItems');
+  const i = _folderRows++;
+  const div = document.createElement('div');
+  div.innerHTML = folderItemHtml({name:'',files:[]}, i);
+  el.appendChild(div.firstChild);
+  const sub = document.createElement('div');
+  sub.id = `fe-subfiles-${i}`;
+  el.appendChild(sub);
+}
+function proj_addFileRow() {
+  const el = document.getElementById('folderEditorItems');
+  const i = _fileRows++;
+  const div = document.createElement('div');
+  div.innerHTML = fileItemHtml({name:''}, i);
+  el.appendChild(div.firstChild);
+}
+function proj_addSubFile(folderIdx) {
+  const el = document.getElementById(`fe-subfiles-${folderIdx}`);
+  if (!el) return;
+  const j = el.children.length;
+  const div = document.createElement('div');
+  div.id = `ffi-${folderIdx}-${j}`;
+  div.className = 'folder-editor-item';
+  div.style.paddingLeft = '16px';
+  div.style.marginTop = '4px';
+  div.innerHTML = `
+    <span style="color:var(--text3);font-size:.75rem;">📄</span>
+    <input class="inp" placeholder="fichier.ext" style="flex:1;padding:5px 9px;font-size:.76rem;" data-folder="${folderIdx}" data-fidx="${j}" data-type="folderfile">
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.8rem;">✕</button>`;
+  el.appendChild(div);
+}
+
+function proj_collectFolderTree() {
+  const folders = {};
+  const rootFiles = [];
+  document.querySelectorAll('[data-type]').forEach(el => {
+    if (el.dataset.type === 'foldername') {
+      const fi = el.dataset.folder;
+      if (!folders[fi]) folders[fi] = { name: '', files: [] };
+      folders[fi].name = el.value.trim();
+    } else if (el.dataset.type === 'folderfile') {
+      const fi = el.dataset.folder;
+      if (!folders[fi]) folders[fi] = { name: '', files: [] };
+      if (el.value.trim()) folders[fi].files.push({ name: el.value.trim() });
+    } else if (el.dataset.type === 'rootfile') {
+      if (el.value.trim()) rootFiles.push({ name: el.value.trim() });
+    }
+  });
+  return {
+    folders: Object.values(folders).filter(f => f.name),
+    files: rootFiles
+  };
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — FORM SUBMIT
+══════════════════════════════════════════════════════ */
+async function proj_submitProjectForm(cat) {
+  const g = id => document.getElementById(id)?.value?.trim() || '';
+  const title = g('pf-title');
+  if (!title) { document.getElementById('pfErr').textContent = '✕ Le titre est requis'; return; }
+
+  let data = {
+    title, desc: g('pf-desc'), longDesc: g('pf-longDesc'),
+    tags: g('pf-tags'), imageUrl: g('pf-imageUrl'), videoUrl: g('pf-videoUrl'),
+    order: parseInt(g('pf-order')) || 0,
+    hidden: false
+  };
+
+  // Category-specific
+  if (cat === 'sites') {
+    Object.assign(data, { url: g('pf-url'), repoUrl: g('pf-repoUrl'), tech: g('pf-tech'), status: g('pf-status') || 'wip' });
+  } else if (cat === 'games') {
+    Object.assign(data, { downloadUrl: g('pf-downloadUrl'), playUrl: g('pf-playUrl'), platforms: g('pf-platforms'), tech: g('pf-tech') });
+  } else if (cat === 'software') {
+    Object.assign(data, { downloadUrl: g('pf-downloadUrl'), url: g('pf-url'), version: g('pf-version'), os: g('pf-os'), tech: g('pf-tech') });
+  } else if (cat === 'animations') {
+    Object.assign(data, { downloadUrl: g('pf-downloadUrl'), software: g('pf-software'), duration: g('pf-duration'), resolution: g('pf-resolution') });
+  } else if (cat === 'bots') {
+    Object.assign(data, { inviteUrl: g('pf-inviteUrl'), url: g('pf-url'), prefix: g('pf-prefix'), servers: g('pf-servers'), commands: g('pf-commands'), users: g('pf-users'), tech: g('pf-tech') });
+  } else if (cat === 'ai') {
+    Object.assign(data, { model: g('pf-model'), tech: g('pf-tech'), demoUrl: g('pf-demoUrl'), downloadUrl: g('pf-downloadUrl'), features: g('pf-features') });
+  } else if (cat === 'assets') {
+    const tree = proj_collectFolderTree();
+    Object.assign(data, { downloadUrl: g('pf-downloadUrl'), size: g('pf-size'), previewUrl: g('pf-previewUrl'), license: g('pf-license'), ...tree });
+  } else if (cat === 'other') {
+    Object.assign(data, { url: g('pf-url'), downloadUrl: g('pf-downloadUrl'), tech: g('pf-tech') });
+  }
+
+  // Save to Firestore
+  const id = await proj_saveProject(cat, data, editingId);
+  if (!id) return;
+
+  if (editingId) {
+    const idx = projects[cat].findIndex(p => p.id === editingId);
+    if (idx !== -1) projects[cat][idx] = { ...projects[cat][idx], ...data };
+  } else {
+    projects[cat].push({ id, ...data, views: 0, likes: 0, downloads: 0 });
+  }
+
+  proj_updateCounts();
+  proj_renderAll();
+  // Refresh admin list
+  const listEl = document.getElementById(`adminList-${cat}`);
+  if (listEl) listEl.innerHTML = (projects[cat]||[]).map(p => proj_adminProjItemHtml(cat, p)).join('');
+  document.getElementById(`addFormZone-${cat}`)?.remove?.();
+  document.querySelector('.edit-panel')?.remove();
+  editingId = null;
+  toast(editingId ? 'Projet mis à jour !' : 'Projet créé !', 's');
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — SETTINGS
+══════════════════════════════════════════════════════ */
+function proj_renderAdminSettings(el) {
+  el.innerHTML = `
+    <h3 style="font-size:1rem;font-weight:800;margin-bottom:20px;">⚡ Paramètres</h3>
+    <div class="edit-panel">
+      <h4>🔑 Mot de passe admin</h4>
+      <div class="form-grid2">
+        <div class="form-group"><label>Nouveau mot de passe</label><input type="password" class="inp" id="set-pw1" placeholder="Min. 4 caractères"></div>
+        <div class="form-group"><label>Confirmer</label><input type="password" class="inp" id="set-pw2" placeholder="Confirmer..."></div>
+      </div>
+      <button class="btn-accent" style="font-size:.78rem;padding:8px 16px;" onclick="proj_saveAdminPw()">Changer</button>
+      <div id="pw-msg" class="ok-msg" style="display:none;margin-top:8px;"></div>
+    </div>
+    <div class="edit-panel" style="margin-top:16px;">
+      <h4>🔧 Options d'affichage</h4>
+      <div class="toggle-row">
+        <div><label>Compteur de likes</label><p>Permettre aux visiteurs de liker les projets</p></div>
+        <button class="toggle${settings.enableLikes?' on':''}" onclick="proj_toggleSetting('enableLikes',this)"></button>
+      </div>
+      <div class="toggle-row">
+        <div><label>Compteur de vues</label><p>Enregistrer les vues sur Firestore</p></div>
+        <button class="toggle${settings.enableViews?' on':''}" onclick="proj_toggleSetting('enableViews',this)"></button>
+      </div>
+      <div class="toggle-row">
+        <div><label>Compteur de téléchargements</label><p>Tracker les clics de téléchargement</p></div>
+        <button class="toggle${settings.enableDownloadCount?' on':''}" onclick="proj_toggleSetting('enableDownloadCount',this)"></button>
+      </div>
+    </div>
+    <div class="edit-panel" style="margin-top:16px;">
+      <h4>📋 Infos Firebase</h4>
+      <div style="font-family:var(--mono);font-size:.72rem;color:var(--text2);line-height:2;">
+        Status : <span id="fbStatusInline"></span><br>
+        Collections : <span style="color:var(--accent);">${CATS.map(c=>`projects_${c}`).join(', ')}</span>
+      </div>
+    </div>`;
+  const fb = document.getElementById('fbStatusInline');
+  if (fb) fb.outerHTML = document.getElementById('fbStatus').outerHTML;
+}
+
+function proj_saveAdminPw() {
+  const p1 = document.getElementById('set-pw1').value;
+  const p2 = document.getElementById('set-pw2').value;
+  const msg = document.getElementById('pw-msg');
+  if (!p1 || p1.length < 4) { msg.style.display='block'; msg.className='err-msg'; msg.textContent='✕ Min. 4 caractères'; return; }
+  if (p1 !== p2) { msg.style.display='block'; msg.className='err-msg'; msg.textContent='✕ Les mots de passe ne correspondent pas'; return; }
+  adminPassword = p1;
+  localStorage.setItem(LS_ADMINPW, p1);
+  msg.style.display='block'; msg.className='ok-msg'; msg.textContent='✓ Mot de passe changé !';
+  document.getElementById('set-pw1').value=''; document.getElementById('set-pw2').value='';
+  setTimeout(() => { msg.style.display='none'; }, 3000);
+}
+
+function proj_toggleSetting(key, btn) {
+  settings[key] = !settings[key];
+  btn.classList.toggle('on', settings[key]);
+  localStorage.setItem(LS_SETTINGS, JSON.stringify(settings));
+  toast(`${key} : ${settings[key] ? 'activé' : 'désactivé'}`, 's');
+}
+
+/* ══════════════════════════════════════════════════════
+   UTILITIES
+══════════════════════════════════════════════════════ */
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function closeOverlay(id) { document.getElementById(id)?.classList.remove('open'); }
+function handleOvClick(e, id) { if (e.target === document.getElementById(id)) closeOverlay(id); }
+
+function toast(msg, type='s') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `${type==='s'?'✓':'✕'} ${msg}`;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(8px)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); }, 3000);
+}
+
+// ESC key closes overlays
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.overlay.open, .admin-overlay.open, .overlay-sm.open').forEach(el => el.classList.remove('open'));
+  }
+});
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
+proj_initFirebase();
+</script>
+</div>
+
 
 <div class="section-divider"></div>
 
@@ -2002,7 +3818,1169 @@ function applySections_OVERRIDE(){
 /* ═══════════════════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════
+   NAVIGATION PROJETS
+═══════════════════════════════════════════════════════════ */
+let projPageVisible = false;
+function showProjPage(e){
+  if(e) e.preventDefault();
+  projPageVisible = !projPageVisible;
+  const pp = document.getElementById('proj-page');
+  if(pp){ pp.style.display = projPageVisible ? 'block' : 'none'; }
+  if(projPageVisible){
+    pp.scrollIntoView({behavior:'smooth', block:'start'});
+    // Init the project module if not already done
+    if(typeof proj_renderAll === 'function') proj_renderAll();
+  }
+}
+
 initApp();
+
+/* ═══════════════════════════════════════════════════════════
+   PROJECTS MODULE
+═══════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════
+   CONSTANTS
+══════════════════════════════════════════════════════ */
+const PROJ_CATS = ['sites','games','software','animations','bots','ai','assets','other'];
+const PROJ_CAT_META = {
+  sites:      { label:'Sites Web',      icon:'🌐', color:'var(--cat-sites-c)' },
+  games:      { label:'Jeux Vidéos',    icon:'🎮', color:'var(--cat-games-c)' },
+  software:   { label:'Logiciels',      icon:'⚙️', color:'var(--cat-software-c)' },
+  animations: { label:'Animations',     icon:'🎬', color:'var(--cat-animations-c)' },
+  bots:       { label:'Bots Discord',   icon:'🤖', color:'var(--cat-bots-c)' },
+  ai:         { label:'IA',             icon:'🧠', color:'var(--cat-ai-c)' },
+  assets:     { label:'Assets',         icon:'📦', color:'var(--cat-assets-c)' },
+  other:      { label:'Autres',         icon:'◈',  color:'var(--cat-other-c)' }
+};
+const PROJ_CWS_LOGO = 'https://raw.githubusercontent.com/Capky/CapWorks-Studio/main/CWS_Logo.png';
+const PROJ_LS_ADMINPW   = 'cw_proj_adminpw';
+const PROJ_LS_LIKES     = 'cw_proj_likes';
+const PROJ_LS_SETTINGS  = 'cw_proj_settings';
+
+/* ══════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════ */
+let proj_db = null;
+let proj_FB = null;
+let proj_projects = {};   // { sites:[], games:[], ... }
+let proj_activeCat = 'all';
+let proj_searchQuery = '';
+let proj_adminLoggedIn = false;
+let adminPassword = localStorage.getItem(PROJ_LS_ADMINPW) || 'admin123';
+let proj_likedProjects = JSON.parse(localStorage.getItem(PROJ_LS_LIKES) || '{}');
+let proj_settings = JSON.parse(localStorage.getItem(PROJ_LS_SETTINGS) || JSON.stringify({
+  showServices: false,
+  enableLikes: true,
+  enableViews: true,
+  enableDownloadCount: true
+}));
+let proj_currentEditCat = 'sites';
+let proj_editingId = null;
+
+// Init empty arrays
+PROJ_CATS.forEach(c => proj_projects[c] = []);
+
+/* ══════════════════════════════════════════════════════
+   FIREBASE INIT
+══════════════════════════════════════════════════════ */
+function proj_waitForFirebase() {
+  return new Promise(resolve => {
+    if (window.__firebaseReady) { resolve(); return; }
+    document.addEventListener('firebase-ready', resolve, { once: true });
+    setTimeout(resolve, 6000); // fallback
+  });
+}
+
+async function proj_initFirebase() {
+  const proj_db = window.__proj_db; const proj_FB = window.__proj_FB;
+  await proj_waitForFirebase();
+  if (!window.__proj_db) { proj_setFbStatus('err', '✕ Firebase non configuré'); return; }
+  window.__proj_db = window.__proj_db;
+  proj_FB = window.__proj_FB;
+  proj_setFbStatus('ok', '✓ Firebase');
+  await proj_loadAllProjects();
+}
+
+function proj_setFbStatus(type, text){ /* noop */ }
+
+/* ══════════════════════════════════════════════════════
+   FIRESTORE — LOAD
+══════════════════════════════════════════════════════ */
+async function proj_loadAllProjects() {
+  const proj_db = window.__proj_db; const proj_FB = window.__proj_FB;
+  if(!window.__proj_db) return;
+  proj_setFbStatus('loading', '⟳ Chargement...');
+  try {
+    for (const cat of PROJ_CATS) {
+      const snap = await proj_FB.getDocs(proj_FB.collection(proj_db, `projects_${cat}`));
+      proj_projects[cat] = [];
+      snap.forEach(d => proj_projects[cat].push({ id: d.id, ...d.data() }));
+      // Sort by order field, then by createdAt
+      proj_projects[cat].sort((a, b) => (a.order || 999) - (b.order || 999));
+    }
+    proj_updateCounts();
+    proj_renderAll();
+    proj_setFbStatus('ok', '✓ Firebase');
+  } catch(e) {
+    console.error(e);
+    proj_setFbStatus('err', '✕ Erreur Firestore');
+    toast('Erreur de chargement Firebase', 'e');
+  }
+}
+
+async function proj_saveProject(cat, data, id = null) {
+  const proj_db = window.__proj_db; const proj_FB = window.__proj_FB;
+  if(!window.__proj_db) { toast('Firebase non configuré', 'e'); return null; }
+  try {
+    if (id) {
+      await proj_FB.setDoc(proj_FB.doc(proj_db, `projects_${cat}`, id), { ...data, updatedAt: proj_FB.serverTimestamp() }, { merge: true });
+      return id;
+    } else {
+      const ref = await proj_FB.addDoc(proj_FB.collection(proj_db, `projects_${cat}`), { ...data, views: 0, likes: 0, downloads: 0, createdAt: proj_FB.serverTimestamp() });
+      return ref.id;
+    }
+  } catch(e) { console.error(e); toast('Erreur de sauvegarde', 'e'); return null; }
+}
+
+async function proj_deleteProject(cat, id) {
+  const proj_db = window.__proj_db; const proj_FB = window.__proj_FB;
+  if(!window.__proj_db) return;
+  try {
+    await proj_FB.deleteDoc(proj_FB.doc(proj_db, `projects_${cat}`, id));
+    proj_projects[cat] = proj_projects[cat].filter(p => p.id !== id);
+    proj_updateCounts(); proj_renderAll();
+    toast('Projet supprimé', 's');
+  } catch(e) { toast('Erreur de suppression', 'e'); }
+}
+
+async function proj_incrementStat(cat, id, field) {
+  const proj_db = window.__proj_db; const proj_FB = window.__proj_FB;
+  if(!window.__proj_db) return;
+  try { await proj_FB.updateDoc(proj_FB.doc(proj_db, `projects_${cat}`, id), { [field]: proj_FB.increment(1) }); }
+  catch(e) { /* silent */ }
+}
+
+/* ══════════════════════════════════════════════════════
+   COUNTS & SEARCH
+══════════════════════════════════════════════════════ */
+function proj_updateCounts() {
+  let total = 0;
+  PROJ_CATS.forEach(c => {
+    const n = proj_projects[c].length;
+    total += n;
+    const el = document.getElementById(`cnt-${c}`);
+    if (el) el.textContent = n;
+  });
+  const el = document.getElementById('cnt-all');
+  if (el) el.textContent = total;
+}
+
+function proj_handleSearch(val) {
+  proj_searchQuery = val.trim().toLowerCase();
+  document.getElementById('searchClear').style.display = val ? 'block' : 'none';
+  proj_renderAll();
+}
+
+function proj_clearSearch() {
+  document.getElementById('globalSearch').value = '';
+  proj_searchQuery = '';
+  document.getElementById('searchClear').style.display = 'none';
+  document.getElementById('searchCount').textContent = '';
+  proj_renderAll();
+}
+
+function proj_filterCat(cat) {
+  proj_activeCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  proj_renderAll();
+}
+
+function proj_matchesSearch(proj) {
+  if (!proj_searchQuery) return true;
+  const haystack = [proj.title, proj.desc, proj.tags, proj.tech, proj.url, proj.model, proj.features]
+    .filter(Boolean).join(' ').toLowerCase();
+  return haystack.includes(proj_searchQuery);
+}
+
+function proj_getFilteredProjects(cat) {
+  return (proj_projects[cat] || []).filter(p => {
+    if (p.hidden) return false;
+    return proj_matchesSearch(p);
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   RENDER ENGINE
+══════════════════════════════════════════════════════ */
+function proj_renderAll() {
+  const container = document.getElementById('projectsContainer');
+  container.innerHTML = '';
+
+  let totalVisible = 0;
+  const catsToShow = proj_activeCat === 'all' ? PROJ_CATS : [proj_activeCat];
+
+  catsToShow.forEach(cat => {
+    const items = proj_getFilteredProjects(cat);
+    if (proj_activeCat === 'all' && items.length === 0) return;
+    totalVisible += items.length;
+    container.appendChild(proj_buildCatSection(cat, items));
+  });
+
+  if (proj_searchQuery) {
+    document.getElementById('searchCount').textContent =
+      totalVisible === 0 ? 'Aucun résultat' : `${totalVisible} projet${totalVisible > 1 ? 's' : ''} trouvé${totalVisible > 1 ? 's' : ''}`;
+  } else {
+    document.getElementById('searchCount').textContent = '';
+  }
+
+  if (totalVisible === 0 && proj_activeCat !== 'all') {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.style.padding = '80px 20px';
+    empty.innerHTML = `<div class="empty-icon">${PROJ_CAT_META[proj_activeCat]?.icon || '📂'}</div>
+      <p>Aucun projet dans cette catégorie pour l'instant.<br><span style="color:var(--text3)">Revenez bientôt !</span></p>`;
+    container.appendChild(empty);
+  }
+}
+
+function proj_buildCatSection(cat, items) {
+  const wrap = document.createElement('div');
+  wrap.setAttribute('data-section', cat);
+
+  // Section header
+  const head = document.createElement('div');
+  head.className = 'section-head cat-header';
+  head.setAttribute('data-cat', cat);
+  head.innerHTML = `
+    <div class="section-head-left">
+      <span class="section-label">${PROJ_CAT_META[cat].icon} // ${PROJ_CAT_META[cat].label.toUpperCase()}</span>
+      <span style="font-family:var(--mono);font-size:.62rem;color:var(--text3);">${items.length} projet${items.length !== 1 ? 's' : ''}</span>
+    </div>
+  `;
+  wrap.appendChild(head);
+
+  // Grid
+  const grid = document.createElement('div');
+  grid.className = `proj_projects-grid grid-${cat}`;
+
+  if (items.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">${PROJ_CAT_META[cat].icon}</div><p>Aucun projet — revenez bientôt.</p></div>`;
+  } else {
+    items.forEach((proj, i) => {
+      const card = proj_buildCard(cat, proj, i);
+      grid.appendChild(card);
+    });
+  }
+
+  wrap.appendChild(grid);
+
+  // Divider (except last)
+  const div = document.createElement('div');
+  div.className = 'section-div';
+  div.style.margin = '48px 0 44px';
+  wrap.appendChild(div);
+
+  return wrap;
+}
+
+/* ══════════════════════════════════════════════════════
+   CARD BUILDERS
+══════════════════════════════════════════════════════ */
+function proj_buildCard(cat, proj, idx) {
+  const card = document.createElement('div');
+  card.className = `proj-card ${cat}-card`;
+  card.setAttribute('data-cat', cat);
+  card.style.animationDelay = `${idx * 0.06}s`;
+
+  const liked = proj_likedProjects[proj.id];
+
+  switch(cat) {
+    case 'sites':      card.innerHTML = proj_buildSiteCard(proj, liked); break;
+    case 'games':      card.innerHTML = proj_buildGameCard(proj, liked); break;
+    case 'software':   card.innerHTML = proj_buildSoftwareCard(proj, liked); break;
+    case 'animations': card.innerHTML = proj_buildAnimCard(proj, liked); break;
+    case 'bots':       card.innerHTML = proj_buildBotCard(proj, liked); break;
+    case 'ai':         card.innerHTML = proj_buildAiCard(proj, liked); break;
+    case 'assets':     card.innerHTML = proj_buildAssetCard(proj, liked); break;
+    case 'other':      card.innerHTML = proj_buildOtherCard(proj, liked); break;
+  }
+
+  // Click → modal (but not on buttons)
+  card.addEventListener('click', e => {
+    if (e.target.closest('button, a')) return;
+    proj_openProjectModal(cat, proj);
+  });
+
+  return card;
+}
+
+function proj_mediaHtml(proj, ratio='ratio-16-9') {
+  if (proj.videoUrl && (proj.videoUrl.includes('youtube') || proj.videoUrl.includes('youtu.be'))) {
+    const vid = proj_ytId(proj.videoUrl);
+    return `<div class="card-media ${ratio}">
+      <div class="play-btn" onclick="proj_openYT('${vid}',event)">
+        <img src="https://img.youtube.com/vi/${vid}/mqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        <div class="card-media-overlay"></div>
+        <div class="play-circle">▶</div>
+      </div>
+      <div class="card-stats">${proj_statsHtml(proj)}</div>
+    </div>`;
+  }
+  if (proj.imageUrl) {
+    return `<div class="card-media ${ratio}">
+      <img src="${esc(proj.imageUrl)}" alt="${esc(proj.title)}" loading="lazy">
+      <div class="card-media-overlay"></div>
+      <div class="card-stats">${proj_statsHtml(proj)}</div>
+    </div>`;
+  }
+  return `<div class="card-media compact">
+    <div class="card-no-media">${PROJ_CAT_META[proj._cat||'other']?.icon || '📁'}</div>
+    <div class="card-stats">${proj_statsHtml(proj)}</div>
+  </div>`;
+}
+
+function proj_statsHtml(proj) {
+  const v = (proj.views || 0) > 0 ? `<span class="stat-chip">👁 ${proj_fmt(proj.views)}</span>` : '';
+  const l = (proj.likes || 0) > 0 ? `<span class="stat-chip">❤ ${proj_fmt(proj.likes)}</span>` : '';
+  const d = (proj.downloads || 0) > 0 ? `<span class="stat-chip">↓ ${proj_fmt(proj.downloads)}</span>` : '';
+  return v + l + d;
+}
+
+function proj_fmt(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : n; }
+
+function proj_tagsHtml(proj) {
+  const tags = (proj.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+  return tags.map(t => `<span class="tag">${esc(t)}</span>`).join('');
+}
+function proj_techTagsHtml(proj) {
+  const tags = (proj.tech || '').split(',').map(t => t.trim()).filter(Boolean);
+  return tags.map(t => `<span class="tag tech">${esc(t)}</span>`).join('');
+}
+
+function proj_likeBtn(proj, liked) {
+  return `<button class="like-btn${liked?' liked':''}" onclick="proj_toggleLike('${esc(proj._cat||'other')}','${esc(proj.id)}',this)">
+    <span class="like-ico">❤</span> ${proj.likes || 0}
+  </button>`;
+}
+
+/* --- SITES --- */
+function proj_buildSiteCard(proj, liked) {
+  proj._cat = 'sites';
+  const statusDot = proj.status === 'live'
+    ? `<div class="site-status-dot live"></div>En ligne`
+    : `<div class="site-status-dot wip"></div>En développement`;
+  return `
+    ${proj_mediaHtml(proj)}
+    <div class="card-body">
+      <div class="card-tags">${proj_tagsHtml(proj)}${proj_techTagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-url"><span class="site-status-dot ${proj.status==='live'?'live':'wip'}"></span><span>${esc(proj.url||'—')}</span></div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.url ? `<a class="btn-cta visit" href="${esc(proj.url)}" target="_blank" onclick="proj_trackView('sites','${esc(proj.id)}')">🔗 Visiter</a>` : ''}
+          ${proj.repoUrl ? `<a class="btn-cta outline" href="${esc(proj.repoUrl)}" target="_blank">⎇ Code</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+/* --- GAMES --- */
+function proj_buildGameCard(proj, liked) {
+  proj._cat = 'games';
+  const platforms = (proj.platforms || '').split(',').map(p => p.trim()).filter(Boolean);
+  const platHtml = platforms.map(p => `<span class="platform-badge pb-${p.toLowerCase()}">${p}</span>`).join('');
+  return `
+    ${proj_mediaHtml(proj)}
+    <div class="card-body">
+      <div class="card-platform">${platHtml}</div>
+      <div class="card-tags">${proj_tagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('games','${esc(proj.id)}',event)">⬇ Télécharger</a>` : ''}
+          ${proj.playUrl ? `<a class="btn-cta visit" href="${esc(proj.playUrl)}" target="_blank">▶ Jouer</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+      ${proj.downloadUrl ? `<div class="game-card dl-counter" style="margin-top:10px;">↓ ${proj_fmt(proj.downloads||0)} téléchargements</div>` : ''}
+    </div>`;
+}
+
+/* --- SOFTWARE --- */
+function proj_buildSoftwareCard(proj, liked) {
+  proj._cat = 'software';
+  return `
+    ${proj_mediaHtml(proj)}
+    <div class="card-body">
+      <div class="card-tags">${proj_tagsHtml(proj)}${proj_techTagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      ${proj.version ? `<div style="font-family:var(--mono);font-size:.65rem;color:var(--text3);margin-bottom:10px;">v${esc(proj.version)}${proj.os?' · '+esc(proj.os):''}</div>` : ''}
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('software','${esc(proj.id)}',event)">⬇ Télécharger</a>` : ''}
+          ${proj.url ? `<a class="btn-cta outline" href="${esc(proj.url)}" target="_blank">🔗 En savoir +</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+/* --- ANIMATIONS --- */
+function proj_buildAnimCard(proj, liked) {
+  proj._cat = 'animations';
+  let mediaBlock;
+  if (proj.videoUrl && (proj.videoUrl.includes('youtube') || proj.videoUrl.includes('youtu.be'))) {
+    const vid = proj_ytId(proj.videoUrl);
+    const dur = proj.duration ? '<div class="duration-badge">⏱ ' + esc(proj.duration) + '</div>' : '';
+    mediaBlock = '<div class="card-media ratio-16-9">'
+      + '<div class="play-btn" onclick="proj_openYT(\'' + vid + '\',event)">'
+      + '<img src="https://img.youtube.com/vi/' + vid + '/mqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">'
+      + '<div class="card-media-overlay"></div>'
+      + '<div class="play-circle">▶</div>'
+      + '</div>'
+      + dur
+      + '<div class="card-stats">' + proj_statsHtml(proj) + '</div>'
+      + '</div>';
+  } else if (proj.videoUrl) {
+    const dur = proj.duration ? '<div class="duration-badge">⏱ ' + esc(proj.duration) + '</div>' : '';
+    mediaBlock = '<div class="card-media ratio-16-9">'
+      + '<video src="' + esc(proj.videoUrl) + '" muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onmouseenter="this.play()" onmouseleave="this.pause()"></video>'
+      + dur
+      + '<div class="card-stats">' + proj_statsHtml(proj) + '</div>'
+      + '</div>';
+  } else {
+    mediaBlock = proj_mediaHtml(proj);
+  }
+  return mediaBlock + `
+    <div class="card-body">
+      <div class="card-tags">${proj_tagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('animations','${esc(proj.id)}',event)">⬇ Télécharger</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+
+/* --- BOTS --- */
+function proj_buildBotCard(proj, liked) {
+  proj._cat = 'bots';
+  const avatarEl = proj.imageUrl
+    ? `<img src="${esc(proj.imageUrl)}" style="width:100%;height:100%;object-fit:cover;">`
+    : `🤖`;
+  return `
+    <div class="card-body" style="padding-top:20px;">
+      <div class="bot-meta">
+        <div class="bot-avatar">${avatarEl}</div>
+        <div>
+          <div class="card-title" style="margin-bottom:2px;">${esc(proj.title||'Bot')}</div>
+          <div style="font-family:var(--mono);font-size:.68rem;color:var(--text3);">${esc(proj.prefix||'/')}</div>
+        </div>
+      </div>
+      <div class="card-tags" style="margin-bottom:10px;">${proj_tagsHtml(proj)}${proj_techTagsHtml(proj)}</div>
+      ${proj.servers||proj.users||proj.commands ? `
+      <div class="bot-stats">
+        ${proj.servers ? `<div class="bot-stat"><div class="bot-stat-val">${esc(proj.servers)}</div><div class="bot-stat-label">Serveurs</div></div>` : ''}
+        ${proj.users ? `<div class="bot-stat"><div class="bot-stat-val">${esc(proj.users)}</div><div class="bot-stat-label">Users</div></div>` : ''}
+        ${proj.commands ? `<div class="bot-stat"><div class="bot-stat-val">${esc(proj.commands)}</div><div class="bot-stat-label">Cmds</div></div>` : ''}
+      </div>` : ''}
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.inviteUrl ? `<a class="btn-cta primary" href="${esc(proj.inviteUrl)}" target="_blank">+ Inviter</a>` : ''}
+          ${proj.url ? `<a class="btn-cta outline" href="${esc(proj.url)}" target="_blank">🔗 Page</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+/* --- AI --- */
+function proj_buildAiCard(proj, liked) {
+  proj._cat = 'ai';
+  const features = (proj.features||'').split('\n').filter(Boolean);
+  return `
+    ${proj.imageUrl ? proj_mediaHtml(proj,'compact') : ''}
+    <div class="card-body">
+      <div class="model-badge">🧠 ${esc(proj.model||'Custom AI')}</div>
+      <div class="card-tags">${proj_tagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      ${features.length ? `<div class="feature-list">${features.slice(0,3).map(f => `<div class="ai-feature">${esc(f)}</div>`).join('')}</div>` : ''}
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.demoUrl ? `<a class="btn-cta primary" href="${esc(proj.demoUrl)}" target="_blank">🔗 Demo</a>` : ''}
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('ai','${esc(proj.id)}',event)">⬇ Télécharger</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+/* --- ASSETS --- */
+function proj_buildAssetCard(proj, liked) {
+  proj._cat = 'assets';
+  const files = proj.files || [];
+  const folders = proj.folders || [];
+  const treeHtml = proj_buildMiniTree(folders, files);
+  return `
+    ${proj.imageUrl ? proj_mediaHtml(proj,'compact') : ''}
+    <div class="card-body">
+      <div class="card-tags">${proj_tagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      ${treeHtml ? `<div class="folder-tree">${treeHtml}</div>` : ''}
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('assets','${esc(proj.id)}',event)">⬇ ZIP (${esc(proj.size||'?')})</a>` : ''}
+          ${proj.previewUrl ? `<a class="btn-cta outline" href="${esc(proj.previewUrl)}" target="_blank">👁 Preview</a>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${proj.downloadUrl ? `<span class="asset-size">↓ ${proj_fmt(proj.downloads||0)}</span>` : ''}
+          ${proj_likeBtn(proj, liked)}
+        </div>
+      </div>
+    </div>`;
+}
+
+/* --- OTHER --- */
+function proj_buildOtherCard(proj, liked) {
+  proj._cat = 'other';
+  return `
+    ${proj.imageUrl ? proj_mediaHtml(proj,'compact') : ''}
+    <div class="card-body">
+      <div class="card-tags">${proj_tagsHtml(proj)}</div>
+      <div class="card-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="card-desc">${esc(proj.desc||'')}</div>
+      <div class="card-footer">
+        <div style="display:flex;gap:7px;">
+          ${proj.url ? `<a class="btn-cta visit" href="${esc(proj.url)}" target="_blank">🔗 Voir</a>` : ''}
+          ${proj.downloadUrl ? `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('other','${esc(proj.id)}',event)">⬇ Télécharger</a>` : ''}
+        </div>
+        ${proj_likeBtn(proj, liked)}
+      </div>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════════════════
+   FOLDER TREE BUILDER
+══════════════════════════════════════════════════════ */
+function proj_buildMiniTree(folders, files, indent=0) {
+  let html = '';
+  const pad = indent ? `style="padding-left:${indent*14}px"` : '';
+  folders.forEach(f => {
+    html += `<div class="tree-item folder" ${pad}>📁 ${esc(f.name)}</div>`;
+    if (f.files) f.files.forEach(fi => {
+      const ext = fi.name.split('.').pop().toUpperCase();
+      html += `<div class="tree-item file" style="padding-left:${(indent+1)*14}px">📄 ${esc(fi.name)}<span class="ext">.${ext}</span></div>`;
+    });
+  });
+  files.forEach(fi => {
+    const ext = fi.name ? fi.name.split('.').pop().toUpperCase() : '?';
+    html += `<div class="tree-item file" ${pad}>📄 ${esc(fi.name||fi)}<span class="ext">.${ext}</span></div>`;
+  });
+  return html;
+}
+
+/* ══════════════════════════════════════════════════════
+   PROJECT DETAIL MODAL
+══════════════════════════════════════════════════════ */
+function proj_openProjectModal(cat, proj) {
+  if (settings.enableViews) { proj_trackView(cat, proj.id); proj.views = (proj.views||0) + 1; }
+  const liked = proj_likedProjects[proj.id];
+  let mediaEl = '';
+  if (proj.videoUrl && (proj.videoUrl.includes('youtube')||proj.videoUrl.includes('youtu.be'))) {
+    const vid = proj_ytId(proj.videoUrl);
+    mediaEl = `<div class="modal-proj-media" style="background:#000;">
+      <iframe src="https://www.youtube.com/embed/${vid}?autoplay=1&rel=0" allow="autoplay;encrypted-media" allowfullscreen style="width:100%;height:380px;border:none;"></iframe>
+    </div>`;
+  } else if (proj.imageUrl) {
+    mediaEl = `<div class="modal-proj-media"><img src="${esc(proj.imageUrl)}" alt="${esc(proj.title)}"></div>`;
+  }
+
+  // Meta grid items per category
+  let metaItems = '';
+  if (cat === 'sites') {
+    metaItems = proj_metaItem('🔗 URL', proj.url||'—') + proj_metaItem('📊 Statut', proj.status==='live'?'🟢 En ligne':'🟡 WIP');
+  } else if (cat === 'games') {
+    metaItems = proj_metaItem('🖥 Plateformes', proj.platforms||'—') + proj_metaItem('↓ Téléchargements', proj_fmt(proj.downloads||0));
+  } else if (cat === 'software') {
+    metaItems = proj_metaItem('📦 Version', proj.version||'—') + proj_metaItem('🖥 OS', proj.os||'—');
+  } else if (cat === 'bots') {
+    metaItems = proj_metaItem('🔧 Prefix', proj.prefix||'/') + proj_metaItem('🖧 Serveurs', proj.servers||'—');
+  } else if (cat === 'assets') {
+    metaItems = proj_metaItem('💾 Taille ZIP', proj.size||'—') + proj_metaItem('↓ Téléchargements', proj_fmt(proj.downloads||0));
+  } else if (cat === 'ai') {
+    metaItems = proj_metaItem('🧠 Modèle', proj.model||'Custom') + proj_metaItem('🔧 Tech', proj.tech||'—');
+  } else if (cat === 'animations') {
+    metaItems = proj_metaItem('⏱ Durée', proj.duration||'—') + proj_metaItem('🎨 Logiciel', proj.software||'—');
+  }
+  metaItems += proj_metaItem('❤ Likes', proj_fmt(proj.likes||0)) + proj_metaItem('👁 Vues', proj_fmt(proj.views||0));
+
+  // Full folder tree for assets
+  const treeSection = (cat === 'assets' && (proj.files||proj.folders)) ? `
+    <div class="modal-folder-head">📁 Contenu de l'archive</div>
+    <div class="modal-folder-tree">${proj_buildMiniTree(proj.folders||[], proj.files||[])}</div>` : '';
+
+  // Action buttons
+  let actions = '';
+  if (proj.downloadUrl) actions += `<a class="btn-cta dl" href="${esc(proj.downloadUrl)}" target="_blank" onclick="proj_trackDownload('${cat}','${esc(proj.id)}',event)">⬇ Télécharger ZIP</a>`;
+  if (proj.url) actions += `<a class="btn-cta visit" href="${esc(proj.url)}" target="_blank">🔗 Visiter</a>`;
+  if (proj.inviteUrl) actions += `<a class="btn-cta primary" href="${esc(proj.inviteUrl)}" target="_blank">+ Inviter le bot</a>`;
+  if (proj.demoUrl) actions += `<a class="btn-cta primary" href="${esc(proj.demoUrl)}" target="_blank">🔗 Demo live</a>`;
+  if (proj.repoUrl) actions += `<a class="btn-cta outline" href="${esc(proj.repoUrl)}" target="_blank">⎇ Code source</a>`;
+  if (proj.playUrl) actions += `<a class="btn-cta visit" href="${esc(proj.playUrl)}" target="_blank">▶ Jouer</a>`;
+  actions += `<button class="like-btn${liked?' liked':''}" onclick="proj_toggleLike('${cat}','${esc(proj.id)}',this)" style="margin-left:auto;">❤ ${proj.likes||0}</button>`;
+
+  document.getElementById('projModalContent').innerHTML = `
+    ${mediaEl}
+    <div class="modal-proj-body">
+      <div class="card-tags" style="margin-bottom:10px;">${proj_tagsHtml(proj)}${proj_techTagsHtml(proj)}</div>
+      <div class="modal-proj-title">${esc(proj.title||'Sans titre')}</div>
+      <div class="modal-proj-desc">${esc(proj.desc||'')}</div>
+      ${proj.longDesc ? `<div style="color:var(--text2);font-size:.84rem;line-height:1.85;margin-bottom:20px;white-space:pre-wrap;">${esc(proj.longDesc)}</div>` : ''}
+      <div class="modal-meta-grid">${metaItems}</div>
+      ${treeSection}
+      <div class="modal-actions">${actions}</div>
+    </div>`;
+
+  document.getElementById('projOverlay').classList.add('open');
+}
+
+function proj_metaItem(label, val) {
+  return `<div class="modal-meta-item"><div class="modal-meta-label">${label}</div><div class="modal-meta-val">${esc(String(val))}</div></div>`;
+}
+
+/* ══════════════════════════════════════════════════════
+   LIKES / VIEWS / DOWNLOADS
+══════════════════════════════════════════════════════ */
+function proj_toggleLike(cat, id, btn) {
+  if (!settings.enableLikes) return;
+  const wasLiked = proj_likedProjects[id];
+  proj_likedProjects[id] = !wasLiked;
+  localStorage.setItem(PROJ_LS_LIKES, JSON.stringify(proj_likedProjects));
+
+  // Update Firebase
+  if (proj_db && id) proj_incrementStat(cat, id, 'likes');
+
+  // Update local
+  const proj = (proj_projects[cat]||[]).find(p => p.id === id);
+  if (proj) proj.likes = (proj.likes||0) + (wasLiked ? -1 : 1);
+
+  btn.classList.toggle('liked', !wasLiked);
+  const countEl = btn.querySelector('.like-ico');
+  if (countEl) countEl.nextSibling && (btn.childNodes[btn.childNodes.length-1].textContent = ` ${proj?.likes||0}`);
+  btn.innerHTML = `<span class="like-ico">❤</span> ${proj?.likes||0}`;
+  btn.className = `like-btn${proj_likedProjects[id]?' liked':''}`;
+
+  // Re-add event
+  btn.onclick = e => { e.stopPropagation(); proj_toggleLike(cat, id, btn); };
+}
+
+function proj_trackView(cat, id) {
+  if (!settings.enableViews || !proj_db) return;
+  proj_incrementStat(cat, id, 'views');
+}
+
+function proj_trackDownload(cat, id, e) {
+  if (!settings.enableDownloadCount || !proj_db) return;
+  proj_incrementStat(cat, id, 'downloads');
+  const proj = (proj_projects[cat]||[]).find(p => p.id === id);
+  if (proj) proj.downloads = (proj.downloads||0) + 1;
+}
+
+function proj_openYT(videoId, e) {
+  e.stopPropagation();
+  // Open YouTube in a lightbox
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;cursor:pointer;';
+  ov.innerHTML = `<div style="width:100%;max-width:860px;position:relative;cursor:default;">
+    <button onclick="this.closest('div[style]').remove()" style="position:absolute;top:-40px;right:0;background:none;border:1px solid rgba(255,255,255,.2);color:white;padding:6px 12px;border-radius:7px;cursor:pointer;font-size:.8rem;">✕ Fermer</button>
+    <div style="padding-top:56.25%;position:relative;">
+      <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" allow="autoplay;encrypted-media" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;border-radius:12px;"></iframe>
+    </div>
+  </div>`;
+  ov.addEventListener('click', function(ev) { if (ev.target === ov) ov.remove(); });
+  document.body.appendChild(ov);
+}
+
+function proj_ytId(url) {
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([^&?/\s]+)/);
+  return m ? m[1] : '';
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — LOGIN
+══════════════════════════════════════════════════════ */
+function proj_openAdmin(){ openAdmin(); /* delegate to index.html admin */ }
+
+function proj_tryAdminLogin() {
+  const pw = document.getElementById('adminPw').value;
+  if (pw !== adminPassword) { document.getElementById('adminPwErr').textContent = '✕ Mot de passe incorrect'; return; }
+  proj_adminLoggedIn = true;
+  document.getElementById('adminLoginWall').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  proj_adminPage('sites');
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — PAGE ROUTING
+══════════════════════════════════════════════════════ */
+function proj_adminPage(name) {
+  proj_currentEditCat = name;
+  document.querySelectorAll('.admin-sidebar-item').forEach(el => {
+    el.classList.toggle('active', el.id === `aside-${name}`);
+  });
+  const content = document.getElementById('adminContent');
+  if (PROJ_CATS.includes(name)) proj_renderAdminCat(name, content);
+  else if (name === 'settings') proj_renderAdminSettings(content);
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — CATEGORY PAGE
+══════════════════════════════════════════════════════ */
+function proj_renderAdminCat(cat, el) {
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+      <h3 style="font-size:1rem;font-weight:800;">${PROJ_CAT_META[cat].icon} ${PROJ_CAT_META[cat].label}</h3>
+      <button class="btn-accent" style="font-size:.76rem;padding:7px 14px;" onclick="proj_showAddForm('${cat}')">+ Ajouter</button>
+    </div>
+    <div id="addFormZone-${cat}"></div>
+    <div class="admin-proj-list" id="adminList-${cat}">
+      ${(proj_projects[cat]||[]).map(p => proj_adminProjItemHtml(cat, p)).join('') || '<p style="color:var(--text3);font-size:.8rem;">Aucun projet.</p>'}
+    </div>`;
+}
+
+function proj_adminProjItemHtml(cat, proj) {
+  const thumb = proj.imageUrl
+    ? `<img src="${esc(proj.imageUrl)}">`
+    : `<span>${PROJ_CAT_META[cat].icon}</span>`;
+  return `<div class="admin-proj-item" id="aitem-${esc(proj.id)}">
+    <div class="api">${thumb}</div>
+    <div class="admin-proj-info">
+      <div class="admin-proj-name">${esc(proj.title||'Sans titre')}</div>
+      <div class="admin-proj-sub">${esc(proj.desc||'—')}</div>
+    </div>
+    <div class="admin-proj-actions">
+      <button class="btn-toggle${proj.hidden?'':' on'}" title="${proj.hidden?'Afficher':'Masquer'}" onclick="proj_toggleHidden('${cat}','${esc(proj.id)}',this)">${proj.hidden?'👁‍🗨':'👁'}</button>
+      <button class="btn-edit" onclick="proj_showEditForm('${cat}','${esc(proj.id)}')">✎ Éditer</button>
+      <button class="btn-del" onclick="proj_confirmDelete('${cat}','${esc(proj.id)}')">🗑</button>
+    </div>
+  </div>`;
+}
+
+async function proj_toggleHidden(cat, id, btn) {
+  const proj_db = window.__proj_db; const proj_FB = window.__proj_FB;
+  const proj = (proj_projects[cat]||[]).find(p => p.id === id);
+  if (!proj) return;
+  proj.hidden = !proj.hidden;
+  btn.textContent = proj.hidden ? '👁‍🗨' : '👁';
+  btn.className = `btn-toggle${proj.hidden?'':' on'}`;
+  if (proj_db) await proj_saveProject(cat, { hidden: proj.hidden }, id);
+  proj_renderAll();
+}
+
+async function proj_confirmDelete(cat, id) {
+  if (!confirm('Supprimer ce projet ?')) return;
+  await proj_deleteProject(cat, id);
+  document.getElementById(`aitem-${id}`)?.remove();
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — ADD / EDIT FORMS
+══════════════════════════════════════════════════════ */
+function proj_showAddForm(cat) {
+  proj_editingId = null;
+  const zone = document.getElementById(`addFormZone-${cat}`);
+  zone.innerHTML = proj_buildProjectForm(cat, null);
+}
+
+function proj_showEditForm(cat, id) {
+  proj_editingId = id;
+  const proj = (proj_projects[cat]||[]).find(p => p.id === id);
+  if (!proj) return;
+  const zone = document.getElementById(`addFormZone-${cat}`);
+  zone.innerHTML = proj_buildProjectForm(cat, proj);
+  zone.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function proj_buildProjectForm(cat, proj) {
+  const v = k => esc(proj?.[k] || '');
+  const isEdit = !!proj;
+  const title = isEdit ? `✎ Modifier "${v('title')}"` : `+ Nouveau ${PROJ_CAT_META[cat].label.slice(0,-1)||cat}`;
+
+  // Common fields
+  let fields = `
+    <div class="form-grid2">
+      <div class="form-group"><label>Titre *</label><input class="inp" id="pf-title" value="${v('title')}" placeholder="Titre du projet"></div>
+      <div class="form-group"><label>Tags (virgule)</label><input class="inp" id="pf-tags" value="${v('tags')}" placeholder="tag1, tag2"></div>
+    </div>
+    <div class="form-group"><label>Description courte</label><textarea class="inp" id="pf-desc" rows="2" placeholder="Description courte...">${v('desc')}</textarea></div>
+    <div class="form-group"><label>Description longue (optionnel)</label><textarea class="inp" id="pf-longDesc" rows="3" placeholder="Détails supplémentaires...">${v('longDesc')}</textarea></div>
+    <div class="form-grid2">
+      <div class="form-group"><label>Image URL (optionnel)</label><input class="inp" id="pf-imageUrl" value="${v('imageUrl')}" placeholder="https://..."></div>
+      <div class="form-group"><label>Vidéo / YouTube URL</label><input class="inp" id="pf-videoUrl" value="${v('videoUrl')}" placeholder="https://youtu.be/..."></div>
+    </div>
+    <div class="form-group"><label>Ordre d'affichage</label><input class="inp" type="number" id="pf-order" value="${v('order')||'0'}" style="max-width:100px;"></div>`;
+
+  // Category-specific fields
+  if (cat === 'sites') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>URL du site *</label><input class="inp" id="pf-url" value="${v('url')}" placeholder="https://monsite.fr"></div>
+        <div class="form-group"><label>URL du repo (optionnel)</label><input class="inp" id="pf-repoUrl" value="${v('repoUrl')}" placeholder="https://github.com/..."></div>
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>Technologies (virgule)</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="React, Firebase..."></div>
+        <div class="form-group"><label>Statut</label>
+          <select class="inp" id="pf-status">
+            <option value="live"${proj?.status==='live'?' selected':''}>🟢 En ligne</option>
+            <option value="wip"${proj?.status==='wip'?' selected':''}>🟡 En développement</option>
+          </select>
+        </div>
+      </div>`;
+  } else if (cat === 'games') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>🔗 Lien de téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub Releases, Google Drive, Mega, itch.io..."></div>
+        <div class="form-group"><label>▶ Lien pour jouer en ligne (web)</label><input class="inp" id="pf-playUrl" value="${v('playUrl')}" placeholder="https://itch.io/... ou lien web"></div>
+      </div>
+      <div style="background:rgba(108,99,255,.06);border:1px solid rgba(108,99,255,.18);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:.7rem;color:var(--accent);font-family:var(--mono);">
+        💡 Hébergeurs recommandés : <strong>itch.io</strong> (idéal pour jeux), <strong>GitHub Releases</strong>, <strong>Mega.nz</strong>, <strong>Google Drive</strong>
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>Plateformes (virgule)</label><input class="inp" id="pf-platforms" value="${v('platforms')}" placeholder="PC, Android, iOS, Web"></div>
+        <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="Unity, Godot, Pygame..."></div>
+      </div>`;
+  } else if (cat === 'software') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>🔗 Lien de téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub Releases, Google Drive, Mega..."></div>
+        <div class="form-group"><label>🌐 URL page info (optionnel)</label><input class="inp" id="pf-url" value="${v('url')}" placeholder="https://..."></div>
+      </div>
+      <div style="background:rgba(0,245,147,.05);border:1px solid rgba(0,245,147,.15);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:.7rem;color:var(--green);font-family:var(--mono);">
+        💡 Hébergeurs recommandés : <strong>GitHub Releases</strong> (versioning), <strong>Mega.nz</strong>, <strong>Google Drive</strong>
+      </div>
+      <div class="form-grid3">
+        <div class="form-group"><label>Version</label><input class="inp" id="pf-version" value="${v('version')}" placeholder="1.0.0"></div>
+        <div class="form-group"><label>OS / Compatibilité</label><input class="inp" id="pf-os" value="${v('os')}" placeholder="Windows, macOS, Linux"></div>
+        <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="Python, Electron..."></div>
+      </div>`;
+  } else if (cat === 'animations') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>🔗 Lien de téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="Google Drive, Mega, WeTransfer..."></div>
+        <div class="form-group"><label>🎨 Logiciel utilisé</label><input class="inp" id="pf-software" value="${v('software')}" placeholder="After Effects, Blender, DaVinci..."></div>
+      </div>
+      <div style="background:rgba(255,106,176,.05);border:1px solid rgba(255,106,176,.18);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:.7rem;color:var(--pink);font-family:var(--mono);">
+        💡 Pour partager la vidéo : <strong>YouTube</strong> (coller le lien YT ci-dessus), ou héberger sur <strong>Google Drive / Mega</strong> pour le DL fichier source
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>Durée</label><input class="inp" id="pf-duration" value="${v('duration')}" placeholder="0:42"></div>
+        <div class="form-group"><label>Résolution</label><input class="inp" id="pf-resolution" value="${v('resolution')}" placeholder="1920x1080"></div>
+      </div>`;
+  } else if (cat === 'bots') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>Lien d'invitation</label><input class="inp" id="pf-inviteUrl" value="${v('inviteUrl')}" placeholder="https://discord.com/oauth2/..."></div>
+        <div class="form-group"><label>URL page du bot</label><input class="inp" id="pf-url" value="${v('url')}" placeholder="https://..."></div>
+      </div>
+      <div class="form-grid3">
+        <div class="form-group"><label>Préfixe</label><input class="inp" id="pf-prefix" value="${v('prefix')}" placeholder="/"></div>
+        <div class="form-group"><label>Serveurs</label><input class="inp" id="pf-servers" value="${v('servers')}" placeholder="1.2k"></div>
+        <div class="form-group"><label>Commandes</label><input class="inp" id="pf-commands" value="${v('commands')}" placeholder="42"></div>
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>Utilisateurs</label><input class="inp" id="pf-users" value="${v('users')}" placeholder="5k"></div>
+        <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="discord.py, Node.js..."></div>
+      </div>`;
+  } else if (cat === 'ai') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>Modèle IA</label><input class="inp" id="pf-model" value="${v('model')}" placeholder="GPT-4, Llama3, Custom..."></div>
+        <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="Python, PyTorch..."></div>
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>🔗 Lien Demo en ligne</label><input class="inp" id="pf-demoUrl" value="${v('demoUrl')}" placeholder="https://huggingface.co/... ou lien demo"></div>
+        <div class="form-group"><label>⬇ Lien téléchargement externe</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub, HuggingFace, Google Drive..."></div>
+      </div>
+      <div class="form-group"><label>Fonctionnalités (une par ligne)</label>
+        <textarea class="inp" id="pf-features" rows="4" placeholder="Génère du texte&#10;Analyse des images&#10;...">${v('features')}</textarea>
+      </div>`;
+  } else if (cat === 'assets') {
+    // Build folder editor
+    const folders = proj?.folders || [];
+    const rootFiles = proj?.files || [];
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>🔗 Lien de téléchargement ZIP externe *</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="GitHub Releases, Google Drive, Mega, OneDrive..."></div>
+        <div class="form-group"><label>💾 Taille du ZIP</label><input class="inp" id="pf-size" value="${v('size')}" placeholder="12.4 MB"></div>
+      </div>
+      <div style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.18);border-radius:9px;padding:10px 14px;margin-bottom:14px;font-size:.72rem;color:var(--cyan);font-family:var(--mono);line-height:1.8;">
+        💡 <strong>Hébergeurs recommandés :</strong><br>
+        • <strong>GitHub Releases</strong> — Lien direct stable, parfait pour les projets publics<br>
+        • <strong>Google Drive</strong> — Partage → "Tout le monde avec le lien" → copier le lien de téléchargement direct<br>
+        • <strong>Mega.nz</strong> — Gratuit, 20 GB, liens permanents<br>
+        • <strong>OneDrive / Dropbox</strong> — Remplacer <code>?dl=0</code> par <code>?dl=1</code> pour le DL direct
+      </div>
+      <div class="form-grid2">
+        <div class="form-group"><label>URL preview (optionnel)</label><input class="inp" id="pf-previewUrl" value="${v('previewUrl')}" placeholder="https://..."></div>
+        <div class="form-group"><label>Licence</label><input class="inp" id="pf-license" value="${v('license')}" placeholder="MIT, CC BY 4.0..."></div>
+      </div>
+      <div class="form-group">
+        <label>📁 Arborescence des fichiers</label>
+        <div class="folder-editor" id="folderEditor">
+          <div id="folderEditorItems">
+            ${folders.map((f,fi) => folderItemHtml(f, fi)).join('')}
+            ${rootFiles.map((f,fi) => fileItemHtml(f, fi)).join('')}
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="btn-cta outline" style="font-size:.72rem;" onclick="proj_addFolderRow()">+ Dossier</button>
+            <button class="btn-cta outline" style="font-size:.72rem;" onclick="proj_addFileRow()">+ Fichier</button>
+          </div>
+        </div>
+      </div>`;
+  } else if (cat === 'other') {
+    fields += `
+      <div class="form-grid2">
+        <div class="form-group"><label>URL (optionnel)</label><input class="inp" id="pf-url" value="${v('url')}" placeholder="https://..."></div>
+        <div class="form-group"><label>Lien téléchargement</label><input class="inp" id="pf-downloadUrl" value="${v('downloadUrl')}" placeholder="https://..."></div>
+      </div>
+      <div class="form-group"><label>Technologies</label><input class="inp" id="pf-tech" value="${v('tech')}" placeholder="..."></div>`;
+  }
+
+  return `<div class="edit-panel">
+    <h4>${title} <button class="edit-panel-close" onclick="this.closest('.edit-panel').remove()">✕</button></h4>
+    <div id="pfErr" class="err-msg" style="margin-bottom:10px;"></div>
+    ${fields}
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button class="btn-accent" style="font-size:.8rem;padding:9px 18px;" onclick="proj_submitProjectForm('${cat}')">
+        ${isEdit ? '💾 Sauvegarder' : '✦ Créer'}
+      </button>
+      <button class="btn-secondary" style="font-size:.8rem;" onclick="this.closest('.edit-panel').remove()">Annuler</button>
+    </div>
+  </div>`;
+}
+
+/* ── Folder/file row builders ── */
+let proj_folderRows = 0; let proj_fileRows = 0;
+function folderItemHtml(f, i) {
+  const filesHtml = (f.files||[]).map((fi, j) => `
+    <div class="folder-editor-item" style="padding-left:16px;margin-top:4px;" id="ffi-${i}-${j}">
+      <span style="color:var(--text3);font-size:.75rem;">📄</span>
+      <input class="inp" placeholder="fichier.ext" value="${esc(fi.name||fi)}" style="flex:1;padding:5px 9px;font-size:.76rem;" data-folder="${i}" data-fidx="${j}" data-type="folderfile">
+      <button onclick="document.getElementById('ffi-${i}-${j}').remove()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.8rem;">✕</button>
+    </div>`).join('');
+  return `<div class="folder-editor-item" id="fe-folder-${i}">
+    <span>📁</span>
+    <input class="inp" placeholder="Nom du dossier" value="${esc(f.name||'')}" style="flex:1;padding:6px 10px;font-size:.78rem;" data-folder="${i}" data-type="foldername">
+    <button onclick="proj_addSubFile(${i})" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--cyan);padding:4px 8px;border-radius:6px;font-size:.68rem;cursor:pointer;">+ Fichier</button>
+    <button onclick="document.getElementById('fe-folder-${i}').remove()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.8rem;">✕</button>
+  </div>
+  <div id="fe-subfiles-${i}">${filesHtml}</div>`;
+}
+function fileItemHtml(f, i) {
+  return `<div class="folder-editor-item" id="fe-file-${i}">
+    <span style="color:var(--text3);">📄</span>
+    <input class="inp" placeholder="fichier.ext" value="${esc(f.name||f||'')}" style="flex:1;padding:6px 10px;font-size:.78rem;" data-froot="${i}" data-type="rootfile">
+    <button onclick="document.getElementById('fe-file-${i}').remove()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.8rem;">✕</button>
+  </div>`;
+}
+function proj_addFolderRow() {
+  const el = document.getElementById('folderEditorItems');
+  const i = proj_folderRows++;
+  const div = document.createElement('div');
+  div.innerHTML = folderItemHtml({name:'',files:[]}, i);
+  el.appendChild(div.firstChild);
+  const sub = document.createElement('div');
+  sub.id = `fe-subfiles-${i}`;
+  el.appendChild(sub);
+}
+function proj_addFileRow() {
+  const el = document.getElementById('folderEditorItems');
+  const i = proj_fileRows++;
+  const div = document.createElement('div');
+  div.innerHTML = fileItemHtml({name:''}, i);
+  el.appendChild(div.firstChild);
+}
+function proj_addSubFile(folderIdx) {
+  const el = document.getElementById(`fe-subfiles-${folderIdx}`);
+  if (!el) return;
+  const j = el.children.length;
+  const div = document.createElement('div');
+  div.id = `ffi-${folderIdx}-${j}`;
+  div.className = 'folder-editor-item';
+  div.style.paddingLeft = '16px';
+  div.style.marginTop = '4px';
+  div.innerHTML = `
+    <span style="color:var(--text3);font-size:.75rem;">📄</span>
+    <input class="inp" placeholder="fichier.ext" style="flex:1;padding:5px 9px;font-size:.76rem;" data-folder="${folderIdx}" data-fidx="${j}" data-type="folderfile">
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.8rem;">✕</button>`;
+  el.appendChild(div);
+}
+
+function proj_collectFolderTree() {
+  const folders = {};
+  const rootFiles = [];
+  document.querySelectorAll('[data-type]').forEach(el => {
+    if (el.dataset.type === 'foldername') {
+      const fi = el.dataset.folder;
+      if (!folders[fi]) folders[fi] = { name: '', files: [] };
+      folders[fi].name = el.value.trim();
+    } else if (el.dataset.type === 'folderfile') {
+      const fi = el.dataset.folder;
+      if (!folders[fi]) folders[fi] = { name: '', files: [] };
+      if (el.value.trim()) folders[fi].files.push({ name: el.value.trim() });
+    } else if (el.dataset.type === 'rootfile') {
+      if (el.value.trim()) rootFiles.push({ name: el.value.trim() });
+    }
+  });
+  return {
+    folders: Object.values(folders).filter(f => f.name),
+    files: rootFiles
+  };
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — FORM SUBMIT
+══════════════════════════════════════════════════════ */
+async function proj_submitProjectForm(cat) {
+  const proj_db = window.__proj_db; const proj_FB = window.__proj_FB;
+  const g = id => document.getElementById(id)?.value?.trim() || '';
+  const title = g('pf-title');
+  if (!title) { document.getElementById('pfErr').textContent = '✕ Le titre est requis'; return; }
+
+  let data = {
+    title, desc: g('pf-desc'), longDesc: g('pf-longDesc'),
+    tags: g('pf-tags'), imageUrl: g('pf-imageUrl'), videoUrl: g('pf-videoUrl'),
+    order: parseInt(g('pf-order')) || 0,
+    hidden: false
+  };
+
+  // Category-specific
+  if (cat === 'sites') {
+    Object.assign(data, { url: g('pf-url'), repoUrl: g('pf-repoUrl'), tech: g('pf-tech'), status: g('pf-status') || 'wip' });
+  } else if (cat === 'games') {
+    Object.assign(data, { downloadUrl: g('pf-downloadUrl'), playUrl: g('pf-playUrl'), platforms: g('pf-platforms'), tech: g('pf-tech') });
+  } else if (cat === 'software') {
+    Object.assign(data, { downloadUrl: g('pf-downloadUrl'), url: g('pf-url'), version: g('pf-version'), os: g('pf-os'), tech: g('pf-tech') });
+  } else if (cat === 'animations') {
+    Object.assign(data, { downloadUrl: g('pf-downloadUrl'), software: g('pf-software'), duration: g('pf-duration'), resolution: g('pf-resolution') });
+  } else if (cat === 'bots') {
+    Object.assign(data, { inviteUrl: g('pf-inviteUrl'), url: g('pf-url'), prefix: g('pf-prefix'), servers: g('pf-servers'), commands: g('pf-commands'), users: g('pf-users'), tech: g('pf-tech') });
+  } else if (cat === 'ai') {
+    Object.assign(data, { model: g('pf-model'), tech: g('pf-tech'), demoUrl: g('pf-demoUrl'), downloadUrl: g('pf-downloadUrl'), features: g('pf-features') });
+  } else if (cat === 'assets') {
+    const tree = proj_collectFolderTree();
+    Object.assign(data, { downloadUrl: g('pf-downloadUrl'), size: g('pf-size'), previewUrl: g('pf-previewUrl'), license: g('pf-license'), ...tree });
+  } else if (cat === 'other') {
+    Object.assign(data, { url: g('pf-url'), downloadUrl: g('pf-downloadUrl'), tech: g('pf-tech') });
+  }
+
+  // Save to Firestore
+  const id = await proj_saveProject(cat, data, proj_editingId);
+  if (!id) return;
+
+  if (proj_editingId) {
+    const idx = proj_projects[cat].findIndex(p => p.id === proj_editingId);
+    if (idx !== -1) proj_projects[cat][idx] = { ...proj_projects[cat][idx], ...data };
+  } else {
+    proj_projects[cat].push({ id, ...data, views: 0, likes: 0, downloads: 0 });
+  }
+
+  proj_updateCounts();
+  proj_renderAll();
+  // Refresh admin list
+  const listEl = document.getElementById(`adminList-${cat}`);
+  if (listEl) listEl.innerHTML = (proj_projects[cat]||[]).map(p => proj_adminProjItemHtml(cat, p)).join('');
+  document.getElementById(`addFormZone-${cat}`)?.remove?.();
+  document.querySelector('.edit-panel')?.remove();
+  proj_editingId = null;
+  toast(proj_editingId ? 'Projet mis à jour !' : 'Projet créé !', 's');
+}
+
+/* ══════════════════════════════════════════════════════
+   ADMIN — SETTINGS
+══════════════════════════════════════════════════════ */
+function proj_renderAdminSettings(el) {
+  el.innerHTML = `
+    <h3 style="font-size:1rem;font-weight:800;margin-bottom:20px;">⚡ Paramètres</h3>
+    <div class="edit-panel">
+      <h4>🔑 Mot de passe admin</h4>
+      <div class="form-grid2">
+        <div class="form-group"><label>Nouveau mot de passe</label><input type="password" class="inp" id="set-pw1" placeholder="Min. 4 caractères"></div>
+        <div class="form-group"><label>Confirmer</label><input type="password" class="inp" id="set-pw2" placeholder="Confirmer..."></div>
+      </div>
+      <button class="btn-accent" style="font-size:.78rem;padding:8px 16px;" onclick="proj_saveAdminPw()">Changer</button>
+      <div id="pw-msg" class="ok-msg" style="display:none;margin-top:8px;"></div>
+    </div>
+    <div class="edit-panel" style="margin-top:16px;">
+      <h4>🔧 Options d'affichage</h4>
+      <div class="toggle-row">
+        <div><label>Compteur de likes</label><p>Permettre aux visiteurs de liker les projets</p></div>
+        <button class="toggle${settings.enableLikes?' on':''}" onclick="proj_toggleSetting('enableLikes',this)"></button>
+      </div>
+      <div class="toggle-row">
+        <div><label>Compteur de vues</label><p>Enregistrer les vues sur Firestore</p></div>
+        <button class="toggle${settings.enableViews?' on':''}" onclick="proj_toggleSetting('enableViews',this)"></button>
+      </div>
+      <div class="toggle-row">
+        <div><label>Compteur de téléchargements</label><p>Tracker les clics de téléchargement</p></div>
+        <button class="toggle${settings.enableDownloadCount?' on':''}" onclick="proj_toggleSetting('enableDownloadCount',this)"></button>
+      </div>
+    </div>
+    <div class="edit-panel" style="margin-top:16px;">
+      <h4>📋 Infos Firebase</h4>
+      <div style="font-family:var(--mono);font-size:.72rem;color:var(--text2);line-height:2;">
+        Status : <span id="fbStatusInline"></span><br>
+        Collections : <span style="color:var(--accent);">${PROJ_CATS.map(c=>`projects_${c}`).join(', ')}</span>
+      </div>
+    </div>`;
+  const fb = document.getElementById('fbStatusInline');
+  if (fb) fb.outerHTML = document.getElementById('fbStatus').outerHTML;
+}
+
+function proj_saveAdminPw() {
+  const p1 = document.getElementById('set-pw1').value;
+  const p2 = document.getElementById('set-pw2').value;
+  const msg = document.getElementById('pw-msg');
+  if (!p1 || p1.length < 4) { msg.style.display='block'; msg.className='err-msg'; msg.textContent='✕ Min. 4 caractères'; return; }
+  if (p1 !== p2) { msg.style.display='block'; msg.className='err-msg'; msg.textContent='✕ Les mots de passe ne correspondent pas'; return; }
+  adminPassword = p1;
+  localStorage.setItem(PROJ_LS_ADMINPW, p1);
+  msg.style.display='block'; msg.className='ok-msg'; msg.textContent='✓ Mot de passe changé !';
+  document.getElementById('set-pw1').value=''; document.getElementById('set-pw2').value='';
+  setTimeout(() => { msg.style.display='none'; }, 3000);
+}
+
+function proj_toggleSetting(key, btn) {
+  settings[key] = !settings[key];
+  btn.classList.toggle('on', settings[key]);
+  localStorage.setItem(PROJ_LS_SETTINGS, JSON.stringify(settings));
+  toast(`${key} : ${settings[key] ? 'activé' : 'désactivé'}`, 's');
+}
+
+
+
+
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
+
+// Init proj_projects module
+document.addEventListener("firebase-ready", ()=>{ setTimeout(proj_initFirebase, 100); });
 </script>
 </body>
 </html>
