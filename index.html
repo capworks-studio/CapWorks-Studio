@@ -345,7 +345,7 @@ select.inp option{background:var(--surf2)}
 .buy-banner a{color:var(--accent);text-decoration:none;font-weight:600}
 
 /* ── Overlays & Modals ── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);z-index:200;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);z-index:200;align-items:center;justify-content:center;padding:20px;overflow-y:auto}#projFormOv{z-index:400}
 .overlay.open{display:flex}
 .modal{background:var(--surf);border:1px solid var(--bdr2);border-radius:var(--r3);width:100%;max-width:480px;margin:auto;animation:modalIn .3s cubic-bezier(.2,.8,.3,1)}
 .modal-hd{padding:20px 24px 17px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
@@ -642,7 +642,7 @@ footer a:hover{text-decoration:underline}
   </div>
 </div>
 <!-- Project Add/Edit form -->
-<div class="overlay" id="projFormOv" onclick="ovClick(event,'projFormOv')">
+<div class="overlay" id="projFormOv" onclick="ovClick(event,'projFormOv')" style="z-index:400">
   <div class="modal" style="max-width:640px">
     <div class="modal-hd"><h3 id="projFormTitle">Ajouter un projet</h3><button class="x-btn" onclick="closeOv('projFormOv')">✕</button></div>
     <div class="modal-bd" id="projFormBody" style="max-height:70vh;overflow-y:auto"></div>
@@ -1315,10 +1315,11 @@ async function saveProj(){
   // Remove empty fields
   Object.keys(data).forEach(k=>{if(data[k]===''||data[k]===undefined)delete data[k];});
   const id=editProjId||'p_'+uid();
+  const existing=projData[cat].find(x=>x.id===id)||{};
   if(!projData[cat])projData[cat]=[];
   if(isEdit){const idx=projData[cat].findIndex(x=>x.id===editProjId);if(idx>-1)projData[cat][idx]={id,...data};else projData[cat].push({id,...data});}
   else projData[cat].push({id,likes:0,views:0,downloads:0,...data});
-  cDel('proj_'+cat);await autoSave(()=>fbSetD('projects_'+cat,id,{id,...data,likes:isEdit?(projData[cat].find(x=>x.id===id)?.likes||0):0,views:0,downloads:0}));
+  cDel('proj_'+cat);await autoSave(()=>fbSetD('projects_'+cat,id,{id,...data,likes:existing.likes||0,views:existing.views||0,downloads:existing.downloads||0}));
   closeOv('projFormOv');renderAdmProjs();updateCounts();renderProjs();toast(isEdit?'Projet mis à jour !':'Projet ajouté !');}
 
 /* ── Admin Users ── */
