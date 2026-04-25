@@ -5509,5 +5509,31 @@ function proj_toggleSetting(key, btn) {
 // Init proj_projects module
 document.addEventListener("firebase-ready", ()=>{ setTimeout(proj_initFirebase, 100); });
 </script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "capworks-studio-fr.firebaseapp.com",
+  databaseURL: "https://capworks-studio-fr-default-rtdb.firebaseio.com",
+  projectId: "capworks-studio-fr",
+  storageBucket: "capworks-studio-fr.firebasestorage.app",
+  messagingSenderId: "466455700751",
+  appId: "1:466455700751:web:6ca548df73dd8e47b70a7a",
+  measurementId: "G-8DMZPBS6J3"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.auth = auth;
+window.db = db;
+</script>
 </body>
 </html>
