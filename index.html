@@ -1924,7 +1924,10 @@ async function loadProjects(){
 
 function renderAdminProjects(){
   const el = document.getElementById('admin-proj-overview'); if(!el) return;
-  el.innerHTML = '<div style="text-align:center;padding:24px"><button class="btn-primary" style="max-width:280px" onclick="window.open('project.html','_blank')">🗂 Ouvrir le gestionnaire de projets →</button><p style="color:var(--text3);font-size:.78rem;margin-top:12px;font-family:var(--mono)">Les projets sont gérés dans project.html<br>avec leur propre panneau admin Firebase.</p></div>';
+  el.innerHTML = `<div style="text-align:center;padding:24px">
+    <button class="btn-primary" style="max-width:280px" onclick="window.open('project.html','_blank')">🗂 Ouvrir le gestionnaire de projets →</button>
+    <p style="color:var(--text3);font-size:.78rem;margin-top:12px;font-family:var(--mono)">Les projets sont gérés dans project.html<br>avec leur propre panneau admin Firebase.</p>
+  </div>`;
 }
 
 /* ═══════════════════════════════════════════════════════════
