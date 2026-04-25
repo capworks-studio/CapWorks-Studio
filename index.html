@@ -340,6 +340,16 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
   .support-layout{grid-template-columns:1fr}
   .support-sidebar{display:none}
 }
+
+/* SKELETON LOADING */
+@keyframes skeleton-pulse{0%,100%{opacity:.4}50%{opacity:.8}}
+.skeleton{border-radius:10px;background:var(--surface2);animation:skeleton-pulse 1.4s ease-in-out infinite}
+.skel-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;padding:22px}
+.skel-line{height:12px;margin-bottom:10px}
+.skel-line.w30{width:30%}.skel-line.w60{width:60%}.skel-line.w80{width:80%}.skel-line.w100{width:100%}
+.skel-icon{width:44px;height:44px;border-radius:10px;flex-shrink:0}
+.skel-tier{height:48px;border-radius:10px;margin-bottom:7px}
+
 </style>
 </head>
 <body>
@@ -381,7 +391,7 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
 
 <!-- FIREBASE STATUS -->
 <div class="fb-bar">
-  <span class="fb-pill loading" id="fbStatus"><span class="spin">⟳</span> Connexion Firebase...</span>
+  <span class="fb-pill loading" id="fbStatus"><span class="spin">⟳</span> Connexion...</span>
 </div>
 
 <!-- SERVICES -->
@@ -785,7 +795,7 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
 ═══════════════════════════════════════════════════════════ */
 let db = null, FB = null;
 
-function waitForFirebase(){
+function waitFirebase(){
   return new Promise(resolve => {
     if(window.__firebaseReady){ resolve(); return; }
     document.addEventListener('firebase-ready', resolve, { once:true });
@@ -794,17 +804,39 @@ function waitForFirebase(){
 }
 
 async function initApp(){
-  await waitForFirebase();
+  await waitFirebase();
   if(!window.__db){ setFbStatus('err','✕ Firebase non configuré'); return; }
   db = window.__db; FB = window.__FB;
-  setFbStatus('ok','✓ Firebase connecté');
-  await loadConfig();
-  await loadServices();
-  await loadTeam();
-  await loadProjects();
-  renderSupport();
+
+  // 1. Show cached content INSTANTLY if available
+  const cachedServices = cacheGet('cw_services');
+  const cachedTeam     = cacheGet('cw_team');
+  const cachedConfig   = cacheGet('config_main');
+
+  if(cachedConfig){ Object.assign(config, cachedConfig); emailjs.init(config.emailjsPublicKey); applySections(); }
+  if(cachedServices){ services = cachedServices; renderServices(); const el=document.getElementById('stat-services'); if(el) el.textContent=services.filter(s=>s.active&&!s.hidden).length+'+'; }
+  if(cachedTeam){ team = cachedTeam; renderTeam(); const el=document.getElementById('stat-members'); if(el) el.textContent=team.length; }
+
+  const hasCached = cachedServices && cachedTeam && cachedConfig;
+  if(hasCached){ setFbStatus('ok','✓ Firebase (cache)'); }
+  else { setFbStatus('loading','⟳ Chargement...'); }
+
   updateHeaderUser();
+  renderSupport();
   if(currentUser) setOnlineStatus(true);
+
+  // 2. Load from Firebase in parallel (silent refresh if cached)
+  try{
+    await Promise.all([
+      loadConfig(),
+      loadServices(),
+      loadTeam(),
+      loadProjects(),
+    ]);
+    setFbStatus('ok','✓ Firebase');
+  } catch(e){
+    if(!hasCached) setFbStatus('err','✕ Erreur Firebase');
+  }
 }
 
 function setFbStatus(type, text){
@@ -818,6 +850,17 @@ function setFbStatus(type, text){
    CONSTANTS
 ═══════════════════════════════════════════════════════════ */
 const CWS_LOGO = 'https://raw.githubusercontent.com/Capky/CapWorks-Studio/main/CWS_Logo.png';
+
+/* ═══════════════════════════════════════════════════════════
+   CACHE sessionStorage — affichage instantané
+═══════════════════════════════════════════════════════════ */
+const CACHE_TTL = 5 * 60 * 1000;
+function cacheSet(key, data){ try{ sessionStorage.setItem('cw_'+key, JSON.stringify({data,ts:Date.now()})); }catch(e){} }
+function cacheGet(key){ try{ const r=sessionStorage.getItem('cw_'+key); if(!r)return null; const {data,ts}=JSON.parse(r); if(Date.now()-ts>CACHE_TTL){sessionStorage.removeItem('cw_'+key);return null;} return data; }catch(e){return null;} }
+function cacheInvalidate(key){ try{ sessionStorage.removeItem('cw_'+key); }catch(e){} }
+async function fbGetColCached(col){ const c=cacheGet(col); if(c)return c; const d=await fbGetCol(col); cacheSet(col,d); return d; }
+async function fbGetDocCached(col,id){ const k=col+'_'+id; const c=cacheGet(k); if(c)return c; const d=await fbGetDoc(col,id); if(d)cacheSet(k,d); return d; }
+
 const DEFAULT_SERVICES = [
   { id:'s1', name:"Jeu vidéo PC", icon:"🖥️", iconBg:"icon-bg-1", desc:"Développement de jeux complets pour Windows/Linux/Mac", active:true, hidden:false,
     tiers:[{name:"Utilisable",price:80,desc:"Gameplay basique",paypal:"",free:false},{name:"De bonne qualité",price:200,desc:"Graphismes soignés",paypal:"",free:false},{name:"Fabuleux",price:500,desc:"Production complète",paypal:"",free:false}]},
@@ -929,6 +972,7 @@ async function loadConfig(){
   applySectionVisibility();
 }
 async function saveConfig(){
+  cacheInvalidate('config_main');
   await fbSet('config/main', config);
 }
 
@@ -970,7 +1014,7 @@ async function toggleSection(key, btn){
    LOAD SERVICES
 ═══════════════════════════════════════════════════════════ */
 async function loadServices(){
-  let data = await fbGetCol('cw_services');
+  let data = await fbGetColCached('cw_services');
   if(!data.length){
     // First run: seed defaults
     for(const s of DEFAULT_SERVICES) await fbSetDoc('cw_services', s.id, s);
@@ -986,7 +1030,7 @@ async function saveServices(){
 }
 
 async function loadTeam(){
-  let data = await fbGetCol('cw_team');
+  let data = await fbGetColCached('cw_team');
   if(!data.length){
     for(const m of DEFAULT_TEAM) await fbSetDoc('cw_team', m.id, m);
     data = DEFAULT_TEAM;
@@ -1002,6 +1046,7 @@ async function loadUsers(){
   data.forEach(u => { users[u.username || u.id] = u; });
 }
 async function saveUser(username, data){
+  cacheInvalidate('cw_users');
   await fbSetDoc('cw_users', username, { ...data, username });
 }
 async function deleteUserFb(username){
@@ -1014,6 +1059,7 @@ async function loadTickets(){
   data.forEach(d => { tickets[d.username] = d.messages || []; });
 }
 async function saveTickets(username){
+  cacheInvalidate('cw_tickets');
   await fbSetDoc('cw_tickets', username, { username, messages: tickets[username] || [] });
 }
 
@@ -1786,6 +1832,7 @@ function renderAdminTeam(){
 }
 
 async function addTeamMember(){
+  cacheInvalidate('cw_team');
   const name=document.getElementById('nt-name').value.trim();
   const avatar=document.getElementById('nt-avatar').value.trim()||'👤';
   const role=document.getElementById('nt-role').value;
@@ -1881,6 +1928,7 @@ async function saveOneService(si){
   setSaveStatus('saving');
   try{
     await fbSetDoc('cw_services', s.id, s);
+    cacheInvalidate('cw_services');
     setSaveStatus('saved');
     renderServices();
     const el=document.getElementById('stat-services');
@@ -1910,7 +1958,7 @@ async function loadProjects(){
   if(!grid) return;
   grid.innerHTML = '';
   for(const cat of PROJ_CATS_DEF){
-    const data = await fbGetCol('projects_'+cat.id);
+    const data = await fbGetColCached('projects_'+cat.id);
     const count = data.filter(p=>!p.hidden).length;
     const div = document.createElement('div');
     div.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .3s;animation:fadeUp .5s ease both;text-decoration:none;color:var(--text)';
