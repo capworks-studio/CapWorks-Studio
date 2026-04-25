@@ -4084,7 +4084,7 @@ let proj_projects = {};   // { sites:[], games:[], ... }
 let proj_activeCat = 'all';
 let proj_searchQuery = '';
 let proj_adminLoggedIn = false;
-let adminPassword = localStorage.getItem(PROJ_LS_ADMINPW) || 'admin123';
+let proj_adminPassword = localStorage.getItem(PROJ_LS_ADMINPW) || 'admin123';
 let proj_likedProjects = JSON.parse(localStorage.getItem(PROJ_LS_LIKES) || '{}');
 let proj_settings = JSON.parse(localStorage.getItem(PROJ_LS_SETTINGS) || JSON.stringify({
   showServices: false,
@@ -5184,7 +5184,7 @@ function proj_saveAdminPw() {
   const msg = document.getElementById('pw-msg');
   if (!p1 || p1.length < 4) { msg.style.display='block'; msg.className='err-msg'; msg.textContent='✕ Min. 4 caractères'; return; }
   if (p1 !== p2) { msg.style.display='block'; msg.className='err-msg'; msg.textContent='✕ Les mots de passe ne correspondent pas'; return; }
-  adminPassword = p1;
+  proj_adminPassword = p1;
   localStorage.setItem(PROJ_LS_ADMINPW, p1);
   msg.style.display='block'; msg.className='ok-msg'; msg.textContent='✓ Mot de passe changé !';
   document.getElementById('set-pw1').value=''; document.getElementById('set-pw2').value='';
