@@ -311,6 +311,8 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
 .save-bar{padding:14px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface2);flex-shrink:0}
 .save-status{font-family:var(--mono);font-size:.72rem;color:var(--text3)}
 .save-status.saved{color:var(--green)}
+.save-status.saving{color:var(--gold)}
+.save-status.saved{color:var(--green)}
 .info-box{background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.2);border-radius:10px;padding:14px 16px;font-size:.8rem;color:var(--cyan);font-family:var(--mono);line-height:1.7;margin-bottom:20px}
 .user-admin-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .ticket-admin-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
@@ -351,7 +353,8 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
     CapWorks<span> Studio</span>
   </a>
   <nav>
-    <a href="#services">Services</a>
+    <a href="#services" id="nav-services">Services</a>
+    <a href="#projects" id="nav-projects" style="display:none">Projets</a>
     <a href="#team">Équipe</a>
     <a href="#support">Support</a>
     <a href="#about">À propos</a>
@@ -393,6 +396,16 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
       <div style="font-size:2rem;margin-bottom:12px">⟳</div>Chargement des services...
     </div>
   </div>
+</section>
+<div class="sec-divider" id="div-projects" style="display:none"></div>
+
+<!-- PROJECTS -->
+<section class="section" id="projects" style="display:none">
+  <div class="section-head">
+    <span class="section-label">// nos réalisations</span>
+    <h2>Nos projets</h2>
+  </div>
+  <div id="proj-cats-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px"></div>
 </section>
 
 <div class="section-divider"></div>
@@ -618,10 +631,11 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
           <div class="err" id="admin-pw-err"></div>
         </div>
       </div>
-      <div id="admin-panel" style="display:none;height:100%;display:none;flex-direction:column">
+      <div id="admin-panel" style="display:none">
         <div class="admin-tabs-bar">
           <button class="a-tab active" onclick="aTab('services')">📦 Services</button>
           <button class="a-tab" onclick="aTab('paypal')">💳 PayPal</button>
+          <button class="a-tab" onclick="aTab('projects')">🗂 Projets</button>
           <button class="a-tab" onclick="aTab('users')">👥 Utilisateurs</button>
           <button class="a-tab" onclick="aTab('support-admin')">🎟 Support</button>
           <button class="a-tab" onclick="aTab('team')">🏅 Équipe</button>
@@ -651,6 +665,13 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
         <div class="a-tab-content" id="atab-paypal">
           <div class="info-box">💡 Collez vos liens PayPal.me ici. Activez <strong style="color:var(--green)">Gratuit</strong> pour un tier sans paiement.</div>
           <div id="admin-paypal-list"></div>
+        </div>
+
+
+        <!-- PROJECTS TAB -->
+        <div class="a-tab-content" id="atab-projects">
+          <div class="info-box">📂 Gérez vos projets depuis <strong>project.html</strong>. Ici vous pouvez activer/désactiver la section et voir un aperçu des projets.</div>
+          <div id="admin-proj-overview"></div>
         </div>
 
         <!-- USERS TAB -->
@@ -728,10 +749,8 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
             <div class="admin-service-item">
               <h4 style="font-size:.88rem;font-weight:700;margin-bottom:8px">🌐 Options d'affichage</h4>
               <div class="settings-section">
-                <div class="toggle-row">
-                  <div><label>Afficher la section Services</label></div>
-                  <button class="toggle on" id="toggle-services" onclick="toggleSection('services',this)"></button>
-                </div>
+                <div class="toggle-row"><div><label>Afficher la section Services</label></div><button class="toggle on" id="toggle-services" onclick="toggleSection('services',this)"></button></div>
+                <div class="toggle-row"><div><label>Afficher la section Projets</label></div><button class="toggle" id="toggle-projects" onclick="toggleSection('projects',this)"></button></div>
                 <div class="toggle-row">
                   <div><label>Afficher la section Équipe</label></div>
                   <button class="toggle on" id="toggle-team" onclick="toggleSection('team',this)"></button>
@@ -782,6 +801,7 @@ async function initApp(){
   await loadConfig();
   await loadServices();
   await loadTeam();
+  await loadProjects();
   renderSupport();
   updateHeaderUser();
   if(currentUser) setOnlineStatus(true);
@@ -912,7 +932,7 @@ async function saveConfig(){
   await fbSet('config/main', config);
 }
 
-function applySectionVisibility(){
+function applySections_OLD_UNUSED(){
   const s = config.sections || {};
   const sectionEl   = document.getElementById('services');
   const teamEl      = document.getElementById('team');
@@ -926,6 +946,17 @@ function applySectionVisibility(){
   });
 }
 
+function applySectionVisibility(){ applySections(); }
+function applySections(){
+  const s = config.sections||{};
+  [['services','div-services','nav-services'],['projects','div-projects','nav-projects'],['team',null,null],['support',null,null]].forEach(([k,divId,navId])=>{
+    const show = s[k]!==false;
+    const sec=document.getElementById(k); if(sec) sec.style.display=show?'':'none';
+    if(divId){ const d=document.getElementById(divId); if(d) d.style.display=show?'':'none'; }
+    if(navId){ const n=document.getElementById(navId); if(n) n.style.display=show?'':'none'; }
+    ['toggle-','tog-'].forEach(pref=>{ const btn=document.getElementById(pref+k); if(btn) btn.classList.toggle('on',show); });
+  });
+}
 async function toggleSection(key, btn){
   config.sections = config.sections || {};
   config.sections[key] = !btn.classList.contains('on');
@@ -1527,7 +1558,7 @@ async function loginAdmin(){
   if(pw!==config.adminPassword){ document.getElementById('admin-pw-err').textContent='✕ Mot de passe incorrect'; return; }
   adminLoggedIn=true;
   document.getElementById('admin-login-wall').style.display='none';
-  const panel=document.getElementById('admin-panel'); panel.style.display='flex'; panel.style.flexDirection='column';
+  const panel=document.getElementById('admin-panel'); panel.style.display='flex'; panel.style.flexDirection='column'; panel.style.height='100%';
   document.getElementById('admin-save-bar').style.display='flex';
   // Fill settings fields
   document.getElementById('discord-webhook').value=config.discordWebhook||'';
@@ -1541,44 +1572,70 @@ async function loginAdmin(){
 }
 
 function aTab(name){
-  const tabs=['services','paypal','users','support-admin','team','settings'];
+  const tabs=['services','paypal','projects','users','support-admin','team','settings'];
   document.querySelectorAll('.a-tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===name));
   document.querySelectorAll('.a-tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById(`atab-${name}`).classList.add('active');
 }
 
-function renderAdminAll(){ renderAdminServices(); renderAdminPaypal(); renderAdminUsers(); renderAdminTickets(); renderAdminTeam(); }
+function renderAdminAll(){ renderAdminServices(); renderAdminPaypal(); renderAdminUsers(); renderAdminTickets(); renderAdminTeam(); renderAdminProjects(); }
 
 /* ── Admin Services ── */
 function renderAdminServices(){
-  const list=document.getElementById('admin-service-list'); list.innerHTML='';
+  const list=document.getElementById('admin-services-list')||document.getElementById('admin-service-list');
+  if(!list){ return; }
+  list.innerHTML='';
+  if(!services.length){ list.innerHTML='<div class="empty-state">Aucun service.</div>'; return; }
   services.forEach((s,si)=>{
-    const div=document.createElement('div'); div.className='admin-service-item';
+    const div=document.createElement('div');
+    div.style.cssText='background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:17px;margin-bottom:13px';
     div.innerHTML=`
-      <div class="flex-row-sb" style="margin-bottom:12px">
-        <div class="flex-row" style="gap:8px;flex:1">
-          <input type="text" class="input" value="${esc(s.icon)}" maxlength="4" onchange="services[${si}].icon=this.value" style="width:54px;text-align:center;font-size:1.2rem;padding:6px">
-          <input type="text" class="input" value="${esc(s.name)}" onchange="services[${si}].name=this.value" style="flex:1;font-weight:700">
-          <label style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text2);cursor:pointer">
-            <button class="toggle${s.active?' on':''}" onclick="services[${si}].active=!services[${si}].active;this.classList.toggle('on',services[${si}].active)"></button>Actif
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px">
+        <div style="display:flex;gap:7px;align-items:center;flex:1">
+          <input type="text" class="input" value="${esc(s.icon)}" maxlength="4"
+            style="width:50px;text-align:center;font-size:1.15rem;padding:5px"
+            onchange="services[${si}].icon=this.value"
+            onblur="saveOneService(${si})">
+          <input type="text" class="input" value="${esc(s.name)}"
+            style="flex:1;font-weight:700"
+            onchange="services[${si}].name=this.value"
+            onblur="saveOneService(${si})">
+          <label style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text2);cursor:pointer;white-space:nowrap">
+            <button class="toggle${s.active?' on':''}"
+              onclick="services[${si}].active=!services[${si}].active;this.classList.toggle('on',services[${si}].active);saveOneService(${si})"></button>Actif
           </label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text2);cursor:pointer">
-            <button class="toggle${s.hidden?'':' on'}" onclick="services[${si}].hidden=!services[${si}].hidden;this.classList.toggle('on',!services[${si}].hidden)"></button>Visible
+          <label style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text2);cursor:pointer;white-space:nowrap">
+            <button class="toggle${s.hidden?'':' on'}"
+              onclick="services[${si}].hidden=!services[${si}].hidden;this.classList.toggle('on',!services[${si}].hidden);saveOneService(${si})"></button>Visible
           </label>
         </div>
-        <button class="btn-danger btn-sm" style="margin-left:10px" onclick="delService(${si})">🗑</button>
+        <button class="btn-danger btn-sm" style="margin-left:9px" onclick="delService(${si})">🗑</button>
       </div>
-      <input type="text" class="input" value="${esc(s.desc)}" onchange="services[${si}].desc=this.value" style="width:100%;margin-bottom:12px">
+      <input type="text" class="input" value="${esc(s.desc)}"
+        style="width:100%;margin-bottom:10px"
+        onchange="services[${si}].desc=this.value"
+        onblur="saveOneService(${si})">
       <div class="tiers-grid">
         ${(s.tiers||[]).map((t,ti)=>`
-          <div class="tier-box ${TIER_CLASSES[ti]}">
+          <div class="tier-box ${TIER_CLASSES[ti]||TIER_BOX_CLASSES[ti]||''}">
             <label>${t.name}</label>
-            <input type="number" class="input" style="margin-bottom:8px" value="${t.price}" min="0" onchange="services[${si}].tiers[${ti}].price=parseFloat(this.value)||0">
-            <input type="text" class="input" value="${esc(t.desc)}" onchange="services[${si}].tiers[${ti}].desc=this.value">
+            <input type="number" class="input" style="margin-bottom:7px" value="${t.price}" min="0"
+              onchange="services[${si}].tiers[${ti}].price=parseFloat(this.value)||0"
+              onblur="saveOneService(${si})">
+            <input type="text" class="input" value="${esc(t.desc)}"
+              onchange="services[${si}].tiers[${ti}].desc=this.value"
+              onblur="saveOneService(${si})">
           </div>`).join('')}
       </div>`;
     list.appendChild(div);
   });
+}
+
+async function toggleTierFree(si,ti,btn){
+  services[si].tiers[ti].free = !services[si].tiers[ti].free;
+  btn.classList.toggle('on', services[si].tiers[ti].free);
+  await saveOneService(si);
+  renderAdminPaypal();
 }
 
 async function delService(si){
@@ -1623,7 +1680,7 @@ function renderAdminPaypal(){
             Gratuit <button class="toggle${t.free?' on':''}" onclick="services[${si}].tiers[${ti}].free=!services[${si}].tiers[${ti}].free;this.classList.toggle('on',services[${si}].tiers[${ti}].free);renderAdminPaypal()"></button>
           </label>
         </div>
-        <input type="url" class="input" value="${esc(t.paypal||'')}" placeholder="https://paypal.me/..." ${t.free?'disabled style="opacity:.4"':''} onchange="services[${si}].tiers[${ti}].paypal=this.value" style="width:100%">
+        <input type="url" class="input" value="${esc(t.paypal||'')}" placeholder="https://paypal.me/..." ${t.free?'disabled style="opacity:.4"':''} onchange="services[${si}].tiers[${ti}].paypal=this.value" onblur="saveOneService(${si})" style="width:100%">
         ${t.free?'<p style="font-size:.68rem;color:var(--green);font-family:var(--mono);margin-top:4px">✓ Tier gratuit — aucun paiement requis</p>':''}
       </div>`).join('');
     div.innerHTML=`<h4 style="font-size:.88rem;font-weight:700;margin-bottom:12px">${s.icon} ${esc(s.name)}</h4>${tiersHtml}`;
@@ -1813,6 +1870,82 @@ async function resetToDefault(){
   for(const s of DEFAULT_SERVICES) await fbSetDoc('cw_services',s.id,s);
   services=[...DEFAULT_SERVICES]; renderServices(); renderAdminAll();
   toast('Réinitialisé !','success');
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   AUTO-SAVE SERVICE (called on every blur)
+═══════════════════════════════════════════════════════════ */
+async function saveOneService(si){
+  const s = services[si]; if(!s) return;
+  setSaveStatus('saving');
+  try{
+    await fbSetDoc('cw_services', s.id, s);
+    setSaveStatus('saved');
+    renderServices();
+    const el=document.getElementById('stat-services');
+    if(el) el.textContent = services.filter(x=>x.active&&!x.hidden).length+'+';
+  }catch(e){ setSaveStatus('error'); }
+}
+
+function setSaveStatus(state){
+  const el=document.getElementById('save-status'); if(!el)return;
+  if(state==='saving'){ el.className='save-status saving'; el.textContent='⟳ Sauvegarde...'; }
+  else if(state==='saved'){ el.className='save-status saved'; el.textContent='✓ Sauvegardé sur Firebase !'; setTimeout(()=>{ el.className='save-status'; el.textContent='Tout est synchronisé avec Firebase'; },2500); }
+  else { el.className='save-status'; el.textContent='✕ Erreur de sauvegarde'; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PROJECTS OVERVIEW IN ADMIN
+═══════════════════════════════════════════════════════════ */
+const PROJ_CATS_DEF = [
+  {id:'sites',label:'Sites Web',icon:'🌐'},{id:'games',label:'Jeux Vidéos',icon:'🎮'},
+  {id:'software',label:'Logiciels',icon:'⚙️'},{id:'animations',label:'Animations',icon:'🎬'},
+  {id:'bots',label:'Bots Discord',icon:'🤖'},{id:'ai',label:'IA',icon:'🧠'},
+  {id:'assets',label:'Assets',icon:'📦'},{id:'other',label:'Autres',icon:'◈'},
+];
+
+async function loadProjects(){
+  const grid = document.getElementById('proj-cats-grid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  for(const cat of PROJ_CATS_DEF){
+    const data = await fbGetCol('projects_'+cat.id);
+    const count = data.filter(p=>!p.hidden).length;
+    const div = document.createElement('div');
+    div.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .3s;animation:fadeUp .5s ease both;text-decoration:none;color:var(--text)';
+    div.onclick = ()=>window.open('project.html','_blank');
+    div.innerHTML = '<div style="width:52px;height:52px;border-radius:13px;background:rgba(108,99,255,.1);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">'+cat.icon+'</div><div style="flex:1"><div style="font-size:.95rem;font-weight:700;margin-bottom:3px">'+cat.label+'</div><div style="font-size:.76rem;color:var(--text2)">'+count+' projet'+(count!==1?'s':'')+'</div></div><span style="color:var(--text3)">→</span>';
+    div.onmouseenter=()=>{ div.style.borderColor='var(--accent)'; div.style.transform='translateY(-3px)'; };
+    div.onmouseleave=()=>{ div.style.borderColor='var(--border)'; div.style.transform=''; };
+    grid.appendChild(div);
+  }
+}
+
+function renderAdminProjects(){
+  const el = document.getElementById('admin-proj-overview'); if(!el) return;
+  el.innerHTML = '<div style="text-align:center;padding:24px"><button class="btn-primary" style="max-width:280px" onclick="window.open('project.html','_blank')">🗂 Ouvrir le gestionnaire de projets →</button><p style="color:var(--text3);font-size:.78rem;margin-top:12px;font-family:var(--mono)">Les projets sont gérés dans project.html<br>avec leur propre panneau admin Firebase.</p></div>';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   APPLY SECTION VISIBILITY (with projects)
+═══════════════════════════════════════════════════════════ */
+function applySections_OVERRIDE(){
+  const s = config.sections||{};
+  const pairs = {
+    services: ['services','div-services','nav-services'],
+    projects: ['projects','div-projects','nav-projects'],
+    team:     ['team',null,null],
+    support:  ['support',null,null],
+  };
+  Object.entries(pairs).forEach(([k,[secId,divId,navId]])=>{
+    const show = s[k]!==false;
+    const sec=document.getElementById(secId); if(sec) sec.style.display=show?'':'none';
+    if(divId){ const d=document.getElementById(divId); if(d) d.style.display=show?'':'none'; }
+    if(navId){ const n=document.getElementById(navId); if(n) n.style.display=show?'':'none'; }
+    const btn=document.getElementById('toggle-'+k); if(btn) btn.classList.toggle('on',show);
+    const btn2=document.getElementById('tog-'+k); if(btn2) btn2.classList.toggle('on',show);
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════
