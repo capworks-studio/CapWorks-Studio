@@ -939,7 +939,7 @@ textarea
   </a>
   <nav>
     <a href="#services" id="nav-services">Services</a>
-    <a href="#proj-page" id="nav-projects" style="display:none" onclick="showProjPage(event)">Projets</a>
+    <a href="#proj-page" id="nav-projects" onclick="showProjPage(event)">Projets</a>
     <a href="#team">Équipe</a>
     <a href="#support">Support</a>
     <a href="#about">À propos</a>
@@ -989,7 +989,7 @@ textarea
 <!-- ═══════════════════════════════════════════════════════════
      SECTION PROJETS (intégrée depuis project.html)
 ═══════════════════════════════════════════════════════════ -->
-<div id="proj-page" style="display:none">
+<div id="proj-page" style="display:block">
 <!-- ═══ HEADER ═══ -->
 
 
@@ -2809,10 +2809,10 @@ function applySections_OLD_UNUSED(){
 function applySectionVisibility(){ applySections(); }
 function applySections(){
   const s = config.sections||{};
-  [['services','div-services','nav-services'],['projects','div-projects','nav-projects'],['team',null,null],['support',null,null]].forEach(([k,divId,navId])=>{
+  [['services','div-services','nav-services'],['proj-page','div-projects','nav-projects'],['team',null,null],['support',null,null]].forEach(([k,divId,navId])=>{
     const show = s[k]!==false;
-    const sec=document.getElementById(k); if(sec) sec.style.display=show?'':'none';
-    if(divId){ const d=document.getElementById(divId); if(d) d.style.display=show?'':'none'; }
+    const secId = k==='projects' ? 'proj-page' : k; const sec=document.getElementById(secId); if(sec) sec.style.display=show?'':'none';
+    if(divId && divId !== 'div-projects'){ const d=document.getElementById(divId); if(d) d.style.display=show?'':'none'; }
     if(navId){ const n=document.getElementById(navId); if(n) n.style.display=show?'':'none'; }
     ['toggle-','tog-'].forEach(pref=>{ const btn=document.getElementById(pref+k); if(btn) btn.classList.toggle('on',show); });
   });
@@ -3801,14 +3801,14 @@ function applySections_OVERRIDE(){
   const s = config.sections||{};
   const pairs = {
     services: ['services','div-services','nav-services'],
-    projects: ['projects','div-projects','nav-projects'],
+    projects: ['proj-page','div-projects','nav-projects'],
     team:     ['team',null,null],
     support:  ['support',null,null],
   };
   Object.entries(pairs).forEach(([k,[secId,divId,navId]])=>{
     const show = s[k]!==false;
     const sec=document.getElementById(secId); if(sec) sec.style.display=show?'':'none';
-    if(divId){ const d=document.getElementById(divId); if(d) d.style.display=show?'':'none'; }
+    if(divId && divId !== 'div-projects'){ const d=document.getElementById(divId); if(d) d.style.display=show?'':'none'; }
     if(navId){ const n=document.getElementById(navId); if(n) n.style.display=show?'':'none'; }
     const btn=document.getElementById('toggle-'+k); if(btn) btn.classList.toggle('on',show);
     const btn2=document.getElementById('tog-'+k); if(btn2) btn2.classList.toggle('on',show);
@@ -3822,17 +3822,12 @@ function applySections_OVERRIDE(){
 /* ═══════════════════════════════════════════════════════════
    NAVIGATION PROJETS
 ═══════════════════════════════════════════════════════════ */
-let projPageVisible = false;
 function showProjPage(e){
   if(e) e.preventDefault();
-  projPageVisible = !projPageVisible;
   const pp = document.getElementById('proj-page');
-  if(pp){ pp.style.display = projPageVisible ? 'block' : 'none'; }
-  if(projPageVisible){
-    pp.scrollIntoView({behavior:'smooth', block:'start'});
-    // Init the project module if not already done
-    if(typeof proj_renderAll === 'function') proj_renderAll();
-  }
+  if(!pp) return;
+  pp.scrollIntoView({behavior:'smooth', block:'start'});
+  if(typeof proj_renderAll === 'function') proj_renderAll();
 }
 
 initApp();
