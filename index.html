@@ -5516,6 +5516,13 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const firebaseConfig = {
   apiKey: "AIzaSy...",
   authDomain: "capworks-studio-fr.firebaseapp.com",
   databaseURL: "https://capworks-studio-fr-default-rtdb.firebaseio.com",
@@ -5528,12 +5535,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 window.auth = auth;
 window.db = db;
+window.firebaseApp = app;
+
+document.dispatchEvent(new Event("firebase-ready"));
 </script>
 </body>
 </html>
