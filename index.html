@@ -261,61 +261,16 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
 .resend-link:hover{color:var(--accent)}
 .resend-link:disabled{cursor:not-allowed;text-decoration:none}
 
-/* ═══════════════════════════ ADMIN MODAL — PREMIUM ═══════════════════════════ */
-.admin-modal{
-  max-width:1100px; max-height:92vh; overflow:hidden; display:flex; flex-direction:column;
-  background:linear-gradient(180deg, rgba(22,22,31,.96), rgba(15,15,24,.96));
-  backdrop-filter:blur(28px) saturate(140%); -webkit-backdrop-filter:blur(28px) saturate(140%);
-  border:1px solid rgba(255,255,255,.06);
-  box-shadow:0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 1px rgba(108,99,255,.08), inset 0 1px 0 rgba(255,255,255,.04);
-}
+/* ═══════════════════════════ ADMIN MODAL ═══════════════════════════ */
+.admin-modal{max-width:980px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
 .admin-modal .modal-body{overflow-y:auto;flex:1;padding:0}
-.admin-tabs-bar{
-  display:flex; gap:4px; border-bottom:1px solid rgba(255,255,255,.06);
-  padding:8px 20px 0; background:rgba(12,12,18,.6); overflow-x:auto;
-  scrollbar-width:thin;
-}
-.a-tab{
-  position:relative; padding:11px 16px 13px; background:transparent; border:none;
-  color:var(--text2); font-family:var(--font); font-size:.8rem; font-weight:600;
-  cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;
-  transition:color .25s ease, background .25s ease; white-space:nowrap; border-radius:8px 8px 0 0;
-}
-.a-tab:hover{ color:var(--text); background:rgba(255,255,255,.03); }
-.a-tab.active{ color:var(--text); border-bottom-color:var(--accent); background:rgba(108,99,255,.06); }
-.a-tab.active::after{
-  content:''; position:absolute; left:50%; bottom:-1px; transform:translateX(-50%);
-  width:24px; height:2px; background:var(--accent); border-radius:99px;
-  box-shadow:0 0 12px var(--accent);
-}
-.a-tab-content{
-  display:none; padding:28px;
-  animation:adminTabIn .3s cubic-bezier(.4,0,.2,1);
-}
-.a-tab-content.active{display:block}
-@keyframes adminTabIn{
-  from{opacity:0; transform:translateY(8px)}
-  to{opacity:1; transform:translateY(0)}
-}
-
-/* Admin cards (glass) */
-.admin-service-item, .user-admin-item, .ticket-admin-card{
-  background:linear-gradient(180deg, rgba(28,28,40,.7), rgba(22,22,31,.7));
-  border:1px solid rgba(255,255,255,.06); border-radius:14px;
-  padding:18px; margin-bottom:14px;
-  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-  transition:border-color .25s, transform .25s, box-shadow .25s;
-}
-.admin-service-item:hover, .user-admin-item:hover, .ticket-admin-card:hover{
-  border-color:rgba(108,99,255,.25);
-  box-shadow:0 12px 30px -12px rgba(108,99,255,.25);
-}
-.user-admin-item{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 16px}
-.ticket-admin-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-
+.admin-tabs-bar{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 24px;background:var(--surface2);overflow-x:auto}
+.a-tab{padding:12px 16px;background:transparent;border:none;color:var(--text2);font-family:var(--font);font-size:.8rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap}
+.a-tab.active{color:var(--text);border-bottom-color:var(--accent)}
+.a-tab-content{display:none;padding:24px}.a-tab-content.active{display:block}
+.admin-service-item{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px}
 .tiers-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
-.tier-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;transition:border-color .2s}
-.tier-box:hover{border-color:var(--border2)}
+.tier-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px}
 .tier-box label{font-size:.67rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;display:block}
 .tier-box.t1 label{color:var(--t1)}.tier-box.t2 label{color:var(--t2)}.tier-box.t3 label{color:var(--t3)}
 .flex-row{display:flex;gap:8px;align-items:center}
@@ -323,131 +278,29 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
 .toggle{width:40px;height:22px;background:var(--border2);border-radius:100px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
 .toggle::after{content:'';position:absolute;width:16px;height:16px;background:white;border-radius:50%;top:3px;left:3px;transition:transform .2s}
 .toggle.on{background:var(--green)}.toggle.on::after{transform:translateX(18px)}
-
-/* Admin add form (premium) */
-.add-form{
-  background:linear-gradient(180deg, rgba(108,99,255,.06), rgba(108,99,255,.02));
-  border:1px solid rgba(108,99,255,.2); border-radius:16px; padding:24px; margin-bottom:24px;
-  position:relative; overflow:hidden;
-}
-.add-form::before{
-  content:''; position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(circle at 0% 0%, rgba(108,99,255,.08), transparent 50%);
-}
-.add-form h4{font-size:.92rem;font-weight:800;color:var(--cyan);margin-bottom:18px;display:flex;align-items:center;gap:10px;letter-spacing:.3px}
-.form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:.72rem;font-weight:700;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
-
-/* Save bar — visible & glassy */
-.save-bar{
-  padding:14px 24px; border-top:1px solid rgba(255,255,255,.06);
-  display:flex; align-items:center; justify-content:space-between;
-  background:rgba(15,15,24,.85); backdrop-filter:blur(12px); flex-shrink:0;
-}
-.save-status{font-family:var(--mono);font-size:.74rem;color:var(--text3);display:flex;align-items:center;gap:8px}
-.save-status::before{content:'●';font-size:.6rem;opacity:.5}
-.save-status.saved{color:var(--green)} .save-status.saved::before{opacity:1;animation:savePulse 1s ease}
-.save-status.saving{color:var(--gold)} .save-status.saving::before{animation:savePulse 1s ease infinite}
-.save-status.error{color:var(--red)}
-@keyframes savePulse{ 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.85)} }
-
-.info-box{
-  background:linear-gradient(135deg, rgba(0,212,255,.06), rgba(0,212,255,.02));
-  border:1px solid rgba(0,212,255,.25); border-radius:12px;
-  padding:14px 18px; font-size:.82rem; color:var(--cyan);
-  font-family:var(--mono); line-height:1.7; margin-bottom:22px;
-}
-
-.settings-section{margin-bottom:28px}
-.settings-section h4{font-size:.82rem;font-weight:700;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.06)}
-.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.add-form{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
+.add-form h4{font-size:.88rem;font-weight:700;color:var(--cyan);margin-bottom:16px}
+.form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.72rem;font-weight:700;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.save-bar{padding:14px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface2);flex-shrink:0}
+.save-status{font-family:var(--mono);font-size:.72rem;color:var(--text3)}
+.save-status.saved{color:var(--green)}
+.save-status.saving{color:var(--gold)}
+.save-status.saved{color:var(--green)}
+.info-box{background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.2);border-radius:10px;padding:14px 16px;font-size:.8rem;color:var(--cyan);font-family:var(--mono);line-height:1.7;margin-bottom:20px}
+.user-admin-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ticket-admin-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.ticket-admin-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.settings-section{margin-bottom:24px}
+.settings-section h4{font-size:.82rem;font-weight:700;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
 .toggle-row:last-child{border-bottom:none}
 .toggle-row label{font-size:.84rem;font-weight:600}
 
-/* ═══ PROJECTS ADMIN PANEL (merged into main admin) ═══ */
-.proj-admin-shell{
-  display:grid; grid-template-columns:240px 1fr; gap:24px; min-height:520px;
-}
-.proj-admin-mobile-select{ display:none; margin-bottom:18px; }
-.proj-admin-mobile-select label{
-  display:block; font-size:.7rem; font-weight:700; letter-spacing:1px;
-  text-transform:uppercase; color:var(--text2); margin-bottom:8px;
-}
-.proj-admin-mobile-select select{
-  width:100%; padding:14px 16px; border-radius:12px;
-  background:rgba(28,28,40,.7); color:var(--text);
-  border:1px solid rgba(255,255,255,.08); font-family:var(--font);
-  font-size:.88rem; font-weight:600; cursor:pointer;
-  appearance:none; -webkit-appearance:none;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239898b0'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat:no-repeat; background-position:right 12px center;
-}
-.proj-admin-side{
-  display:flex; flex-direction:column; gap:4px;
-  padding:16px 12px; border-radius:16px;
-  background:linear-gradient(180deg, rgba(28,28,40,.5), rgba(22,22,31,.5));
-  border:1px solid rgba(255,255,255,.05);
-  height:fit-content; position:sticky; top:0;
-}
-.proj-admin-side-label{
-  font-family:var(--mono); font-size:.65rem; letter-spacing:1.5px;
-  text-transform:uppercase; color:var(--text3);
-  padding:6px 12px 10px;
-}
-.proj-admin-side-sep{ height:1px; background:rgba(255,255,255,.06); margin:8px 8px; }
-.proj-admin-pill{
-  display:flex; align-items:center; gap:10px;
-  padding:11px 14px; border-radius:10px;
-  background:transparent; border:1px solid transparent;
-  color:var(--text2); font-family:var(--font); font-size:.84rem; font-weight:600;
-  text-align:left; cursor:pointer; transition:all .2s ease;
-  width:100%;
-}
-.proj-admin-pill span{ font-size:1rem; width:22px; text-align:center; flex-shrink:0; }
-.proj-admin-pill:hover{ background:rgba(255,255,255,.04); color:var(--text); }
-.proj-admin-pill.active{
-  background:linear-gradient(135deg, rgba(108,99,255,.18), rgba(108,99,255,.08));
-  border-color:rgba(108,99,255,.35); color:var(--text);
-  box-shadow:0 4px 16px -6px rgba(108,99,255,.4), inset 0 1px 0 rgba(255,255,255,.05);
-}
-.proj-admin-main{ min-width:0; animation:adminTabIn .3s ease; }
-.empty-state{
-  padding:48px 24px; text-align:center; color:var(--text3);
-  font-family:var(--mono); font-size:.84rem; line-height:1.7;
-  background:rgba(255,255,255,.02); border:1px dashed rgba(255,255,255,.08);
-  border-radius:14px;
-}
-
 /* ═══════════════════════════ TOAST ═══════════════════════════ */
-.toast{
-  position:fixed; bottom:24px; right:24px; z-index:9999;
-  display:flex; align-items:center; gap:12px;
-  background:rgba(22,22,31,.92); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-  border:1px solid var(--border2); border-radius:14px;
-  padding:14px 18px; font-size:.82rem; max-width:340px;
-  box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.02) inset;
-  opacity:0; transform:translateX(20px) scale(.96);
-  transition:opacity .3s ease, transform .3s cubic-bezier(.34,1.56,.64,1);
-}
-.toast.toast-in{ opacity:1; transform:translateX(0) scale(1); }
-.toast.toast-out{ opacity:0; transform:translateX(20px) scale(.96); }
-.toast .toast-icon{
-  flex:0 0 26px; width:26px; height:26px; border-radius:8px;
-  display:flex; align-items:center; justify-content:center; font-weight:700;
-}
-.toast .toast-msg{ flex:1; line-height:1.35; }
-.toast.toast-success{ border-color:rgba(0,245,147,.35); box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 24px -10px rgba(0,245,147,.45); }
-.toast.toast-success .toast-icon{ background:rgba(0,245,147,.15); color:var(--green); }
-.toast.toast-error{ border-color:rgba(255,77,109,.35); box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 24px -10px rgba(255,77,109,.45); }
-.toast.toast-error .toast-icon{ background:rgba(255,77,109,.15); color:var(--red); }
-.toast.toast-info{ border-color:rgba(0,212,255,.35); box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 24px -10px rgba(0,212,255,.45); }
-.toast.toast-info .toast-icon{ background:rgba(0,212,255,.15); color:var(--cyan); }
-.toast.toast-warn{ border-color:rgba(255,201,71,.35); box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 24px -10px rgba(255,201,71,.45); }
-.toast.toast-warn .toast-icon{ background:rgba(255,201,71,.15); color:var(--gold); }
-/* Legacy aliases used elsewhere in the codebase */
-.toast.success{ border-color:rgba(0,245,147,.35); }
-.toast.error{ border-color:rgba(255,77,109,.35); }
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:14px 18px;font-size:.82rem;z-index:9999;animation:modalIn .3s ease;max-width:300px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.toast.success{border-color:rgba(0,245,147,.4)}.toast.error{border-color:rgba(255,77,109,.4)}
 
 @media(max-width:900px){
   .about-grid,.contact-grid{grid-template-columns:1fr}
@@ -461,25 +314,6 @@ select.input{cursor:pointer}select.input option{background:var(--surface2)}
   .form-grid2{grid-template-columns:1fr}
   .support-layout{grid-template-columns:1fr}
   .support-sidebar{display:none}
-
-  /* ── ADMIN MOBILE ── */
-  .admin-modal{ max-width:100%; max-height:100vh; height:100vh; border-radius:0; }
-  .admin-tabs-bar{
-    padding:6px 8px 0; gap:2px;
-    /* convert to scrollable horizontal pills */
-    background:rgba(12,12,18,.85); backdrop-filter:blur(16px);
-    position:sticky; top:0; z-index:5;
-  }
-  .a-tab{ padding:10px 12px; font-size:.74rem; }
-  .a-tab-content{ padding:18px; }
-  .form-grid2{ grid-template-columns:1fr; }
-  .add-form{ padding:18px; }
-  .save-bar{ padding:12px 16px; flex-wrap:wrap; gap:8px; }
-
-  /* Projects admin: hide sidebar, show dropdown */
-  .proj-admin-shell{ grid-template-columns:1fr; gap:0; min-height:auto; }
-  .proj-admin-side{ display:none; }
-  .proj-admin-mobile-select{ display:block; }
 }
 
 /* SKELETON LOADING */
@@ -1091,380 +925,9 @@ textarea
 
 /* PROJECTS PAGE */
 .proj-page-active { display:block !important; }
-
-/* ═══════════════════════════ FIREBASE LOADING SCREEN ═══════════════════════════ */
-#cws-loader{
-  position:fixed; inset:0; z-index:9999;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  background:radial-gradient(circle at 50% 35%, #15151f 0%, #060609 70%);
-  font-family:var(--font); color:var(--text);
-  transition:opacity .35s ease, visibility .35s ease;
-}
-#cws-loader.hidden{ opacity:0; visibility:hidden; pointer-events:none; }
-#cws-loader::before{
-  content:''; position:absolute; inset:0; pointer-events:none;
-  background-image:
-    linear-gradient(rgba(108,99,255,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(108,99,255,.05) 1px, transparent 1px);
-  background-size:40px 40px;
-  mask-image:radial-gradient(ellipse at center, black 30%, transparent 75%);
-  -webkit-mask-image:radial-gradient(ellipse at center, black 30%, transparent 75%);
-}
-.cws-loader-inner{ position:relative; display:flex; flex-direction:column; align-items:center; gap:28px; max-width:380px; width:90%; }
-.cws-loader-logo{
-  width:96px; height:96px; border-radius:24px; overflow:hidden;
-  background:linear-gradient(135deg, rgba(108,99,255,.18), rgba(0,212,255,.12));
-  border:1px solid rgba(108,99,255,.35);
-  display:flex; align-items:center; justify-content:center;
-  box-shadow:0 20px 60px -10px rgba(108,99,255,.45), inset 0 1px 0 rgba(255,255,255,.08);
-  animation:cwsLogoFloat 3s ease-in-out infinite;
-  position:relative;
-}
-.cws-loader-logo::after{
-  content:''; position:absolute; inset:-2px; border-radius:26px;
-  background:conic-gradient(from 0deg, transparent 70%, rgba(108,99,255,.6), transparent);
-  animation:cwsLogoSpin 2.4s linear infinite;
-  z-index:-1;
-}
-.cws-loader-logo img{ width:64%; height:64%; object-fit:contain; }
-@keyframes cwsLogoFloat{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-@keyframes cwsLogoSpin{ to{transform:rotate(360deg)} }
-.cws-loader-brand{ font-family:var(--mono); font-size:.78rem; letter-spacing:3px; text-transform:uppercase; color:var(--text2); }
-.cws-loader-brand strong{ color:var(--text); font-weight:700; }
-.cws-loader-bar{
-  width:100%; height:4px; border-radius:99px; overflow:hidden;
-  background:rgba(255,255,255,.06); position:relative;
-}
-.cws-loader-bar-fill{
-  position:absolute; inset:0 100% 0 0;
-  background:linear-gradient(90deg, var(--accent), var(--cyan));
-  border-radius:99px;
-  transition:right .45s cubic-bezier(.4,0,.2,1);
-  box-shadow:0 0 12px rgba(108,99,255,.6);
-}
-.cws-loader-status{ font-family:var(--mono); font-size:.72rem; color:var(--text3); letter-spacing:.5px; min-height:1em; text-align:center; }
-.cws-loader-status.err{ color:var(--red); }
-.cws-loader-dots::after{ content:''; animation:cwsDots 1.4s steps(4,end) infinite; }
-@keyframes cwsDots{ 0%{content:''} 25%{content:'.'} 50%{content:'..'} 75%{content:'...'} 100%{content:''} }
-
-/* ═══════════════════════════════════════════════════════════
-   PREMIUM PROJECT CARDS — Animated upgrade layer (overrides)
-═══════════════════════════════════════════════════════════ */
-
-/* Uniform grid across all categories */
-.projects-grid,
-.projects-grid.grid-sites,
-.projects-grid.grid-games,
-.projects-grid.grid-software,
-.projects-grid.grid-animations,
-.projects-grid.grid-bots,
-.projects-grid.grid-ai,
-.projects-grid.grid-assets,
-.projects-grid.grid-other{
-  grid-template-columns:repeat(auto-fill, minmax(310px, 1fr));
-  gap:24px;
-  perspective:1400px;
-}
-
-/* Card shell — premium glass + gradient border */
-.proj-card{
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,0) 40%),
-    var(--surface);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:18px;
-  overflow:hidden;
-  cursor:pointer;
-  position:relative;
-  isolation:isolate;
-  display:flex;
-  flex-direction:column;
-  min-height:430px;
-  transform-style:preserve-3d;
-  transition:
-    transform .55s cubic-bezier(.2,.8,.2,1),
-    border-color .35s ease,
-    box-shadow .55s cubic-bezier(.2,.8,.2,1),
-    background .35s ease;
-  animation:projCardIn .6s cubic-bezier(.2,.8,.2,1) both;
-  will-change:transform;
-}
-@keyframes projCardIn{
-  from{opacity:0;transform:translateY(28px) scale(.97)}
-  to  {opacity:1;transform:translateY(0)     scale(1)}
-}
-
-/* Animated gradient border halo */
-.proj-card::after{
-  content:'';
-  position:absolute; inset:-1px;
-  border-radius:inherit;
-  padding:1px;
-  background:linear-gradient(135deg,
-    transparent 0%,
-    rgba(108,99,255,.0) 35%,
-    rgba(108,99,255,.55) 50%,
-    rgba(0,212,255,.55) 60%,
-    transparent 80%);
-  background-size:220% 220%;
-  background-position:0% 0%;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-          mask-composite:exclude;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .5s ease, background-position 1.2s ease;
-  z-index:3;
-}
-.proj-card:hover{
-  transform:translateY(-10px) scale(1.012);
-  box-shadow:
-    0 30px 70px -20px rgba(108,99,255,.35),
-    0 14px 36px -16px rgba(0,0,0,.6),
-    0 0 0 1px rgba(108,99,255,.18);
-  border-color:transparent;
-}
-.proj-card:hover::after{
-  opacity:1;
-  background-position:100% 100%;
-}
-
-/* Top accent bar — slimmer, gradient, slides in */
-.proj-card::before{
-  height:3px;
-  background:linear-gradient(90deg, var(--accent), var(--cyan), var(--accent));
-  background-size:200% 100%;
-  transform:scaleX(0);
-  transform-origin:left center;
-  opacity:1;
-  transition:transform .5s cubic-bezier(.2,.8,.2,1), background-position 2s linear;
-  z-index:4;
-}
-.proj-card:hover::before{
-  transform:scaleX(1);
-  animation:projShine 2.4s linear infinite;
-}
-@keyframes projShine{
-  from{background-position:0% 0%} to{background-position:200% 0%}
-}
-
-/* Category-tinted halo overrides (stronger, premium feel) */
-.proj-card[data-cat="sites"]:hover     {box-shadow:0 30px 70px -20px rgba(0,212,255,.38), 0 14px 36px -16px rgba(0,0,0,.6), 0 0 0 1px rgba(0,212,255,.22)}
-.proj-card[data-cat="games"]:hover     {box-shadow:0 30px 70px -20px rgba(108,99,255,.42), 0 14px 36px -16px rgba(0,0,0,.6), 0 0 0 1px rgba(108,99,255,.22)}
-.proj-card[data-cat="software"]:hover  {box-shadow:0 30px 70px -20px rgba(0,245,147,.34), 0 14px 36px -16px rgba(0,0,0,.6), 0 0 0 1px rgba(0,245,147,.22)}
-.proj-card[data-cat="animations"]:hover{box-shadow:0 30px 70px -20px rgba(255,106,176,.38), 0 14px 36px -16px rgba(0,0,0,.6), 0 0 0 1px rgba(255,106,176,.22)}
-.proj-card[data-cat="bots"]:hover      {box-shadow:0 30px 70px -20px rgba(255,201,71,.32), 0 14px 36px -16px rgba(0,0,0,.6), 0 0 0 1px rgba(255,201,71,.22)}
-.proj-card[data-cat="ai"]:hover        {box-shadow:0 30px 70px -20px rgba(167,139,250,.4), 0 14px 36px -16px rgba(0,0,0,.6), 0 0 0 1px rgba(167,139,250,.22)}
-.proj-card[data-cat="assets"]:hover    {box-shadow:0 30px 70px -20px rgba(251,146,60,.36), 0 14px 36px -16px rgba(0,0,0,.6), 0 0 0 1px rgba(251,146,60,.22)}
-
-/* Media — zoom on hover + shine sweep */
-.proj-card .card-media{
-  overflow:hidden;
-  position:relative;
-}
-.proj-card .card-media img,
-.proj-card .card-media video,
-.proj-card .card-media iframe,
-.proj-card .play-btn img{
-  transition:transform .9s cubic-bezier(.2,.8,.2,1), filter .5s ease;
-}
-.proj-card:hover .card-media img,
-.proj-card:hover .card-media video,
-.proj-card:hover .card-media iframe,
-.proj-card:hover .play-btn img{
-  transform:scale(1.08);
-  filter:saturate(1.12) brightness(1.04);
-}
-.proj-card .card-media::after{
-  content:'';
-  position:absolute; top:0; left:-75%;
-  width:60%; height:100%;
-  background:linear-gradient(110deg,
-    transparent 0%,
-    rgba(255,255,255,.18) 50%,
-    transparent 100%);
-  transform:skewX(-18deg);
-  transition:left .9s cubic-bezier(.2,.8,.2,1);
-  pointer-events:none;
-  z-index:2;
-}
-.proj-card:hover .card-media::after{
-  left:130%;
-}
-
-/* Stronger media gradient overlay */
-.proj-card .card-media-overlay{
-  background:linear-gradient(to top,
-    rgba(5,5,10,.85) 0%,
-    rgba(5,5,10,.25) 45%,
-    transparent 70%);
-}
-
-/* Stat chips — pop on hover */
-.proj-card .card-stats{
-  bottom:10px; right:12px; gap:6px;
-  transform:translateY(4px); opacity:.9;
-  transition:transform .4s ease, opacity .4s ease;
-}
-.proj-card:hover .card-stats{ transform:translateY(0); opacity:1; }
-.stat-chip{
-  background:rgba(0,0,0,.65);
-  border:1px solid rgba(255,255,255,.12);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  font-weight:600;
-}
-
-/* Body — let footer stick to bottom for uniform alignment */
-.proj-card .card-body{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  padding:18px 18px 16px;
-  gap:2px;
-}
-.proj-card .card-footer{ margin-top:auto; padding-top:14px; }
-.proj-card .card-title{
-  font-size:1.08rem; font-weight:750; letter-spacing:-.35px;
-  background:linear-gradient(180deg, var(--text), var(--text2));
-  -webkit-background-clip:text; background-clip:text;
-  -webkit-text-fill-color:transparent;
-  transition:filter .35s ease;
-}
-.proj-card:hover .card-title{ filter:drop-shadow(0 0 12px rgba(108,99,255,.35)); }
-.proj-card .card-desc{
-  font-size:.815rem; line-height:1.65; color:var(--text2);
-  -webkit-line-clamp:2;
-}
-
-/* Tags — refined */
-.proj-card .tag{
-  font-size:.58rem; padding:3px 9px;
-  background:rgba(108,99,255,.1);
-  border:1px solid rgba(108,99,255,.22);
-  transition:transform .25s ease, background .25s ease, border-color .25s ease;
-}
-.proj-card:hover .tag{
-  background:rgba(108,99,255,.18);
-  border-color:rgba(108,99,255,.4);
-}
-.proj-card .tag:hover{ transform:translateY(-2px); }
-
-/* CTA buttons — premium polish */
-.proj-card .btn-cta{
-  padding:8px 15px; border-radius:10px;
-  font-size:.76rem; font-weight:650;
-  position:relative; overflow:hidden;
-  transition:transform .25s cubic-bezier(.2,.8,.2,1), background .25s ease, box-shadow .35s ease, color .25s ease;
-}
-.proj-card .btn-cta::before{
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.22) 50%, transparent 70%);
-  transform:translateX(-110%);
-  transition:transform .65s cubic-bezier(.2,.8,.2,1);
-  pointer-events:none;
-}
-.proj-card .btn-cta:hover{ transform:translateY(-2px) scale(1.04); }
-.proj-card .btn-cta:hover::before{ transform:translateX(110%); }
-.proj-card .btn-cta:active{ transform:translateY(0) scale(.98); }
-.proj-card .btn-cta.visit:hover { box-shadow:0 8px 22px -8px rgba(0,212,255,.6); }
-.proj-card .btn-cta.dl:hover    { box-shadow:0 8px 22px -8px rgba(0,245,147,.6); }
-.proj-card .btn-cta.primary:hover{box-shadow:0 8px 24px -6px rgba(108,99,255,.7); background:#7b73ff; }
-
-/* Like button — bounce on hover */
-.proj-card .like-btn{
-  border-radius:10px; padding:7px 12px; font-size:.74rem;
-  transition:transform .25s cubic-bezier(.2,.8,.2,1), background .25s, border-color .25s, color .25s, box-shadow .35s;
-}
-.proj-card .like-btn:hover{ transform:translateY(-2px) scale(1.05); box-shadow:0 8px 20px -8px var(--red); }
-.proj-card .like-btn.liked{ box-shadow:0 0 0 1px rgba(255,86,86,.35), 0 8px 20px -10px var(--red); }
-
-/* Play button — sleeker */
-.proj-card .play-circle{
-  width:58px; height:58px;
-  background:rgba(255,255,255,.12);
-  border:2px solid rgba(255,255,255,.45);
-  box-shadow:0 8px 30px rgba(0,0,0,.4), inset 0 0 18px rgba(255,255,255,.08);
-  transition:transform .35s cubic-bezier(.2,.8,.2,1), background .25s, box-shadow .35s;
-}
-.proj-card:hover .play-circle{
-  transform:scale(1.18);
-  background:rgba(255,255,255,.22);
-  box-shadow:0 12px 40px rgba(108,99,255,.5), inset 0 0 24px rgba(255,255,255,.12);
-}
-
-/* Empty state — friendlier */
-.empty-state{
-  padding:100px 24px;
-  background:radial-gradient(ellipse at center, rgba(108,99,255,.05), transparent 60%);
-  border-radius:18px;
-}
-
-/* Reduce motion safety */
-@media (prefers-reduced-motion: reduce){
-  .proj-card, .proj-card *{ animation:none !important; transition:none !important; }
-  .proj-card:hover{ transform:none; }
-}
-
-/* Small screens — keep grid pleasant */
-@media (max-width:600px){
-  .projects-grid,
-  .projects-grid.grid-sites,
-  .projects-grid.grid-games,
-  .projects-grid.grid-software,
-  .projects-grid.grid-animations,
-  .projects-grid.grid-bots,
-  .projects-grid.grid-ai,
-  .projects-grid.grid-assets,
-  .projects-grid.grid-other{
-    grid-template-columns:1fr;
-    gap:18px;
-  }
-  .proj-card{ min-height:auto; }
-}
 </style>
 </head>
 <body>
-
-<!-- ═══ FIREBASE BLOCKING LOADER ═══ -->
-<div id="cws-loader">
-  <div class="cws-loader-inner">
-    <div class="cws-loader-logo">
-      <img src="https://raw.githubusercontent.com/Capky/CapWorks-Studio/main/CWS_Logo.png" alt="CWS" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'⚡',style:'font-size:2.5rem'}))">
-    </div>
-    <div class="cws-loader-brand"><strong>CapWorks</strong> Studio</div>
-    <div class="cws-loader-bar"><div class="cws-loader-bar-fill" id="cwsLoaderFill"></div></div>
-    <div class="cws-loader-status cws-loader-dots" id="cwsLoaderStatus">Initialisation</div>
-  </div>
-</div>
-
-<script>
-/* ═══ Firebase loader controls (defined early so initApp can use them) ═══ */
-window.cwsLoadingShow = function(){
-  const el = document.getElementById('cws-loader');
-  if(el){ el.classList.remove('hidden'); }
-};
-window.cwsLoadingHide = function(){
-  const el = document.getElementById('cws-loader');
-  if(el){ el.classList.add('hidden'); }
-};
-window.cwsLoadingProgress = function(pct, label){
-  const fill = document.getElementById('cwsLoaderFill');
-  const status = document.getElementById('cwsLoaderStatus');
-  if(fill){ fill.style.right = (100 - Math.max(0, Math.min(100, pct))) + '%'; }
-  if(status && label){ status.textContent = label; status.classList.add('cws-loader-dots'); status.classList.remove('err'); }
-};
-window.cwsLoadingError = function(msg){
-  const status = document.getElementById('cwsLoaderStatus');
-  if(status){
-    status.textContent = '✕ ' + (msg || 'Erreur Firebase');
-    status.classList.remove('cws-loader-dots');
-    status.classList.add('err');
-  }
-};
-// Safety: if Firebase never readies up, hide loader after 10s anyway
-setTimeout(()=>{ const el=document.getElementById('cws-loader'); if(el && !el.classList.contains('hidden')) el.classList.add('hidden'); }, 10000);
-</script>
 
 <!-- HEADER -->
 <header>
@@ -1580,16 +1043,45 @@ setTimeout(()=>{ const el=document.getElementById('cws-loader'); if(el && !el.cl
   </div>
 </div>
 
-<!-- Note: the standalone "projects admin" overlay/panel that used to live
-     here has been merged into the main admin modal (see #atab-projects). -->
-
+    <div class="admin-modal-body">
+      <!-- Login wall -->
+      <div id="adminLoginWall" style="padding:56px 28px;text-align:center;">
+        <div style="font-size:2.2rem;margin-bottom:14px;">🔐</div>
+        <h4 style="font-size:1rem;font-weight:700;margin-bottom:6px;">Accès restreint</h4>
+        <p style="color:var(--text2);font-size:.82rem;margin-bottom:22px;">Mot de passe administrateur requis</p>
+        <div style="max-width:260px;margin:0 auto;display:flex;flex-direction:column;gap:8px;">
+          <input type="password" class="inp" id="adminPw" placeholder="Mot de passe..." onkeypress="if(event.key==='Enter')proj_tryAdminLogin()">
+          <button class="btn-primary" onclick="proj_tryAdminLogin()">Accéder →</button>
+          <div class="err-msg" id="adminPwErr"></div>
+        </div>
+      </div>
+      <!-- Admin panel -->
+      <div id="adminPanel" style="display:none;">
+        <div class="admin-layout">
+          <!-- Sidebar -->
+          <div class="admin-sidebar">
+            <div class="admin-sidebar-item active" onclick="proj_adminPage('sites')" id="aside-sites">🌐 Sites</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('games')" id="aside-games">🎮 Jeux vidéos</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('software')" id="aside-software">⚙️ Logiciels</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('animations')" id="aside-animations">🎬 Animations</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('bots')" id="aside-bots">🤖 Bots Discord</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('ai')" id="aside-ai">🧠 IA</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('assets')" id="aside-assets">📦 Assets</div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('other')" id="aside-other">◈ Autres</div>
+            <div class="admin-sidebar-sep"></div>
+            <div class="admin-sidebar-item" onclick="proj_adminPage('settings')" id="aside-settings">⚡ Paramètres</div>
+          </div>
+          <!-- Content -->
+          <div class="admin-content" id="adminContent">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-(function(){
-/* ══════════════════════════════════════════════════════
-   PROJECTS MODULE (legacy, isolated in IIFE to avoid
-   collisions with the main app script below).
-══════════════════════════════════════════════════════ */
 /* ══════════════════════════════════════════════════════
    CONSTANTS
 ══════════════════════════════════════════════════════ */
@@ -1635,9 +1127,79 @@ CATS.forEach(c => projects[c] = []);
 /* ══════════════════════════════════════════════════════
    FIREBASE INIT
 ══════════════════════════════════════════════════════ */
-/* Firebase init / Firestore CRUD for projects are defined in the
-   main app script below (search for "PROJECTS MODULE — FIREBASE INIT").
-   This older block has been removed to avoid duplicate declarations. */
+function proj_waitForFirebase() {
+  return new Promise(resolve => {
+    if (window.__firebaseReady) { resolve(); return; }
+    document.addEventListener('firebase-ready', resolve, { once: true });
+    setTimeout(resolve, 6000); // fallback
+  });
+}
+
+async function proj_initFirebase(){
+  // Reuse Firebase already initialized by index.html
+  await new Promise(r=>{ if(window.__firebaseReady){r();}else{document.addEventListener('firebase-ready',r,{once:true});} });
+  if(!window.__db) return;
+  // Share db with project module via globals
+  window.__proj_db = window.__db;
+  window.__proj_FB = window.__FB;
+  await proj_loadAllProjects();
+}
+
+
+function proj_setFbStatus(type, text){ /* noop */ }
+
+/* ══════════════════════════════════════════════════════
+   FIRESTORE — LOAD
+══════════════════════════════════════════════════════ */
+async function proj_loadAllProjects() {
+  if (!db) return;
+  proj_setFbStatus('loading', '⟳ Chargement...');
+  try {
+    for (const cat of CATS) {
+      const snap = await FB.getDocs(FB.collection(db, `projects_${cat}`));
+      projects[cat] = [];
+      snap.forEach(d => projects[cat].push({ id: d.id, ...d.data() }));
+      // Sort by order field, then by createdAt
+      projects[cat].sort((a, b) => (a.order || 999) - (b.order || 999));
+    }
+    proj_updateCounts();
+    proj_renderAll();
+    proj_setFbStatus('ok', '✓ Firebase');
+  } catch(e) {
+    console.error(e);
+    proj_setFbStatus('err', '✕ Erreur Firestore');
+    toast('Erreur de chargement Firebase', 'e');
+  }
+}
+
+async function proj_saveProject(cat, data, id = null) {
+  if (!db) { toast('Firebase non configuré', 'e'); return null; }
+  try {
+    if (id) {
+      await FB.setDoc(FB.doc(db, `projects_${cat}`, id), { ...data, updatedAt: FB.serverTimestamp() }, { merge: true });
+      return id;
+    } else {
+      const ref = await FB.addDoc(FB.collection(db, `projects_${cat}`), { ...data, views: 0, likes: 0, downloads: 0, createdAt: FB.serverTimestamp() });
+      return ref.id;
+    }
+  } catch(e) { console.error(e); toast('Erreur de sauvegarde', 'e'); return null; }
+}
+
+async function proj_deleteProject(cat, id) {
+  if (!db) return;
+  try {
+    await FB.deleteDoc(FB.doc(db, `projects_${cat}`, id));
+    projects[cat] = projects[cat].filter(p => p.id !== id);
+    proj_updateCounts(); proj_renderAll();
+    toast('Projet supprimé', 's');
+  } catch(e) { toast('Erreur de suppression', 'e'); }
+}
+
+async function proj_incrementStat(cat, id, field) {
+  if (!db) return;
+  try { await FB.updateDoc(FB.doc(db, `projects_${cat}`, id), { [field]: FB.increment(1) }); }
+  catch(e) { /* silent */ }
+}
 
 /* ══════════════════════════════════════════════════════
    COUNTS & SEARCH
@@ -2641,9 +2203,21 @@ function proj_toggleSetting(key, btn) {
 }
 
 /* ══════════════════════════════════════════════════════
-   UTILITIES — esc/closeOverlay/handleOvClick/toast are defined
-   in the main app script below (single source of truth).
+   UTILITIES
 ══════════════════════════════════════════════════════ */
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function closeOverlay(id) { document.getElementById(id)?.classList.remove('open'); }
+function handleOvClick(e, id) { if (e.target === document.getElementById(id)) closeOverlay(id); }
+
+function toast(msg, type='s') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `${type==='s'?'✓':'✕'} ${msg}`;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(8px)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); }, 3000);
+}
 
 // ESC key closes overlays
 document.addEventListener('keydown', e => {
@@ -2653,33 +2227,9 @@ document.addEventListener('keydown', e => {
 });
 
 /* ══════════════════════════════════════════════════════
-   INIT — handled by the main app's initApp() (see below).
-   The projects module's proj_initFirebase() is called from there.
+   INIT
 ══════════════════════════════════════════════════════ */
-
-/* Expose functions used by inline HTML handlers */
-window.proj_filterCat       = proj_filterCat;
-window.proj_handleSearch    = proj_handleSearch;
-window.proj_clearSearch     = proj_clearSearch;
-window.proj_adminPage       = proj_adminPage;
-window.proj_openYT          = proj_openYT;
-window.proj_toggleLike      = proj_toggleLike;
-window.proj_trackView       = proj_trackView;
-window.proj_trackDownload   = proj_trackDownload;
-window.proj_addFileRow      = typeof proj_addFileRow      !== 'undefined' ? proj_addFileRow      : undefined;
-window.proj_addFolderRow    = typeof proj_addFolderRow    !== 'undefined' ? proj_addFolderRow    : undefined;
-window.proj_addSubFile      = typeof proj_addSubFile      !== 'undefined' ? proj_addSubFile      : undefined;
-window.proj_confirmDelete   = typeof proj_confirmDelete   !== 'undefined' ? proj_confirmDelete   : undefined;
-window.proj_saveAdminPw     = typeof proj_saveAdminPw     !== 'undefined' ? proj_saveAdminPw     : undefined;
-window.proj_showAddForm     = typeof proj_showAddForm     !== 'undefined' ? proj_showAddForm     : undefined;
-window.proj_showEditForm    = typeof proj_showEditForm    !== 'undefined' ? proj_showEditForm    : undefined;
-window.proj_submitProjectForm = typeof proj_submitProjectForm !== 'undefined' ? proj_submitProjectForm : undefined;
-window.proj_toggleHidden    = typeof proj_toggleHidden    !== 'undefined' ? proj_toggleHidden    : undefined;
-window.proj_toggleSetting   = typeof proj_toggleSetting   !== 'undefined' ? proj_toggleSetting   : undefined;
-window.proj_renderAll       = proj_renderAll;
-window.proj_initFirebase    = typeof proj_initFirebase    !== 'undefined' ? proj_initFirebase    : undefined;
-
-})();
+proj_initFirebase();
 </script>
 </div>
 
@@ -2944,45 +2494,10 @@ window.proj_initFirebase    = typeof proj_initFirebase    !== 'undefined' ? proj
         </div>
 
 
-        <!-- PROJECTS TAB — fully integrated (no more project.html redirect) -->
+        <!-- PROJECTS TAB -->
         <div class="a-tab-content" id="atab-projects">
-          <div class="proj-admin-shell">
-            <!-- Mobile: dropdown selector -->
-            <div class="proj-admin-mobile-select">
-              <label>Catégorie</label>
-              <select id="projAdminMobileSel" onchange="proj_adminPage(this.value)">
-                <option value="sites">🌐 Sites Web</option>
-                <option value="games">🎮 Jeux vidéos</option>
-                <option value="software">⚙️ Logiciels</option>
-                <option value="animations">🎬 Animations</option>
-                <option value="bots">🤖 Bots Discord</option>
-                <option value="ai">🧠 IA</option>
-                <option value="assets">📦 Assets</option>
-                <option value="other">◈ Autres</option>
-                <option value="settings">⚡ Paramètres</option>
-              </select>
-            </div>
-
-            <!-- Desktop: pill sidebar -->
-            <aside class="proj-admin-side">
-              <div class="proj-admin-side-label">// catégories</div>
-              <button class="proj-admin-pill active" onclick="proj_adminPage('sites')" id="aside-sites"><span>🌐</span> Sites Web</button>
-              <button class="proj-admin-pill" onclick="proj_adminPage('games')" id="aside-games"><span>🎮</span> Jeux vidéos</button>
-              <button class="proj-admin-pill" onclick="proj_adminPage('software')" id="aside-software"><span>⚙️</span> Logiciels</button>
-              <button class="proj-admin-pill" onclick="proj_adminPage('animations')" id="aside-animations"><span>🎬</span> Animations</button>
-              <button class="proj-admin-pill" onclick="proj_adminPage('bots')" id="aside-bots"><span>🤖</span> Bots Discord</button>
-              <button class="proj-admin-pill" onclick="proj_adminPage('ai')" id="aside-ai"><span>🧠</span> IA</button>
-              <button class="proj-admin-pill" onclick="proj_adminPage('assets')" id="aside-assets"><span>📦</span> Assets</button>
-              <button class="proj-admin-pill" onclick="proj_adminPage('other')" id="aside-other"><span>◈</span> Autres</button>
-              <div class="proj-admin-side-sep"></div>
-              <button class="proj-admin-pill" onclick="proj_adminPage('settings')" id="aside-settings"><span>⚡</span> Paramètres</button>
-            </aside>
-
-            <!-- Content -->
-            <div class="proj-admin-main" id="adminContent">
-              <div class="empty-state">Sélectionnez une catégorie pour gérer vos projets.</div>
-            </div>
-          </div>
+          <div class="info-box">📂 Gérez vos projets depuis <strong>project.html</strong>. Ici vous pouvez activer/désactiver la section et voir un aperçu des projets.</div>
+          <div id="admin-proj-overview"></div>
         </div>
 
         <!-- USERS TAB -->
@@ -3105,24 +2620,9 @@ function waitFirebase(){
 }
 
 async function initApp(){
-  // Show the blocking Firebase loading screen
-  cwsLoadingShow();
-  cwsLoadingProgress(15, 'Connexion à Firebase…');
-
   await waitFirebase();
-  cwsLoadingProgress(45, 'Authentification…');
-
-  if(!window.__db){
-    setFbStatus('err','✕ Firebase non configuré');
-    cwsLoadingError('Firebase non configuré');
-    return;
-  }
+  if(!window.__db){ setFbStatus('err','✕ Firebase non configuré'); return; }
   db = window.__db; FB = window.__FB;
-  // Share refs with the projects module
-  window.__proj_db = window.__db;
-  window.__proj_FB = window.__FB;
-
-  cwsLoadingProgress(65, 'Récupération du contenu…');
 
   // 1. Show cached content INSTANTLY if available
   const cachedServices = cacheGet('cw_services');
@@ -3141,8 +2641,6 @@ async function initApp(){
   renderSupport();
   if(currentUser) setOnlineStatus(true);
 
-  cwsLoadingProgress(80, 'Synchronisation…');
-
   // 2. Load from Firebase in parallel (silent refresh if cached)
   try{
     await Promise.all([
@@ -3150,15 +2648,11 @@ async function initApp(){
       loadServices(),
       loadTeam(),
       loadProjects(),
-      (typeof proj_initFirebase === 'function' ? proj_initFirebase() : Promise.resolve()),
     ]);
     setFbStatus('ok','✓ Firebase');
   } catch(e){
     if(!hasCached) setFbStatus('err','✕ Erreur Firebase');
   }
-
-  cwsLoadingProgress(100, 'Prêt !');
-  setTimeout(cwsLoadingHide, 280);
 }
 
 function setFbStatus(type, text){
@@ -3390,23 +2884,11 @@ async function saveTickets(username){
 ═══════════════════════════════════════════════════════════ */
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function hashPass(p){ let h=0; for(let i=0;i<p.length;i++) h=(Math.imul(31,h)+p.charCodeAt(i))|0; return h.toString(36); }
-function closeOverlay(id){ document.getElementById(id)?.classList.remove('open'); }
+function closeOverlay(id){ document.getElementById(id).classList.remove('open'); }
 function handleOvClick(e,id){ if(e.target===document.getElementById(id)) closeOverlay(id); }
 function toast(msg, type='success'){
-  // Normalize type aliases: 's' -> 'success', 'e' -> 'error', 'i' -> 'info', 'w' -> 'warn'
-  const aliases = { s:'success', e:'error', i:'info', w:'warn' };
-  const t = aliases[type] || type;
-  const icons = { success:'✓', error:'✕', info:'ℹ', warn:'⚠' };
-  const el = document.createElement('div');
-  el.className = `toast toast-${t}`;
-  el.innerHTML = `<span class="toast-icon">${icons[t]||'•'}</span><span class="toast-msg">${msg}</span>`;
-  document.body.appendChild(el);
-  requestAnimationFrame(()=>el.classList.add('toast-in'));
-  setTimeout(()=>{
-    el.classList.remove('toast-in');
-    el.classList.add('toast-out');
-    setTimeout(()=>el.remove(), 350);
-  }, 3200);
+  const t=document.createElement('div'); t.className=`toast ${type}`; t.innerHTML=(type==='success'?'✓':'✕')+' '+msg;
+  document.body.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(8px)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); },3000);
 }
 function isStaff(role){ return role==='mod'||role==='owner'; }
 function generateOrderId(){ return 'CWS-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,5).toUpperCase(); }
@@ -3956,14 +3438,6 @@ function aTab(name){
   document.querySelectorAll('.a-tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===name));
   document.querySelectorAll('.a-tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById(`atab-${name}`).classList.add('active');
-  // Lazy-render the projects sub-page when entering the Projects tab
-  if (name === 'projects' && typeof proj_adminPage === 'function') {
-    const content = document.getElementById('adminContent');
-    if (content && (!content.dataset.loaded || content.dataset.loaded === '0')) {
-      proj_adminPage(proj_currentEditCat || 'sites');
-      content.dataset.loaded = '1';
-    }
-  }
 }
 
 function renderAdminAll(){ renderAdminServices(); renderAdminPaypal(); renderAdminUsers(); renderAdminTickets(); renderAdminTeam(); renderAdminProjects(); }
@@ -4313,9 +3787,11 @@ async function loadProjects(){
 }
 
 function renderAdminProjects(){
-  // No-op: the projects admin panel is now fully integrated as sub-tabs
-  // inside the Projects tab. Rendering is triggered by aTab('projects')
-  // which calls proj_adminPage(...) on first open.
+  const el = document.getElementById('admin-proj-overview'); if(!el) return;
+  el.innerHTML = `<div style="text-align:center;padding:24px">
+    <button class="btn-primary" style="max-width:280px" onclick="window.open('project.html','_blank')">🗂 Ouvrir le gestionnaire de projets →</button>
+    <p style="color:var(--text3);font-size:.78rem;margin-top:12px;font-family:var(--mono)">Les projets sont gérés dans project.html<br>avec leur propre panneau admin Firebase.</p>
+  </div>`;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -4388,7 +3864,7 @@ let proj_projects = {};   // { sites:[], games:[], ... }
 let proj_activeCat = 'all';
 let proj_searchQuery = '';
 let proj_adminLoggedIn = false;
-let proj_adminPassword = localStorage.getItem(PROJ_LS_ADMINPW) || 'admin123';
+let adminPassword = localStorage.getItem(PROJ_LS_ADMINPW) || 'admin123';
 let proj_likedProjects = JSON.parse(localStorage.getItem(PROJ_LS_LIKES) || '{}');
 let proj_settings = JSON.parse(localStorage.getItem(PROJ_LS_SETTINGS) || JSON.stringify({
   showServices: false,
@@ -5042,38 +4518,26 @@ function proj_ytId(url) {
 /* ══════════════════════════════════════════════════════
    ADMIN — LOGIN
 ══════════════════════════════════════════════════════ */
-function proj_openAdmin(){
-  // Open the unified admin modal and jump to the "Projects" tab
-  if (typeof openAdmin === 'function') openAdmin();
-  setTimeout(()=>{
-    if (typeof aTab === 'function') aTab('projects');
-    // If already logged in, render default category
-    if (typeof adminLoggedIn !== 'undefined' && adminLoggedIn) {
-      proj_adminPage('sites');
-    }
-  }, 50);
-}
+function proj_openAdmin(){ openAdmin(); /* delegate to index.html admin */ }
 
-/* Login is handled by the unified admin's loginAdmin().
-   Kept as a no-op alias for any legacy callers. */
 function proj_tryAdminLogin() {
-  if (typeof loginAdmin === 'function') loginAdmin();
+  const pw = document.getElementById('adminPw').value;
+  if (pw !== adminPassword) { document.getElementById('adminPwErr').textContent = '✕ Mot de passe incorrect'; return; }
+  proj_adminLoggedIn = true;
+  document.getElementById('adminLoginWall').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  proj_adminPage('sites');
 }
 
 /* ══════════════════════════════════════════════════════
-   ADMIN — PAGE ROUTING (sub-tabs inside the Projects tab)
+   ADMIN — PAGE ROUTING
 ══════════════════════════════════════════════════════ */
 function proj_adminPage(name) {
   proj_currentEditCat = name;
-  // Sync sidebar pills (new layout) AND legacy sidebar items
-  document.querySelectorAll('.proj-admin-pill, .admin-sidebar-item').forEach(el => {
+  document.querySelectorAll('.admin-sidebar-item').forEach(el => {
     el.classList.toggle('active', el.id === `aside-${name}`);
   });
-  // Sync mobile dropdown
-  const sel = document.getElementById('projAdminMobileSel');
-  if (sel && sel.value !== name) sel.value = name;
   const content = document.getElementById('adminContent');
-  if (!content) return;
   if (PROJ_CATS.includes(name)) proj_renderAdminCat(name, content);
   else if (name === 'settings') proj_renderAdminSettings(content);
 }
@@ -5488,7 +4952,7 @@ function proj_saveAdminPw() {
   const msg = document.getElementById('pw-msg');
   if (!p1 || p1.length < 4) { msg.style.display='block'; msg.className='err-msg'; msg.textContent='✕ Min. 4 caractères'; return; }
   if (p1 !== p2) { msg.style.display='block'; msg.className='err-msg'; msg.textContent='✕ Les mots de passe ne correspondent pas'; return; }
-  proj_adminPassword = p1;
+  adminPassword = p1;
   localStorage.setItem(PROJ_LS_ADMINPW, p1);
   msg.style.display='block'; msg.className='ok-msg'; msg.textContent='✓ Mot de passe changé !';
   document.getElementById('set-pw1').value=''; document.getElementById('set-pw2').value='';
@@ -5501,48 +4965,17 @@ function proj_toggleSetting(key, btn) {
   localStorage.setItem(PROJ_LS_SETTINGS, JSON.stringify(settings));
   toast(`${key} : ${settings[key] ? 'activé' : 'désactivé'}`, 's');
 }
-  
+
+
+
+
+
 /* ══════════════════════════════════════════════════════
    INIT
 ══════════════════════════════════════════════════════ */
 
 // Init proj_projects module
 document.addEventListener("firebase-ready", ()=>{ setTimeout(proj_initFirebase, 100); });
-</script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-const firebaseConfig = {
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "capworks-studio-fr.firebaseapp.com",
-  databaseURL: "https://capworks-studio-fr-default-rtdb.firebaseio.com",
-  projectId: "capworks-studio-fr",
-  storageBucket: "capworks-studio-fr.firebasestorage.app",
-  messagingSenderId: "466455700751",
-  appId: "1:466455700751:web:6ca548df73dd8e47b70a7a",
-  measurementId: "G-8DMZPBS6J3"
-};
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-window.auth = auth;
-window.db = db;
-window.firebaseApp = app;
-
-document.dispatchEvent(new Event("firebase-ready"));
 </script>
 </body>
 </html>
