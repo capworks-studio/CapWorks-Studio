@@ -1585,6 +1585,11 @@ setTimeout(()=>{ const el=document.getElementById('cws-loader'); if(el && !el.cl
 
 
 <script>
+(function(){
+/* ══════════════════════════════════════════════════════
+   PROJECTS MODULE (legacy, isolated in IIFE to avoid
+   collisions with the main app script below).
+══════════════════════════════════════════════════════ */
 /* ══════════════════════════════════════════════════════
    CONSTANTS
 ══════════════════════════════════════════════════════ */
@@ -2652,6 +2657,29 @@ document.addEventListener('keydown', e => {
    The projects module's proj_initFirebase() is called from there.
 ══════════════════════════════════════════════════════ */
 
+/* Expose functions used by inline HTML handlers */
+window.proj_filterCat       = proj_filterCat;
+window.proj_handleSearch    = proj_handleSearch;
+window.proj_clearSearch     = proj_clearSearch;
+window.proj_adminPage       = proj_adminPage;
+window.proj_openYT          = proj_openYT;
+window.proj_toggleLike      = proj_toggleLike;
+window.proj_trackView       = proj_trackView;
+window.proj_trackDownload   = proj_trackDownload;
+window.proj_addFileRow      = typeof proj_addFileRow      !== 'undefined' ? proj_addFileRow      : undefined;
+window.proj_addFolderRow    = typeof proj_addFolderRow    !== 'undefined' ? proj_addFolderRow    : undefined;
+window.proj_addSubFile      = typeof proj_addSubFile      !== 'undefined' ? proj_addSubFile      : undefined;
+window.proj_confirmDelete   = typeof proj_confirmDelete   !== 'undefined' ? proj_confirmDelete   : undefined;
+window.proj_saveAdminPw     = typeof proj_saveAdminPw     !== 'undefined' ? proj_saveAdminPw     : undefined;
+window.proj_showAddForm     = typeof proj_showAddForm     !== 'undefined' ? proj_showAddForm     : undefined;
+window.proj_showEditForm    = typeof proj_showEditForm    !== 'undefined' ? proj_showEditForm    : undefined;
+window.proj_submitProjectForm = typeof proj_submitProjectForm !== 'undefined' ? proj_submitProjectForm : undefined;
+window.proj_toggleHidden    = typeof proj_toggleHidden    !== 'undefined' ? proj_toggleHidden    : undefined;
+window.proj_toggleSetting   = typeof proj_toggleSetting   !== 'undefined' ? proj_toggleSetting   : undefined;
+window.proj_renderAll       = proj_renderAll;
+window.proj_initFirebase    = typeof proj_initFirebase    !== 'undefined' ? proj_initFirebase    : undefined;
+
+})();
 </script>
 </div>
 
