@@ -1001,40 +1001,41 @@ function renderProjs(){
 function buildCard(cat,p,idx){
   const card=document.createElement('div');card.className='proj-card';card.style.animationDelay=`${idx*.05}s`;
   const liked=likes[p.id];const m=CAT_META[cat];
-  // media
   let mediaH='';
   const statH=statsH(p);
   if(p.videoUrl&&(p.videoUrl.includes('youtube')||p.videoUrl.includes('youtu.be'))){
     const vid=ytId(p.videoUrl);
     const dur=p.duration?`<div class="duration-badge">⏱ ${esc(p.duration)}</div>`:'';
-    mediaH=`<div class="card-media ratio-16-9"><div class="play-btn" onclick="openYT('${vid}',event)"><img src="https://img.youtube.com/vi/${vid}/mqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><div class="card-media-overlay"></div><div class="play-circle">▶</div></div>${dur}<div class="card-stats">${statH}</div></div>`;
+    mediaH=`<div class="card-media ratio-16-9"><div class="play-btn" onclick="openYT('${vid}',event)"><img src="https://img.youtube.com/vi/${vid}/mqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><div class="card-media-overlay"></div><div class="play-circle">▶</div></div>${dur}${p.comingSoon?`<div style="position:absolute;top:8px;left:8px;z-index:4;font-family:var(--mono);font-size:.58rem;font-weight:700;background:rgba(251,191,36,.18);color:var(--gold);border:1px solid rgba(251,191,36,.45);padding:3px 9px;border-radius:99px;backdrop-filter:blur(6px)">🚀 COMING SOON</div>`:''}<div class="card-stats">${statH}</div></div>`;
   } else if(p.imageUrl){
-    mediaH=`<div class="card-media ratio-16-9"><img src="${esc(p.imageUrl)}" loading="lazy"><div class="card-media-overlay"></div><div class="card-stats">${statH}</div></div>`;
+    mediaH=`<div class="card-media ratio-16-9"><img src="${esc(p.imageUrl)}" loading="lazy"><div class="card-media-overlay"></div>${p.comingSoon?`<div style="position:absolute;top:8px;left:8px;z-index:4;font-family:var(--mono);font-size:.58rem;font-weight:700;background:rgba(251,191,36,.18);color:var(--gold);border:1px solid rgba(251,191,36,.45);padding:3px 9px;border-radius:99px;backdrop-filter:blur(6px)">🚀 COMING SOON</div>`:''}<div class="card-stats">${statH}</div></div>`;
   } else {
-    mediaH=`<div class="card-media compact"><div class="no-media-icon">${m.icon}</div><div class="card-stats">${statH}</div></div>`;
+    mediaH=`<div class="card-media compact"><div class="no-media-icon">${p.comingSoon?'🚀':m.icon}</div>${p.comingSoon?`<div style="position:absolute;top:8px;left:8px;z-index:4;font-family:var(--mono);font-size:.58rem;font-weight:700;background:rgba(251,191,36,.18);color:var(--gold);border:1px solid rgba(251,191,36,.45);padding:3px 9px;border-radius:99px;backdrop-filter:blur(6px)">🚀 COMING SOON</div>`:''}<div class="card-stats">${statH}</div></div>`;
   }
-  // tags
   const tags=((p.tags||'').split(',').map(t=>t.trim()).filter(Boolean)).map(t=>`<span class="card-tag">${esc(t)}</span>`).join('');
   const tech=((p.tech||'').split(',').map(t=>t.trim()).filter(Boolean)).map(t=>`<span class="card-tag tech">${esc(t)}</span>`).join('');
-  // actions
   let acts='';
-  if(p.downloadUrl)acts+=`<a class="btn btn-green btn-sm" href="${esc(p.downloadUrl)}" target="_blank" onclick="trackDL('${cat}','${esc(p.id)}',event)">⬇</a>`;
-  if(p.url)acts+=`<a class="btn btn-cyan btn-sm" href="${esc(p.url)}" target="_blank">🔗</a>`;
-  if(p.inviteUrl)acts+=`<a class="btn btn-primary btn-sm" href="${esc(p.inviteUrl)}" target="_blank">+ Inviter</a>`;
-  if(p.demoUrl)acts+=`<a class="btn btn-primary btn-sm" href="${esc(p.demoUrl)}" target="_blank">Demo</a>`;
-  if(p.playUrl)acts+=`<a class="btn btn-cyan btn-sm" href="${esc(p.playUrl)}" target="_blank">▶</a>`;
-  // cat-specific extras
+  if(p.comingSoon&&p.contributeUrl){
+    acts+=`<button class="btn btn-gold btn-sm" onclick="openContribute('${cat}','${esc(p.id)}','${esc(p.title)}','${esc(p.contributeUrl)}',${p.contributeGoal||0},event)">💛 Contribuer</button>`;
+  } else {
+    if(p.downloadUrl)acts+=`<a class="btn btn-green btn-sm" href="${esc(p.downloadUrl)}" target="_blank" onclick="trackDL('${cat}','${esc(p.id)}',event)">⬇</a>`;
+    if(p.url)acts+=`<a class="btn btn-cyan btn-sm" href="${esc(p.url)}" target="_blank">🔗</a>`;
+    if(p.inviteUrl)acts+=`<a class="btn btn-primary btn-sm" href="${esc(p.inviteUrl)}" target="_blank">+ Inviter</a>`;
+    if(p.demoUrl)acts+=`<a class="btn btn-primary btn-sm" href="${esc(p.demoUrl)}" target="_blank">Demo</a>`;
+    if(p.playUrl)acts+=`<a class="btn btn-cyan btn-sm" href="${esc(p.playUrl)}" target="_blank">▶</a>`;
+  }
   let extras='';
   if(cat==='sites'&&p.status){const live=p.status==='live';extras=`<div class="site-status"><div class="site-status-dot${live?' live':' wip'}"></div>${live?'En ligne':'En développement'}</div>`;}
   if(cat==='games'&&p.platforms){const pl=(p.platforms||'').split(',').map(t=>t.trim()).filter(Boolean);extras=`<div class="card-platform">${pl.map(x=>`<span class="platform-badge pb-${x.toLowerCase()}">${x}</span>`).join('')}</div>`;}
   if(cat==='bots'){const ava=p.imageUrl?`<img src="${esc(p.imageUrl)}" style="width:100%;height:100%;object-fit:cover">`:`🤖`;mediaH=`<div class="card-body" style="padding-top:18px"><div class="bot-meta"><div class="bot-ava">${ava}</div><div><div class="card-title" style="margin-bottom:2px">${esc(p.title||'Bot')}</div>${tags}${tech}</div></div>`;}
   if(cat==='ai'&&p.model){extras=`<div class="model-badge">🧠 ${esc(p.model)}</div>`;}
-  // render
+  // Barre de progression contribution
+  const progBar=p.comingSoon&&p.contributeGoal?`<div style="margin-top:10px;margin-bottom:2px"><div style="display:flex;justify-content:space-between;font-size:.63rem;font-family:var(--mono);color:var(--txt3);margin-bottom:4px"><span>💛 ${fmt(p.contributeTotal||0)}€ collectés</span><span>objectif ${fmt(p.contributeGoal)}€</span></div><div style="height:4px;background:var(--bdr2);border-radius:99px;overflow:hidden"><div style="height:100%;width:${Math.min(100,((p.contributeTotal||0)/p.contributeGoal)*100)}%;background:linear-gradient(90deg,#d97706,var(--gold));border-radius:99px;transition:width .6s ease"></div></div></div>`:'';
   if(cat==='bots'){
     const bStats=`<div class="bot-stats"><div class="bot-stat"><div class="bot-stat-val">${fmt(p.servers||0)}</div><div class="bot-stat-lbl">Serveurs</div></div><div class="bot-stat"><div class="bot-stat-val">${fmt(p.users_count||0)}</div><div class="bot-stat-lbl">Utilisateurs</div></div></div>`;
-    card.innerHTML=`${mediaH}${bStats}<div class="card-desc">${esc(p.desc||'')}</div><div class="card-footer"><div class="card-actions">${acts}</div><button class="like-btn${liked?' liked':''}" onclick="toggleLike('${cat}','${esc(p.id)}',this)">❤ ${p.likes||0}</button></div></div>`;
+    card.innerHTML=`${mediaH}${bStats}<div class="card-desc">${esc(p.desc||'')}</div>${progBar}<div class="card-footer"><div class="card-actions">${acts}</div><button class="like-btn${liked?' liked':''}" onclick="toggleLike('${cat}','${esc(p.id)}',this)">❤ ${p.likes||0}</button></div></div>`;
   } else {
-    card.innerHTML=`${mediaH}<div class="card-body">${extras}<div class="card-tags">${tags}${tech}</div><div class="card-title">${esc(p.title||'Sans titre')}</div><div class="card-desc">${esc(p.desc||'')}</div><div class="card-footer"><div class="card-actions">${acts}</div><button class="like-btn${liked?' liked':''}" onclick="toggleLike('${cat}','${esc(p.id)}',this)">❤ ${p.likes||0}</button></div></div>`;
+    card.innerHTML=`${mediaH}<div class="card-body">${extras}<div class="card-tags">${tags}${tech}</div><div class="card-title">${esc(p.title||'Sans titre')}</div><div class="card-desc">${esc(p.desc||'')}</div>${progBar}<div class="card-footer"><div class="card-actions">${acts}</div><button class="like-btn${liked?' liked':''}" onclick="toggleLike('${cat}','${esc(p.id)}',this)">❤ ${p.likes||0}</button></div></div>`;
   }
   card.addEventListener('click',e=>{if(e.target.closest('a,button'))return;openProjDetail(cat,p);});
   return card;
@@ -1236,12 +1237,10 @@ function renderAdmProjs(){
 async function toggleProjHidden(cat,id,btn){const p=(projData[cat]||[]).find(x=>x.id===id);if(!p)return;p.hidden=!p.hidden;btn.classList.toggle('on',!p.hidden);cDel('proj_'+cat);await autoSave(()=>fbMerge('projects_'+cat,id,{hidden:p.hidden}));updateCounts();renderProjs();}
 async function delProj(cat,id){if(!confirm('Supprimer ce projet ?'))return;const idx=(projData[cat]||[]).findIndex(x=>x.id===id);if(idx>-1)projData[cat].splice(idx,1);cDel('proj_'+cat);await autoSave(()=>fbDel('projects_'+cat,id));renderAdmProjs();updateCounts();renderProjs();toast('Projet supprimé');}
 
-/* Project form */
 function openProjForm(id,cat){
   editProjId=id;editProjCat=cat;
   const isEdit=!!id;const p=id?(projData[cat]||[]).find(x=>x.id===id)||{}:{};
   document.getElementById('projFormTitle').textContent=isEdit?'Modifier le projet':'Nouveau projet';
-  // Cat selector if new
   let catSelHtml='';
   if(!isEdit){catSelHtml=`<div class="fg"><label>Catégorie</label><select class="inp" id="pfCat">${CATS.map(c=>`<option value="${c}"${c===cat?' selected':''}>${CAT_META[c].icon} ${CAT_META[c].label}</option>`).join('')}</select></div>`;}
   document.getElementById('projFormBody').innerHTML=`
@@ -1289,9 +1288,11 @@ function openProjForm(id,cat){
       <div class="fg"><label>Licence</label><input type="text" class="inp" id="pfLicense" value="${esc(p.license||'')}" placeholder="MIT, CC BY..."></div>
       <div class="fg"><label>Statut (sites)</label><select class="inp" id="pfStatus"><option value=""${!p.status?' selected':''}>—</option><option value="live"${p.status==='live'?' selected':''}>🟢 En ligne</option><option value="wip"${p.status==='wip'?' selected':''}>🟡 En développement</option></select></div>
     </div>
-    <div class="fg"><label>Masquer ce projet</label><label style="display:flex;align-items:center;gap:7px;margin-top:4px;cursor:pointer"><button class="tog-btn${p.hidden?' on':''}" id="pfHidden" onclick="this.classList.toggle('on')"></button><span style="font-size:.8rem;color:var(--txt2)">Ne pas afficher sur le site</span></label></div>`;
-  document.getElementById('projFormOv').classList.add('open');
-}
+    <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:var(--r);padding:13px;margin-bottom:12px">
+      <div style="font-size:.7rem;font-weight:700;color:var(--gold);margin-bottom:10px;font-family:var(--mono);letter-spacing:1px">🚀 MODE COMING SOON</div>
+      <div class="fg"><label>Activer la contribution</label>
+        <label style="display:flex;align-items:center;gap:7px;margin-top:4px;cursor:pointer">
+          <button class="tog-btn${p.comingSoon?' on':''}" id="pfComingSoon" onclick="this.classList.togg
 async function saveProj(){
   const isEdit=!!editProjId;
   const cat=isEdit?editProjCat:document.getElementById('pfCat').value;
@@ -1311,16 +1312,20 @@ async function saveProj(){
     servers:document.getElementById('pfServers').value.trim(),users_count:document.getElementById('pfUsers').value.trim(),
     license:document.getElementById('pfLicense').value.trim(),status:document.getElementById('pfStatus').value,
     hidden:document.getElementById('pfHidden').classList.contains('on'),
+    comingSoon:document.getElementById('pfComingSoon')?.classList.contains('on')||false,
+    contributeUrl:document.getElementById('pfContributeUrl')?.value.trim()||'',
+    contributeGoal:parseFloat(document.getElementById('pfContributeGoal')?.value)||0,
   };
-  // Remove empty fields
-  Object.keys(data).forEach(k=>{if(data[k]===''||data[k]===undefined)delete data[k];});
+  Object.keys(data).forEach(k=>{if(data[k]===''||data[k]===undefined||data[k]===0)delete data[k];});
   const id=editProjId||'p_'+uid();
-  const existing=projData[cat].find(x=>x.id===id)||{};
+  const existing=(projData[cat]||[]).find(x=>x.id===id)||{};
   if(!projData[cat])projData[cat]=[];
   if(isEdit){const idx=projData[cat].findIndex(x=>x.id===editProjId);if(idx>-1)projData[cat][idx]={id,...data};else projData[cat].push({id,...data});}
-  else projData[cat].push({id,likes:0,views:0,downloads:0,...data});
-  cDel('proj_'+cat);await autoSave(()=>fbSetD('projects_'+cat,id,{id,...data,likes:existing.likes||0,views:existing.views||0,downloads:existing.downloads||0}));
-  closeOv('projFormOv');renderAdmProjs();updateCounts();renderProjs();toast(isEdit?'Projet mis à jour !':'Projet ajouté !');}
+  else projData[cat].push({id,likes:0,views:0,downloads:0,contributeTotal:0,...data});
+  cDel('proj_'+cat);
+  await autoSave(()=>fbSetD('projects_'+cat,id,{id,...data,likes:existing.likes||0,views:existing.views||0,downloads:existing.downloads||0,contributeTotal:existing.contributeTotal||0}));
+  closeOv('projFormOv');renderAdmProjs();updateCounts();renderProjs();toast(isEdit?'Projet mis à jour !':'Projet ajouté !');
+}
 
 /* ── Admin Users ── */
 function renderAdmUsers(){const list=document.getElementById('admUserList');list.innerHTML='';const keys=Object.keys(users);if(!keys.length){list.innerHTML='<div style="color:var(--txt3);font-family:var(--mono);font-size:.75rem;text-align:center;padding:24px">Aucun utilisateur.</div>';return;}keys.forEach(u=>{const ud=users[u];const div=document.createElement('div');div.className='adm-user-item';div.innerHTML=`<div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:50%;background:var(--surf3);display:flex;align-items:center;justify-content:center;font-size:.88rem">${ud.emoji||'👤'}</div><div><div style="font-weight:700;font-size:.82rem">${esc(u)}</div><div style="font-size:.65rem;font-family:var(--mono);color:var(--txt3)">${ud.role} · ${ud.email||'—'} · ${ud.online?'🟢':'⚫'}</div></div></div><div style="display:flex;flex-direction:column;gap:6px;min-width:240px"><div class="grid2"><input type="email" class="inp" value="${esc(ud.email||'')}" placeholder="Email" style="font-size:.78rem" onchange="users['${esc(u)}'].email=this.value" onblur="saveUser('${esc(u)}',users['${esc(u)}'])"><select class="inp" style="font-size:.78rem" onchange="admSetRole('${esc(u)}',this.value)"><option value="user"${ud.role==='user'?' selected':''}>Utilisateur</option><option value="mod"${ud.role==='mod'?' selected':''}>Modérateur</option><option value="owner"${ud.role==='owner'?' selected':''}>Owner</option></select></div><div class="grid2"><input type="password" class="inp" id="pwr-${esc(u)}" placeholder="Nouveau mdp..." style="font-size:.78rem"><div style="display:flex;gap:5px"><button class="btn btn-ghost btn-sm" onclick="admResetPw('${esc(u)}')">Changer</button><button class="btn btn-danger btn-sm" onclick="admDelUser('${esc(u)}')">🗑</button></div></div></div>`;list.appendChild(div);});}
@@ -1343,6 +1348,105 @@ async function saveWebhook(){config.discordWebhook=document.getElementById('whUr
 async function testWebhook(){const wh=document.getElementById('whUrl').value.trim();const m=document.getElementById('whMsg');if(!wh){m.style.display='block';m.className='err-msg';m.textContent='✕ Entrez le webhook';return;}m.style.display='block';m.className='ok-msg';m.textContent='⟳ Test...';try{const r=await fetch(wh+'?wait=true',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({embeds:[{title:'🧪 Test — CapWorks Studio',color:0x7c6cff,description:'Webhook fonctionnel !',timestamp:new Date().toISOString()}]})});m.textContent=r.ok?'✓ Test réussi !':'✕ Erreur '+r.status;if(!r.ok)m.className='err-msg';}catch(e){m.className='err-msg';m.textContent='✕ Erreur réseau';}setTimeout(()=>m.style.display='none',5000);}
 async function saveEJS(){const pk=document.getElementById('ejsPk').value.trim(),sid=document.getElementById('ejsSvc').value.trim(),tid=document.getElementById('ejsTpl').value.trim(),m=document.getElementById('ejsMsg');if(!pk||!sid||!tid){m.style.display='block';m.className='err-msg';m.textContent='✕ Remplissez les 3 champs';return;}config.emailjsPublicKey=pk;config.emailjsServiceId=sid;config.emailjsTemplateId=tid;emailjs.init(pk);await saveConfig();m.style.display='block';m.className='ok-msg';m.textContent='✓ EmailJS sauvegardé !';setTimeout(()=>m.style.display='none',3000);}
 
+function openContribute(cat,id,title,ppUrl,goal,e){
+  e.stopPropagation();
+  if(!ppUrl){toast('Lien PayPal non configuré','error');return;}
+  const p=(projData[cat]||[]).find(x=>x.id===id);
+  const total=p?.contributeTotal||0;
+  const pct=goal?Math.min(100,(total/goal)*100):0;
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  ov.innerHTML=`
+    <div style="background:var(--surf);border:1px solid var(--bdr2);border-radius:var(--r3);width:100%;max-width:420px;animation:modalIn .3s cubic-bezier(.2,.8,.3,1)">
+      <div style="padding:22px 24px 18px;border-bottom:1px solid var(--bdr)">
+        <div style="font-size:1.8rem;margin-bottom:8px">💛</div>
+        <h3 style="font-size:1.05rem;font-weight:800;letter-spacing:-.4px;margin-bottom:6px">Soutenir <span style="color:var(--gold)">${esc(title)}</span></h3>
+        <p style="color:var(--txt2);font-size:.8rem;line-height:1.7">Ce projet est en cours de développement. Votre contribution aide l'équipe à le créer plus vite !</p>
+      </div>
+      <div style="padding:18px 24px">
+        ${goal?`<div style="background:var(--surf2);border:1px solid var(--bdr);border-radius:9px;padding:12px 14px;margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;font-size:.7rem;font-family:var(--mono);color:var(--txt3);margin-bottom:6px">
+            <span>💛 ${fmt(total)}€ collectés</span><span>objectif ${fmt(goal)}€</span>
+          </div>
+          <div style="height:5px;background:var(--bdr2);border-radius:99px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#d97706,var(--gold));border-radius:99px"></div>
+          </div>
+        </div>`:''}
+        <div class="fg"><label>Montant (€)</label>
+          <input type="number" class="inp" id="contribAmount" min="1" placeholder="Ex: 5" style="font-size:1.1rem;text-align:center;font-family:var(--mono);font-weight:700">
+        </div>
+        <div class="fg"><label>Message (optionnel)</label>
+          <input type="text" class="inp" id="contribMsg" placeholder="Bonne chance à l'équipe !">
+        </div>
+        <div id="contribErr" class="err-msg"></div>
+      </div>
+      <div style="padding:13px 24px;border-top:1px solid var(--bdr);display:flex;gap:7px;justify-content:flex-end">
+        <button class="btn btn-surf" onclick="this.closest('div[style*=z-index]').remove()">Annuler</button>
+        <button class="btn btn-gold" onclick="doContribute('${cat}','${esc(id)}','${esc(title)}','${esc(ppUrl)}',${goal})">💛 Contribuer via PayPal</button>
+      </div>
+    </div>`;
+  ov.addEventListener('click',ev=>{if(ev.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
+
+async function doContribute(cat,id,title,ppUrl,goal){
+  const amount=parseFloat(document.getElementById('contribAmount').value);
+  const msg=document.getElementById('contribMsg').value.trim();
+  const err=document.getElementById('contribErr');
+  if(!amount||amount<1){err.textContent='✕ Entrez un montant valide (min. 1€)';return;}
+  // Ouvre PayPal
+  window.open(`${ppUrl}/${amount}EUR`,'_blank');
+  // Met à jour Firebase
+  const p=(projData[cat]||[]).find(x=>x.id===id);
+  if(p&&db){
+    p.contributeTotal=(p.contributeTotal||0)+amount;
+    await FB.setDoc(FB.doc(db,'projects_'+cat,id),{contributeTotal:p.contributeTotal},{merge:true});
+    if(msg)await fbAddD('cw_contributions',{projectId:id,projectTitle:title,amount,message:msg,user:curUser?.username||'Anonyme',date:new Date().toISOString()});
+  }
+  // Ferme la modale
+  document.querySelector('div[style*="z-index:9999"]')?.remove();
+  showThankYou(title,amount,msg);
+}
+
+function showThankYou(title,amount,msg){
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.96);backdrop-filter:blur(16px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  ov.innerHTML=`
+    <div style="text-align:center;max-width:500px;animation:fadeUp .5s ease">
+      <div style="font-size:4.5rem;margin-bottom:16px">💛</div>
+      <h2 style="font-size:2rem;font-weight:900;letter-spacing:-1.5px;margin-bottom:12px">Merci !</h2>
+      <p style="color:var(--txt2);font-size:.97rem;line-height:1.85;margin-bottom:6px">
+        Grâce à vous, <strong style="color:var(--gold)">${esc(title)}</strong><br>sera plus simple à créer !
+      </p>
+      <p style="color:var(--txt3);font-size:.78rem;font-family:var(--mono);margin-bottom:28px">
+        Contribution : <span style="color:var(--gold);font-weight:700">${amount}€</span>${msg?` · <em>"${esc(msg)}"</em>`:''}
+      </p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a href="https://discord.gg/52AJ2jgHda" target="_blank" class="btn btn-primary">💬 Rejoindre le Discord</a>
+        <button class="btn btn-surf" onclick="this.closest('div[style*=fixed]').remove()">← Retour au site</button>
+      </div>
+    </div>`;
+  ov.addEventListener('click',ev=>{if(ev.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+  spawnConfetti();
+}
+
+function spawnConfetti(){
+  const colors=['#7c6cff','#22d3ee','#fbbf24','#10f099','#ff4f72','#f472b6'];
+  for(let i=0;i<70;i++){
+    const c=document.createElement('div');
+    const color=colors[Math.floor(Math.random()*colors.length)];
+    const size=Math.random()*9+4;
+    c.style.cssText=`position:fixed;z-index:99999;pointer-events:none;width:${size}px;height:${size}px;background:${color};border-radius:${Math.random()>.5?'50%':'3px'};left:${Math.random()*100}vw;top:-12px;opacity:1`;
+    document.body.appendChild(c);
+    const duration=Math.random()*2000+1800;
+    const drift=(Math.random()-.5)*220;
+    c.animate([
+      {transform:`translateY(0) translateX(0) rotate(0deg)`,opacity:1},
+      {transform:`translateY(110vh) translateX(${drift}px) rotate(${Math.random()*720}deg)`,opacity:0}
+    ],{duration,easing:'ease-in',fill:'forwards'}).onfinish=()=>c.remove();
+  }
+}
 /* ════════════════════════════════════════
    START
 ════════════════════════════════════════ */
