@@ -1292,7 +1292,19 @@ function openProjForm(id,cat){
       <div style="font-size:.7rem;font-weight:700;color:var(--gold);margin-bottom:10px;font-family:var(--mono);letter-spacing:1px">🚀 MODE COMING SOON</div>
       <div class="fg"><label>Activer la contribution</label>
         <label style="display:flex;align-items:center;gap:7px;margin-top:4px;cursor:pointer">
-          <button class="tog-btn${p.comingSoon?' on':''}" id="pfComingSoon" onclick="this.classList.togg
+          <button class="tog-btn${p.comingSoon?' on':''}" id="pfComingSoon" onclick="this.classList.toggle('on')"></button>
+          <span style="font-size:.8rem;color:var(--txt2)">Afficher un bouton "Contribuer" sur la card</span>
+        </label>
+      </div>
+      <div class="grid2">
+        <div class="fg"><label>Lien PayPal contribution</label><input type="url" class="inp" id="pfContributeUrl" value="${esc(p.contributeUrl||'')}" placeholder="https://paypal.me/..."></div>
+        <div class="fg"><label>Objectif (€)</label><input type="number" class="inp" id="pfContributeGoal" value="${p.contributeGoal||''}" placeholder="500" min="0"></div>
+      </div>
+    </div>
+    <div class="fg"><label>Masquer ce projet</label><label style="display:flex;align-items:center;gap:7px;margin-top:4px;cursor:pointer"><button class="tog-btn${p.hidden?' on':''}" id="pfHidden" onclick="this.classList.toggle('on')"></button><span style="font-size:.8rem;color:var(--txt2)">Ne pas afficher sur le site</span></label></div>`;
+  document.getElementById('projFormOv').classList.add('open');
+}
+  
 async function saveProj(){
   const isEdit=!!editProjId;
   const cat=isEdit?editProjCat:document.getElementById('pfCat').value;
