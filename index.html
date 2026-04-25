@@ -62,6 +62,136 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 @keyframes modalIn{from{opacity:0;transform:scale(.93) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
 @keyframes skelPulse{0%,100%{opacity:.35}50%{opacity:.65}}
 
+/* ── Jackpot Counter Animations ── */
+@keyframes jackpotRoll {
+  0%   { transform: translateY(0); opacity:1; }
+  30%  { transform: translateY(-110%); opacity:0; }
+  31%  { transform: translateY(110%); opacity:0; }
+  60%  { transform: translateY(0); opacity:1; }
+}
+@keyframes jackpotGlow {
+  0%,100% { text-shadow: 0 0 8px rgba(251,191,36,0); }
+  50%     { text-shadow: 0 0 20px rgba(251,191,36,.6), 0 0 40px rgba(251,191,36,.3); }
+}
+@keyframes jackpotPulse {
+  0%,100% { transform: scale(1); }
+  50%     { transform: scale(1.04); }
+}
+@keyframes slotSpin {
+  0%   { opacity:0; transform:translateY(8px) }
+  10%  { opacity:1; transform:translateY(0) }
+  85%  { opacity:1; transform:translateY(0) }
+  100% { opacity:0; transform:translateY(-8px) }
+}
+
+.jackpot-banner {
+  background: linear-gradient(135deg, rgba(251,191,36,.07), rgba(124,108,255,.07));
+  border: 1px solid rgba(251,191,36,.25);
+  border-radius: var(--r2);
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: fadeUp .4s ease;
+  position: relative;
+  overflow: hidden;
+}
+.jackpot-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(251,191,36,.04), transparent);
+  animation: shimmer 3s linear infinite;
+  background-size: 200% auto;
+}
+.jackpot-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  animation: jackpotPulse 2s ease-in-out infinite;
+}
+.jackpot-text {
+  flex: 1;
+  min-width: 0;
+}
+.jackpot-label {
+  font-size: .64rem;
+  font-family: var(--mono);
+  color: var(--txt3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.jackpot-count-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.jackpot-number {
+  font-family: var(--mono);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--gold);
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  animation: jackpotGlow 2.5s ease-in-out infinite;
+}
+.jackpot-digit {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  height: 1.6rem;
+  line-height: 1.6rem;
+}
+.jackpot-digit span {
+  display: inline-block;
+}
+.jackpot-digit span.rolling {
+  animation: jackpotRoll .5s cubic-bezier(.4,0,.2,1);
+}
+.jackpot-suffix {
+  font-family: var(--font);
+  font-size: .78rem;
+  color: var(--txt2);
+  font-weight: 500;
+}
+.jackpot-sub {
+  font-size: .7rem;
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: .3px;
+}
+
+/* Slot machine digits for register */
+.slot-digits {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--gold);
+}
+.slot-col {
+  display: inline-flex;
+  flex-direction: column;
+  height: 1.4em;
+  overflow: hidden;
+  position: relative;
+}
+.slot-col-inner {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0s;
+}
+.slot-col-inner.spinning {
+  animation: slotSpinCol var(--dur, .8s) cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes slotSpinCol {
+  0%   { transform: translateY(0) }
+  100% { transform: translateY(calc(-100% + 1.4em)) }
+}
+
 /* ── Header ── */
 header{position:sticky;top:0;z-index:100;height:60px;padding:0 36px;
   display:flex;align-items:center;justify-content:space-between;
@@ -198,7 +328,7 @@ select.inp option{background:var(--surf2)}
 .proj-grid{display:grid;gap:16px;margin-bottom:44px}
 .proj-grid.g2{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 .proj-grid.g3{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
-/* project cards from project.html */
+/* project cards */
 .proj-card{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r2);overflow:hidden;cursor:pointer;transition:transform .3s cubic-bezier(.2,.8,.3,1),border-color .3s,box-shadow .3s;animation:fadeUp .45s ease both;position:relative}
 .proj-card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 16px 48px rgba(124,108,255,.13)}
 .proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--cyan));opacity:0;transition:opacity .3s;z-index:2}
@@ -872,6 +1002,67 @@ let admLoggedIn=false,activeTicket=null,pendingPay=null,pendingReg=null,otpCode=
 let projCat='all',projQ='',admProjCat='all',editProjId=null,editProjCat=null;
 
 /* ════════════════════════════════════════
+   JACKPOT COUNTER
+════════════════════════════════════════ */
+// Realistic client count: starts from a base and slightly increments for fun
+function getClientCount() {
+  // Store in localStorage so it persists and slowly grows
+  let base = parseInt(localStorage.getItem('cw_client_base') || '0');
+  if (!base) {
+    base = 247 + Math.floor(Math.random() * 50); // first visit: 247–296
+    localStorage.setItem('cw_client_base', base);
+  }
+  // Each page load may add 0–2
+  const extra = Math.floor(Math.random() * 3);
+  const total = base + extra;
+  return total;
+}
+
+function buildJackpotBanner(targetNum) {
+  const digits = String(targetNum).split('');
+  return `
+    <div class="jackpot-banner" id="jackpotBanner">
+      <div class="jackpot-icon">🎰</div>
+      <div class="jackpot-text">
+        <div class="jackpot-label">Font confiance à la CapWorks Studio</div>
+        <div class="jackpot-count-wrap">
+          <div class="jackpot-number" id="jackpotNumber">
+            ${digits.map((_,i)=>`<div class="jackpot-digit"><span id="jd-${i}">0</span></div>`).join('')}
+          </div>
+          <div class="jackpot-suffix">clients satisfaits</div>
+        </div>
+        <div class="jackpot-sub">Rejoignez-nous maintenant ✨</div>
+      </div>
+    </div>`;
+}
+
+function animateJackpot(targetNum) {
+  const digits = String(targetNum).split('');
+  // Animate each digit one by one with stagger
+  digits.forEach((digit, i) => {
+    const el = document.getElementById(`jd-${i}`);
+    if (!el) return;
+    let current = 0;
+    const delay = i * 120;
+    const steps = 12 + (digits.length - i) * 3;
+    let step = 0;
+    setTimeout(() => {
+      const interval = setInterval(() => {
+        step++;
+        if (step >= steps) {
+          clearInterval(interval);
+          el.textContent = digit;
+          el.classList.add('rolling');
+          setTimeout(() => el.classList.remove('rolling'), 500);
+        } else {
+          el.textContent = Math.floor(Math.random() * 10);
+        }
+      }, 55);
+    }, delay);
+  });
+}
+
+/* ════════════════════════════════════════
    INIT
 ════════════════════════════════════════ */
 async function initApp(){
@@ -1029,7 +1220,6 @@ function buildCard(cat,p,idx){
   if(cat==='games'&&p.platforms){const pl=(p.platforms||'').split(',').map(t=>t.trim()).filter(Boolean);extras=`<div class="card-platform">${pl.map(x=>`<span class="platform-badge pb-${x.toLowerCase()}">${x}</span>`).join('')}</div>`;}
   if(cat==='bots'){const ava=p.imageUrl?`<img src="${esc(p.imageUrl)}" style="width:100%;height:100%;object-fit:cover">`:`🤖`;mediaH=`<div class="card-body" style="padding-top:18px"><div class="bot-meta"><div class="bot-ava">${ava}</div><div><div class="card-title" style="margin-bottom:2px">${esc(p.title||'Bot')}</div>${tags}${tech}</div></div>`;}
   if(cat==='ai'&&p.model){extras=`<div class="model-badge">🧠 ${esc(p.model)}</div>`;}
-  // Barre de progression contribution
   const progBar=p.comingSoon&&p.contributeGoal?`<div style="margin-top:10px;margin-bottom:2px"><div style="display:flex;justify-content:space-between;font-size:.63rem;font-family:var(--mono);color:var(--txt3);margin-bottom:4px"><span>💛 ${fmt(p.contributeTotal||0)}€ collectés</span><span>objectif ${fmt(p.contributeGoal)}€</span></div><div style="height:4px;background:var(--bdr2);border-radius:99px;overflow:hidden"><div style="height:100%;width:${Math.min(100,((p.contributeTotal||0)/p.contributeGoal)*100)}%;background:linear-gradient(90deg,#d97706,var(--gold));border-radius:99px;transition:width .6s ease"></div></div></div>`:'';
   if(cat==='bots'){
     const bStats=`<div class="bot-stats"><div class="bot-stat"><div class="bot-stat-val">${fmt(p.servers||0)}</div><div class="bot-stat-lbl">Serveurs</div></div><div class="bot-stat"><div class="bot-stat-val">${fmt(p.users_count||0)}</div><div class="bot-stat-lbl">Utilisateurs</div></div></div>`;
@@ -1128,27 +1318,158 @@ async function setOnline(v){if(!curUser)return;if(users[curUser.username]){users
 document.addEventListener('visibilitychange',()=>{if(curUser)setOnline(!document.hidden);});
 window.addEventListener('beforeunload',()=>{if(curUser)setOnline(false);});
 function openAuth(tab='login'){document.getElementById('authOv').classList.add('open');switchAuth(tab);}
-function switchAuth(tab){document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',['login','register'][i]===tab));document.getElementById('authTitle').textContent=tab==='login'?'Connexion':'Créer un compte';const f=document.getElementById('authForm');if(tab==='login'){f.innerHTML=`<div class="fg"><label>Pseudo</label><input type="text" class="inp" id="lUser" placeholder="Votre pseudo..."></div><div class="fg"><label>Mot de passe</label><input type="password" class="inp" id="lPass" placeholder="••••••••" onkeypress="if(event.key==='Enter')doLogin()"></div><div class="err-msg" id="lErr"></div><div style="margin-top:13px"><button class="btn btn-primary btn-full" onclick="doLogin()">Se connecter →</button></div>`;}else{const re=EMOJIS[Math.floor(Math.random()*EMOJIS.length)];f.innerHTML=`<div class="fg"><label>Pseudo</label><input type="text" class="inp" id="rUser" placeholder="Choisissez un pseudo..."></div><div class="fg"><label>Email <span style="color:var(--red)">*</span></label><input type="email" class="inp" id="rEmail" placeholder="exemple@gmail.com"></div><div class="fg"><label>Mot de passe</label><input type="password" class="inp" id="rPass" placeholder="Min. 4 caractères..."></div><div class="fg"><label>Avatar (emoji)</label><input type="text" class="inp" id="rEmoji" placeholder="${re}" maxlength="4"></div><div class="err-msg" id="rErr"></div><div style="margin-top:13px"><button class="btn btn-primary btn-full" id="rBtn" onclick="doRegister()">Continuer →</button></div>`;}}
+function switchAuth(tab){document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',['login','register'][i]===tab));document.getElementById('authTitle').textContent=tab==='login'?'Connexion':'Créer un compte';const f=document.getElementById('authForm');if(tab==='login'){f.innerHTML=`<div class="fg"><label>Pseudo</label><input type="text" class="inp" id="lUser" placeholder="Votre pseudo..."></div><div class="fg"><label>Mot de passe</label><input type="password" class="inp" id="lPass" placeholder="••••••••" onkeypress="if(event.key==='Enter')doLogin()"></div><div class="err-msg" id="lErr"></div><div style="margin-top:13px"><button class="btn btn-primary btn-full" onclick="doLogin()">Se connecter →</button></div>`;}else{
+    // ── REGISTER FORM WITH JACKPOT BANNER ──
+    const re=EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+    const clientNum = getClientCount();
+    f.innerHTML=buildJackpotBanner(clientNum)+`<div class="fg"><label>Pseudo</label><input type="text" class="inp" id="rUser" placeholder="Choisissez un pseudo..."></div><div class="fg"><label>Email <span style="color:var(--red)">*</span></label><input type="email" class="inp" id="rEmail" placeholder="exemple@gmail.com"></div><div class="fg"><label>Mot de passe</label><input type="password" class="inp" id="rPass" placeholder="Min. 4 caractères..."></div><div class="fg"><label>Avatar (emoji)</label><input type="text" class="inp" id="rEmoji" placeholder="${re}" maxlength="4"></div><div class="err-msg" id="rErr"></div><div style="margin-top:13px"><button class="btn btn-primary btn-full" id="rBtn" onclick="doRegister()">Continuer →</button></div>`;
+    // trigger jackpot animation after render
+    setTimeout(()=>animateJackpot(clientNum), 120);
+  }
+}
 async function doRegister(){await loadUsers();const u=document.getElementById('rUser').value.trim(),email=document.getElementById('rEmail').value.trim(),p=document.getElementById('rPass').value,e=document.getElementById('rEmoji').value.trim()||'👤',err=document.getElementById('rErr');if(!u||!email||!p){err.textContent='✕ Remplissez tous les champs';return;}if(u.length<2||u.length>20){err.textContent='✕ Pseudo : 2–20 caractères';return;}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='✕ Email invalide';return;}if(p.length<4){err.textContent='✕ Mot de passe trop court';return;}if(users[u]){err.textContent='✕ Ce pseudo est déjà pris';return;}pendingReg={u,email,p,e};otpCode=genOtp();const btn=document.getElementById('rBtn');btn.disabled=true;btn.textContent='Envoi du code...';err.textContent='';try{emailjs.init(config.emailjsPublicKey);await emailjs.send(config.emailjsServiceId,config.emailjsTemplateId,{to_email:email,to_name:u,code:otpCode});showOtp(email);}catch(ex){err.textContent='✕ Erreur envoi email.';btn.disabled=false;btn.textContent='Continuer →';}}
 function genOtp(){return String(Math.floor(100000+Math.random()*900000));}
 function maskEmail(e){const[l,d]=e.split('@');return l[0]+'*'.repeat(Math.max(l.length-1,3))+'@'+d;}
-function showOtp(email){document.getElementById('authTitle').textContent='Vérification';document.querySelectorAll('.auth-tab').forEach(t=>t.style.display='none');document.getElementById('authForm').innerHTML=`<div style="text-align:center;margin-bottom:16px"><div style="font-size:1.8rem;margin-bottom:8px">📬</div><p style="color:var(--txt2);font-size:.82rem;line-height:1.7">Code envoyé à<br><span class="em">${maskEmail(email)}</span></p></div><label style="display:block;font-size:.66rem;font-weight:700;color:var(--txt2);text-align:center;margin-bottom:3px;text-transform:uppercase">Code à 6 chiffres</label><div class="otp-row">${[0,1,2,3,4,5].map(i=>`<input class="otp-in" id="otp${i}" maxlength="1" type="text" inputmode="numeric" oninput="otpIn(this,${i})" onkeydown="otpKey(event,${i})">`).join('')}</div><div class="err-msg" id="otpErr" style="text-align:center"></div><div style="margin-top:13px"><button class="btn btn-primary btn-full" onclick="verifyOtp()">Vérifier →</button></div><div style="text-align:center;margin-top:11px"><button class="resend-lnk" id="resendBtn" onclick="resendOtp()" disabled>Renvoyer (<span id="resendCnt">60</span>s)</button></div><div style="text-align:center;margin-top:7px"><button class="resend-lnk" onclick="switchAuth('register')" style="color:var(--txt3)">← Modifier mes infos</button></div>`;setTimeout(()=>document.getElementById('otp0').focus(),90);let secs=60;resendTimer=setInterval(()=>{secs--;const el=document.getElementById('resendCnt'),btn=document.getElementById('resendBtn');if(!el){clearInterval(resendTimer);return;}if(secs<=0){clearInterval(resendTimer);btn.disabled=false;btn.textContent='Renvoyer le code';}else el.textContent=secs;},1000);}
-function otpIn(el,idx){el.value=el.value.replace(/\D/g,'');if(el.value){el.classList.add('filled');if(idx<5)document.getElementById(`otp${idx+1}`).focus();else verifyOtp();}else el.classList.remove('filled');}
+function showOtp(email,context){
+  // context: undefined = register, 'email' = change email, 'username' = change username (no OTP needed for that path)
+  document.getElementById('authTitle').textContent='Vérification';
+  document.querySelectorAll('.auth-tab').forEach(t=>t.style.display='none');
+  document.getElementById('authForm').innerHTML=`<div style="text-align:center;margin-bottom:16px"><div style="font-size:1.8rem;margin-bottom:8px">📬</div><p style="color:var(--txt2);font-size:.82rem;line-height:1.7">Code envoyé à<br><span class="em">${maskEmail(email)}</span></p></div><label style="display:block;font-size:.66rem;font-weight:700;color:var(--txt2);text-align:center;margin-bottom:3px;text-transform:uppercase">Code à 6 chiffres</label><div class="otp-row">${[0,1,2,3,4,5].map(i=>`<input class="otp-in" id="otp${i}" maxlength="1" type="text" inputmode="numeric" oninput="otpIn(this,${i})" onkeydown="otpKey(event,${i})">`).join('')}</div><div class="err-msg" id="otpErr" style="text-align:center"></div><div style="margin-top:13px"><button class="btn btn-primary btn-full" onclick="verifyOtp('${context||''}')">Vérifier →</button></div><div style="text-align:center;margin-top:11px"><button class="resend-lnk" id="resendBtn" onclick="resendOtp()" disabled>Renvoyer (<span id="resendCnt">60</span>s)</button></div><div style="text-align:center;margin-top:7px"><button class="resend-lnk" onclick="${context?'closeOv(\'authOv\')':'switchAuth(\'register\')'}" style="color:var(--txt3)">← ${context?'Annuler':'Modifier mes infos'}</button></div>`;
+  setTimeout(()=>document.getElementById('otp0').focus(),90);
+  let secs=60;resendTimer=setInterval(()=>{secs--;const el=document.getElementById('resendCnt'),btn=document.getElementById('resendBtn');if(!el){clearInterval(resendTimer);return;}if(secs<=0){clearInterval(resendTimer);btn.disabled=false;btn.textContent='Renvoyer le code';}else el.textContent=secs;},1000);
+}
+function otpIn(el,idx){el.value=el.value.replace(/\D/g,'');if(el.value){el.classList.add('filled');if(idx<5)document.getElementById(`otp${idx+1}`).focus();else verifyOtp('');}else el.classList.remove('filled');}
 function otpKey(e,idx){if(e.key==='Backspace'&&!e.target.value&&idx>0)document.getElementById(`otp${idx-1}`).focus();}
 function getOtp(){return[0,1,2,3,4,5].map(i=>document.getElementById(`otp${i}`)?.value||'').join('');}
-async function verifyOtp(){const entered=getOtp();const err=document.getElementById('otpErr');if(entered.length<6){err.textContent='✕ Entrez les 6 chiffres';return;}if(entered!==otpCode){err.textContent='✕ Code incorrect';[0,1,2,3,4,5].forEach(i=>{const el=document.getElementById(`otp${i}`);el.classList.add('error');setTimeout(()=>el.classList.remove('error'),500);});return;}clearInterval(resendTimer);const{u,email,p,e}=pendingReg;const ud={hash:hashPw(p),role:'user',emoji:e,email,online:true,username:u};users[u]=ud;await fbSetD('cw_users',u,ud);curUser={username:u,role:'user',emoji:e};localStorage.setItem('cw_session',JSON.stringify(curUser));pendingReg=null;otpCode=null;document.querySelectorAll('.auth-tab').forEach(t=>t.style.display='');closeOv('authOv');updateHdr();renderSup();toast(`✓ Bienvenue, ${u} !`);}
-async function resendOtp(){if(!pendingReg)return;otpCode=genOtp();const btn=document.getElementById('resendBtn');btn.disabled=true;btn.textContent='Envoi...';try{emailjs.init(config.emailjsPublicKey);await emailjs.send(config.emailjsServiceId,config.emailjsTemplateId,{to_email:pendingReg.email,to_name:pendingReg.u,code:otpCode});let secs=60;btn.innerHTML='Renvoyer (<span id="resendCnt">60</span>s)';resendTimer=setInterval(()=>{secs--;const el=document.getElementById('resendCnt');if(!el){clearInterval(resendTimer);return;}if(secs<=0){clearInterval(resendTimer);btn.disabled=false;btn.textContent='Renvoyer le code';}else el.textContent=secs;},1000);toast('Code renvoyé !');}catch(ex){btn.disabled=false;btn.textContent='Renvoyer le code';toast('Erreur d\'envoi','error');}}
+async function verifyOtp(context){
+  const entered=getOtp();const err=document.getElementById('otpErr');
+  if(entered.length<6){err.textContent='✕ Entrez les 6 chiffres';return;}
+  if(entered!==otpCode){err.textContent='✕ Code incorrect';[0,1,2,3,4,5].forEach(i=>{const el=document.getElementById(`otp${i}`);el.classList.add('error');setTimeout(()=>el.classList.remove('error'),500);});return;}
+  clearInterval(resendTimer);
+
+  if(context==='email') {
+    // ── Change email confirmed ──
+    const newEmail=pendingEmailChange;
+    if(!newEmail)return;
+    const ud=users[curUser.username];
+    ud.email=newEmail;
+    await saveUser(curUser.username,ud);
+    pendingEmailChange=null;otpCode=null;
+    closeOv('authOv');document.querySelectorAll('.auth-tab').forEach(t=>t.style.display='');
+    openSettings();
+    toast('Email mis à jour !');
+    return;
+  }
+
+  // ── Default: register ──
+  const{u,email,p,e}=pendingReg;
+  const ud={hash:hashPw(p),role:'user',emoji:e,email,online:true,username:u};
+  users[u]=ud;await fbSetD('cw_users',u,ud);
+  curUser={username:u,role:'user',emoji:e};localStorage.setItem('cw_session',JSON.stringify(curUser));
+  pendingReg=null;otpCode=null;
+  document.querySelectorAll('.auth-tab').forEach(t=>t.style.display='');
+  closeOv('authOv');updateHdr();renderSup();
+  toast(`✓ Bienvenue, ${u} !`);
+}
+async function resendOtp(){if(!pendingReg&&!pendingEmailChange)return;const email=pendingReg?.email||pendingEmailChange;if(!email)return;otpCode=genOtp();const btn=document.getElementById('resendBtn');btn.disabled=true;btn.textContent='Envoi...';try{emailjs.init(config.emailjsPublicKey);await emailjs.send(config.emailjsServiceId,config.emailjsTemplateId,{to_email:email,to_name:pendingReg?.u||curUser?.username||'',code:otpCode});let secs=60;btn.innerHTML='Renvoyer (<span id="resendCnt">60</span>s)';resendTimer=setInterval(()=>{secs--;const el=document.getElementById('resendCnt');if(!el){clearInterval(resendTimer);return;}if(secs<=0){clearInterval(resendTimer);btn.disabled=false;btn.textContent='Renvoyer le code';}else el.textContent=secs;},1000);toast('Code renvoyé !');}catch(ex){btn.disabled=false;btn.textContent='Renvoyer le code';toast('Erreur d\'envoi','error');}}
 async function doLogin(){await loadUsers();const u=document.getElementById('lUser').value.trim(),p=document.getElementById('lPass').value,err=document.getElementById('lErr');if(!u||!p){err.textContent='✕ Remplissez tous les champs';return;}if(!users[u]){err.textContent='✕ Compte introuvable';return;}if(users[u].hash!==hashPw(p)){err.textContent='✕ Mot de passe incorrect';return;}users[u].online=true;await fbSetD('cw_users',u,{...users[u],username:u});curUser={username:u,role:users[u].role,emoji:users[u].emoji};localStorage.setItem('cw_session',JSON.stringify(curUser));closeOv('authOv');updateHdr();renderSup();toast(`Bienvenue, ${u} !`);}
 async function logout(){await setOnline(false);curUser=null;activeTicket=null;localStorage.removeItem('cw_session');updateHdr();renderSup();toast('Déconnecté.');}
-function openSettings(){if(!curUser)return;const ud=users[curUser.username]||{};document.getElementById('settBody').innerHTML=`<div class="fg"><label>Emoji avatar</label><input type="text" class="inp" id="setEmoji" value="${esc(curUser.emoji||'👤')}" maxlength="4"></div><div class="fg"><label>Email</label><input type="email" class="inp" id="setEmail" value="${esc(ud.email||'')}"></div><div style="margin-bottom:14px"><div style="font-size:.68rem;font-weight:700;color:var(--txt2);letter-spacing:.7px;text-transform:uppercase;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--bdr)">🔑 Changer le mot de passe</div><div class="fg"><label>Actuel</label><input type="password" class="inp" id="setPwC"></div><div class="fg"><label>Nouveau</label><input type="password" class="inp" id="setPwN"></div><div class="fg"><label>Confirmer</label><input type="password" class="inp" id="setPwCf"></div></div><div id="setMsg" class="err-msg" style="margin-bottom:10px"></div><button class="btn btn-primary btn-full" onclick="saveSettings()">💾 Sauvegarder</button>`;document.getElementById('settOv').classList.add('open');}
-async function saveSettings(){const emoji=document.getElementById('setEmoji').value.trim()||'👤',email=document.getElementById('setEmail').value.trim(),curPw=document.getElementById('setPwC').value,newPw=document.getElementById('setPwN').value,cfPw=document.getElementById('setPwCf').value,msgEl=document.getElementById('setMsg');msgEl.className='err-msg';const ud=users[curUser.username];if(!ud)return;if(newPw||curPw){if(!curPw){msgEl.textContent='✕ Entrez le mot de passe actuel';return;}if(ud.hash!==hashPw(curPw)){msgEl.textContent='✕ Mot de passe actuel incorrect';return;}if(!newPw||newPw.length<4){msgEl.textContent='✕ Nouveau mot de passe trop court';return;}if(newPw!==cfPw){msgEl.textContent='✕ Les mots de passe ne correspondent pas';return;}ud.hash=hashPw(newPw);}ud.emoji=emoji;if(email)ud.email=email;curUser.emoji=emoji;localStorage.setItem('cw_session',JSON.stringify(curUser));await saveUser(curUser.username,ud);updateHdr();msgEl.className='ok-msg';msgEl.textContent='✓ Paramètres sauvegardés !';setTimeout(()=>{msgEl.textContent='';},3000);}
+
+/* ════════════════════════════════════════
+   SETTINGS — with email OTP + username change
+════════════════════════════════════════ */
+let pendingEmailChange = null;
+
+function openSettings(){if(!curUser)return;const ud=users[curUser.username]||{};document.getElementById('settBody').innerHTML=`
+  <!-- Avatar & info section -->
+  <div style="background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+    <div style="width:46px;height:46px;border-radius:50%;background:var(--surf3);border:2px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">${curUser.emoji||'👤'}</div>
+    <div><div style="font-weight:700;font-size:.92rem">${esc(curUser.username)}</div><div style="font-size:.68rem;font-family:var(--mono);color:var(--txt3)">${ud.role||'user'} · ${ud.email||'—'}</div></div>
+  </div>
+
+  <!-- Change username -->
+  <div style="margin-bottom:14px;padding:12px 14px;background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r)">
+    <div style="font-size:.68rem;font-weight:700;color:var(--txt2);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--bdr);font-family:var(--mono)">🏷️ Changer le pseudo</div>
+    <div class="fg"><label>Nouveau pseudo</label><input type="text" class="inp" id="setUser" value="${esc(curUser.username)}" placeholder="Nouveau pseudo..."></div>
+    <div id="setUserMsg" class="err-msg" style="margin-bottom:6px"></div>
+    <button class="btn btn-ghost btn-sm" onclick="changeUsername()">✎ Changer le pseudo</button>
+  </div>
+
+  <!-- Change email -->
+  <div style="margin-bottom:14px;padding:12px 14px;background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r)">
+    <div style="font-size:.68rem;font-weight:700;color:var(--txt2);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--bdr);font-family:var(--mono)">📧 Changer l'email</div>
+    <div class="fg"><label>Nouvel email</label><input type="email" class="inp" id="setEmail" value="${esc(ud.email||'')}" placeholder="nouveau@email.com"></div>
+    <div id="setEmailMsg" class="err-msg" style="margin-bottom:6px"></div>
+    <button class="btn btn-ghost btn-sm" onclick="requestEmailChange()">📤 Changer l'email</button>
+  </div>
+
+  <!-- Change avatar & password -->
+  <div style="padding:12px 14px;background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r)">
+    <div style="font-size:.68rem;font-weight:700;color:var(--txt2);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--bdr);font-family:var(--mono)">🎨 Avatar & mot de passe</div>
+    <div class="fg"><label>Emoji avatar</label><input type="text" class="inp" id="setEmoji" value="${esc(curUser.emoji||'👤')}" maxlength="4"></div>
+    <div style="font-size:.68rem;font-weight:700;color:var(--txt2);letter-spacing:.7px;text-transform:uppercase;margin-bottom:9px;padding-bottom:7px;border-top:1px solid var(--bdr);padding-top:10px;margin-top:4px;font-family:var(--mono)">🔑 Changer le mot de passe</div>
+    <div class="fg"><label>Actuel</label><input type="password" class="inp" id="setPwC"></div>
+    <div class="fg"><label>Nouveau</label><input type="password" class="inp" id="setPwN"></div>
+    <div class="fg" style="margin-bottom:10px"><label>Confirmer</label><input type="password" class="inp" id="setPwCf"></div>
+    <div id="setMsg" class="err-msg" style="margin-bottom:10px"></div>
+    <button class="btn btn-primary btn-full" onclick="saveSettings()">💾 Sauvegarder</button>
+  </div>`;
+  document.getElementById('settOv').classList.add('open');
+}
+
+/* Change username */
+async function changeUsername(){
+  await loadUsers();
+  const newU=document.getElementById('setUser').value.trim();
+  const msgEl=document.getElementById('setUserMsg');
+  if(!newU||newU===curUser.username){msgEl.className='err-msg';msgEl.textContent='✕ Entrez un nouveau pseudo différent';return;}
+  if(newU.length<2||newU.length>20){msgEl.className='err-msg';msgEl.textContent='✕ 2–20 caractères';return;}
+  if(users[newU]){msgEl.className='err-msg';msgEl.textContent='✕ Ce pseudo est déjà pris';return;}
+  const oldU=curUser.username;
+  const ud={...users[oldU],username:newU};
+  // Copy old data to new key, delete old
+  await fbSetD('cw_users',newU,ud);
+  await fbDel('cw_users',oldU);
+  // Move tickets
+  if(tickets[oldU]){tickets[newU]=tickets[oldU];delete tickets[oldU];await saveTkts(newU);await fbDel('cw_tickets',oldU);}
+  users[newU]=ud;delete users[oldU];
+  curUser.username=newU;
+  localStorage.setItem('cw_session',JSON.stringify(curUser));
+  updateHdr();closeOv('settOv');openSettings();
+  toast(`Pseudo changé → ${newU} !`);
+}
+
+/* Request email change via OTP */
+async function requestEmailChange(){
+  const newEmail=document.getElementById('setEmail').value.trim();
+  const msgEl=document.getElementById('setEmailMsg');
+  const ud=users[curUser.username]||{};
+  if(!newEmail||newEmail===ud.email){msgEl.className='err-msg';msgEl.textContent='✕ Entrez un nouvel email différent';return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)){msgEl.className='err-msg';msgEl.textContent='✕ Email invalide';return;}
+  pendingEmailChange=newEmail;otpCode=genOtp();
+  msgEl.className='ok-msg';msgEl.textContent='⟳ Envoi du code...';
+  try{
+    emailjs.init(config.emailjsPublicKey);
+    await emailjs.send(config.emailjsServiceId,config.emailjsTemplateId,{to_email:newEmail,to_name:curUser.username,code:otpCode});
+    // Open auth modal in OTP mode
+    closeOv('settOv');
+    document.getElementById('authOv').classList.add('open');
+    document.getElementById('authTitle').textContent='Confirmez votre email';
+    document.querySelectorAll('.auth-tab').forEach(t=>t.style.display='none');
+    showOtp(newEmail,'email');
+  }catch(ex){
+    pendingEmailChange=null;otpCode=null;
+    msgEl.className='err-msg';msgEl.textContent='✕ Erreur envoi email.';
+  }
+}
+
+async function saveSettings(){const emoji=document.getElementById('setEmoji').value.trim()||'👤',curPw=document.getElementById('setPwC').value,newPw=document.getElementById('setPwN').value,cfPw=document.getElementById('setPwCf').value,msgEl=document.getElementById('setMsg');msgEl.className='err-msg';const ud=users[curUser.username];if(!ud)return;if(newPw||curPw){if(!curPw){msgEl.textContent='✕ Entrez le mot de passe actuel';return;}if(ud.hash!==hashPw(curPw)){msgEl.textContent='✕ Mot de passe actuel incorrect';return;}if(!newPw||newPw.length<4){msgEl.textContent='✕ Nouveau mot de passe trop court';return;}if(newPw!==cfPw){msgEl.textContent='✕ Les mots de passe ne correspondent pas';return;}ud.hash=hashPw(newPw);}ud.emoji=emoji;curUser.emoji=emoji;localStorage.setItem('cw_session',JSON.stringify(curUser));await saveUser(curUser.username,ud);updateHdr();msgEl.className='ok-msg';msgEl.textContent='✓ Paramètres sauvegardés !';setTimeout(()=>{msgEl.textContent='';},3000);}
 
 /* ════════════════════════════════════════
    ADMIN
 ════════════════════════════════════════ */
 function openAdmin(){document.getElementById('admOv').classList.add('open');if(admLoggedIn)return;document.getElementById('admPw').value='';document.getElementById('admPwErr').textContent='';}
-async function loginAdmin(){const pw=document.getElementById('admPw').value;if(pw!==config.adminPassword){document.getElementById('admPwErr').textContent='✕ Mot de passe incorrect';return;}admLoggedIn=true;document.getElementById('admWall').style.display='none';const p=document.getElementById('admPanel');p.style.display='flex';p.style.flexDirection='row';document.getElementById('admSaveBar').style.display='flex';// fill settings
-document.getElementById('whUrl').value=config.discordWebhook||'';document.getElementById('whRole').value=config.discordRoleId||'';document.getElementById('ejsPk').value=config.emailjsPublicKey||'';document.getElementById('ejsSvc').value=config.emailjsServiceId||'';document.getElementById('ejsTpl').value=config.emailjsTemplateId||'';renderSectToggles();await loadUsers();await loadTickets();renderAdmAll();}
+async function loginAdmin(){const pw=document.getElementById('admPw').value;if(pw!==config.adminPassword){document.getElementById('admPwErr').textContent='✕ Mot de passe incorrect';return;}admLoggedIn=true;document.getElementById('admWall').style.display='none';const p=document.getElementById('admPanel');p.style.display='flex';p.style.flexDirection='row';document.getElementById('admSaveBar').style.display='flex';document.getElementById('whUrl').value=config.discordWebhook||'';document.getElementById('whRole').value=config.discordRoleId||'';document.getElementById('ejsPk').value=config.emailjsPublicKey||'';document.getElementById('ejsSvc').value=config.emailjsServiceId||'';document.getElementById('ejsTpl').value=config.emailjsTemplateId||'';renderSectToggles();await loadUsers();await loadTickets();renderAdmAll();}
 function admTab(name){const tabs=['services','paypal','projects','users','tickets','team','settings'];document.querySelectorAll('.aside-btn').forEach((b,i)=>b.classList.toggle('active',tabs[i]===name));document.querySelectorAll('.adm-tab').forEach(c=>c.classList.remove('active'));document.getElementById('atab-'+name).classList.add('active');}
 function renderAdmAll(){renderAdmSvcs();renderAdmPp();renderAdmProjs();renderAdmUsers();renderAdmTickets();renderAdmTeam();}
 async function reloadAll(){setSave('saving');await Promise.all([loadConfig(),loadSvcs(),loadTeam(),loadProjs(),loadUsers(),loadTickets()]);renderAdmAll();setSave('saved');toast('Données rechargées !');}
@@ -1406,16 +1727,13 @@ async function doContribute(cat,id,title,ppUrl,goal){
   const msg=document.getElementById('contribMsg').value.trim();
   const err=document.getElementById('contribErr');
   if(!amount||amount<1){err.textContent='✕ Entrez un montant valide (min. 1€)';return;}
-  // Ouvre PayPal
   window.open(`${ppUrl}/${amount}EUR`,'_blank');
-  // Met à jour Firebase
   const p=(projData[cat]||[]).find(x=>x.id===id);
   if(p&&db){
     p.contributeTotal=(p.contributeTotal||0)+amount;
     await FB.setDoc(FB.doc(db,'projects_'+cat,id),{contributeTotal:p.contributeTotal},{merge:true});
     if(msg)await fbAddD('cw_contributions',{projectId:id,projectTitle:title,amount,message:msg,user:curUser?.username||'Anonyme',date:new Date().toISOString()});
   }
-  // Ferme la modale
   document.querySelector('div[style*="z-index:9999"]')?.remove();
   showThankYou(title,amount,msg);
 }
@@ -1459,6 +1777,7 @@ function spawnConfetti(){
     ],{duration,easing:'ease-in',fill:'forwards'}).onfinish=()=>c.remove();
   }
 }
+
 /* ════════════════════════════════════════
    START
 ════════════════════════════════════════ */
