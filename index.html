@@ -1004,18 +1004,14 @@ let projCat='all',projQ='',admProjCat='all',editProjId=null,editProjCat=null;
 /* ════════════════════════════════════════
    JACKPOT COUNTER
 ════════════════════════════════════════ */
-// Realistic client count: starts from a base and slightly increments for fun
-function getClientCount() {
-  // Store in localStorage so it persists and slowly grows
-  let base = parseInt(localStorage.getItem('cw_client_base') || '0');
-  if (!base) {
-    base = 247 + Math.floor(Math.random() * 50); // first visit: 247–296
-    localStorage.setItem('cw_client_base', base);
+async function getClientCount() {
+  if (!db) return 0;
+  try {
+    const snapshot = await FB.getDocs(FB.collection(db, 'cw_users'));
+    return snapshot.size;
+  } catch(e) {
+    return 0;
   }
-  // Each page load may add 0–2
-  const extra = Math.floor(Math.random() * 3);
-  const total = base + extra;
-  return total;
 }
 
 function buildJackpotBanner(targetNum) {
@@ -1024,14 +1020,14 @@ function buildJackpotBanner(targetNum) {
     <div class="jackpot-banner" id="jackpotBanner">
       <div class="jackpot-icon">🎰</div>
       <div class="jackpot-text">
-        <div class="jackpot-label">Font confiance à la CapWorks Studio</div>
+        <div class="jackpot-label">personnes font confiance à la CapWorks Studio</div>
         <div class="jackpot-count-wrap">
           <div class="jackpot-number" id="jackpotNumber">
             ${digits.map((_,i)=>`<div class="jackpot-digit"><span id="jd-${i}">0</span></div>`).join('')}
           </div>
-          <div class="jackpot-suffix">clients satisfaits</div>
+          <div class="jackpot-suffix">membres</div>
         </div>
-        <div class="jackpot-sub">Rejoignez-nous maintenant ✨</div>
+        div class="jackpot-sub">Rejoins-nous dès maintenant ! 🚀</div>
       </div>
     </div>`;
 }
@@ -1321,10 +1317,15 @@ function openAuth(tab='login'){document.getElementById('authOv').classList.add('
 function switchAuth(tab){document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',['login','register'][i]===tab));document.getElementById('authTitle').textContent=tab==='login'?'Connexion':'Créer un compte';const f=document.getElementById('authForm');if(tab==='login'){f.innerHTML=`<div class="fg"><label>Pseudo</label><input type="text" class="inp" id="lUser" placeholder="Votre pseudo..."></div><div class="fg"><label>Mot de passe</label><input type="password" class="inp" id="lPass" placeholder="••••••••" onkeypress="if(event.key==='Enter')doLogin()"></div><div class="err-msg" id="lErr"></div><div style="margin-top:13px"><button class="btn btn-primary btn-full" onclick="doLogin()">Se connecter →</button></div>`;}else{
     // ── REGISTER FORM WITH JACKPOT BANNER ──
     const re=EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
-    const clientNum = getClientCount();
-    f.innerHTML=buildJackpotBanner(clientNum)+`<div class="fg"><label>Pseudo</label><input type="text" class="inp" id="rUser" placeholder="Choisissez un pseudo..."></div><div class="fg"><label>Email <span style="color:var(--red)">*</span></label><input type="email" class="inp" id="rEmail" placeholder="exemple@gmail.com"></div><div class="fg"><label>Mot de passe</label><input type="password" class="inp" id="rPass" placeholder="Min. 4 caractères..."></div><div class="fg"><label>Avatar (emoji)</label><input type="text" class="inp" id="rEmoji" placeholder="${re}" maxlength="4"></div><div class="err-msg" id="rErr"></div><div style="margin-top:13px"><button class="btn btn-primary btn-full" id="rBtn" onclick="doRegister()">Continuer →</button></div>`;
-    // trigger jackpot animation after render
-    setTimeout(()=>animateJackpot(clientNum), 120);
+    f.innerHTML = buildJackpotBanner(0) + `...`;
+    getClientCount().then(clientNum => {
+      animateJackpot(clientNum);
+      // Met à jour les digits affichés
+      String(clientNum).split('').forEach((digit, i) => {
+        const el = document.getElementById(`jd-${i}`);
+        if (el) el.textContent = digit;
+      });
+    });
   }
 }
 async function doRegister(){await loadUsers();const u=document.getElementById('rUser').value.trim(),email=document.getElementById('rEmail').value.trim(),p=document.getElementById('rPass').value,e=document.getElementById('rEmoji').value.trim()||'👤',err=document.getElementById('rErr');if(!u||!email||!p){err.textContent='✕ Remplissez tous les champs';return;}if(u.length<2||u.length>20){err.textContent='✕ Pseudo : 2–20 caractères';return;}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='✕ Email invalide';return;}if(p.length<4){err.textContent='✕ Mot de passe trop court';return;}if(users[u]){err.textContent='✕ Ce pseudo est déjà pris';return;}pendingReg={u,email,p,e};otpCode=genOtp();const btn=document.getElementById('rBtn');btn.disabled=true;btn.textContent='Envoi du code...';err.textContent='';try{emailjs.init(config.emailjsPublicKey);await emailjs.send(config.emailjsServiceId,config.emailjsTemplateId,{to_email:email,to_name:u,code:otpCode});showOtp(email);}catch(ex){err.textContent='✕ Erreur envoi email.';btn.disabled=false;btn.textContent='Continuer →';}}
