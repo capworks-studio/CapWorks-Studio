@@ -1,0 +1,20 @@
+name = "capworks-studio"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+# KV Namespace — create via:
+#   wrangler kv namespace create CW_KV
+# Then paste the id below.
+[[kv_namespaces]]
+binding = "CW_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+# Secrets (set via `wrangler secret put <NAME>`):
+#   ADMIN_PASSWORD        — Admin panel password
+#   JWT_SECRET            — Secret for signing auth tokens
+#   DISCORD_WEBHOOK_URL   — Discord webhook for notifications
+#   RESEND_API_KEY        — Resend.com API key for OTP emails
+#   FROM_EMAIL            — Sender email (e.g. noreply@capworks.studio)
+
+[vars]
+ALLOWED_ORIGIN = "https://capky.github.io"
